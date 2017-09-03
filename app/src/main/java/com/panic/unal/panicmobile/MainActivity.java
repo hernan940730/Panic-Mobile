@@ -1,4 +1,4 @@
-package com.example.david.panicmobile;
+package com.panic.unal.panicmobile;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
