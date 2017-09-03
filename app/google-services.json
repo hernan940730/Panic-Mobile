@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "802701259038",
+    "firebase_url": "https://panic-security.firebaseio.com",
+    "project_id": "panic-security",
+    "storage_bucket": "panic-security.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802701259038:android:1d578881e084c7e3",
+        "android_client_info": {
+          "package_name": "com.panic.security"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802701259038-qp59a35g4um18q6uqh6mh40951strm24.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.panic.security",
+            "certificate_hash": "28e1143b353c376a7f5e7e0a6197d3a567260b4a"
+          }
+        },
+        {
+          "client_id": "802701259038-r2tdcrpq03el0esq41miimmiumpiebtr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4dDtpT6MXOPrFDE5mki1yga06ql2fb54"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802701259038-r2tdcrpq03el0esq41miimmiumpiebtr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
