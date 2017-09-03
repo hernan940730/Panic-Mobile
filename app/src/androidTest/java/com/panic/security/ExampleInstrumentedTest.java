@@ -1,4 +1,4 @@
-package com.panic.unal.panicmobile;
+package com.panic.security;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.david.panicmobile", appContext.getPackageName());
+        assertEquals("com.panic.security", appContext.getPackageName());
     }
 }

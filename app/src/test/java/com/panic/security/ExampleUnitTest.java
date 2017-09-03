@@ -1,4 +1,4 @@
-package com.panic.unal.panicmobile;
+package com.panic.security;
 
 import org.junit.Test;
 
