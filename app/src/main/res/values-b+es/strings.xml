@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Panic Security</string>
+
+    <!-- Error messages-->
+    <string name="server_error">Fallo al conectar al servidor!</string>
+
+    <!-- Crime types -->
+    <string name="assault_crime">Asalto</string>
+    <string name="auto_theft_crime">Robo de autos</string>
+    <string name="burglary_crime">Robo a casas</string>
+    <string name="shop_lifting_crime">Robo a tiendas</string>
+    <string name="suspicious_activity_crime">Actividad sospechosa</string>
+    <string name="homicide_crime">Homicidio</string>
+    <string name="vandalism_crime">Vandalismo</string>
+    <string name="drugs_crime">Drogas</string>
+    <string name="other_crime">Otro</string>
+</resources>
