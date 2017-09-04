@@ -58,6 +58,19 @@ public abstract class FirebaseReferences {
         public static final String IS_ACTIVE_REFERENCE = "is_active_account";
         public static final String FRIENDS_REFERENCE = "friends";
         public static final String FRIEND_REQUESTS_REFERENCE = "friend_requests";
+
+        public static abstract class Friend {
+            public static final String USER_ID = "user_id";
+            public static final String DATE = "date";
+            public static final String IS_LOCATION_SHARED = "is_location_shared";
+            public static final String IS_PENDING = "is_pending";
+
+        }
+
+        public static abstract class FriendRequest {
+            public static final String USER_ID = "user_id";
+            public static final String DATE = "date";
+        }
     }
 
     public static abstract class Profile {

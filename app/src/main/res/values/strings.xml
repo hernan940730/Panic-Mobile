@@ -26,4 +26,8 @@
     <string name="about_us">About us</string>
     <string name="more">More Options</string>
 
+
+    <!-- Gender -->
+    <string name="male_gender">Male</string>
+    <string name="female_gender">Female</string>
 </resources>

@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.panic.security.FirebaseReferences;
 import com.panic.security.R;
+import com.panic.security.models.home_module.DBRegistersGenerator;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -68,6 +69,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 tv.setText(R.string.server_error);
             }
         });*/
+
+        Button b = (Button) findViewById(R.id.generate_users_button);
+
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DBRegistersGenerator.fillUsers();
+            }
+        });
+
 
     }
 
