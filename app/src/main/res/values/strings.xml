@@ -30,4 +30,10 @@
     <!-- Gender -->
     <string name="male_gender">Male</string>
     <string name="female_gender">Female</string>
+    <string name="login">Log into your Panic! account</string>
+    <string name="username_text">username</string>
+    <string name="password_text">password</string>
+    <string name="login_text">login</string>
+    <string name="login_button_text">login</string>
+    <string name="singin_button_text">Sign In</string>
 </resources>

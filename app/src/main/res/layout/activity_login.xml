@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools = "http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".controllers.home_module.HomeActivity" >
+
+    <ImageView
+        android:id="@+id/login_logo"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:src="@mipmap/ic_logo_panic"
+        android:layout_centerHorizontal="true"/>
+    <TextView
+        android:id="@+id/login_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:textSize="35sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/login_logo"/>
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/username_text"
+        android:focusable="true"
+        android:textColorHighlight="#ffff25e6"
+        android:layout_below="@+id/login_text"
+        android:layout_centerHorizontal="true"/>
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/password_text"
+        android:focusable="true"
+        android:inputType="textPassword"
+        android:layout_below="@+id/username"
+        android:ems="10"/>
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_button_text"
+        android:layout_below="@+id/password"
+        android:layout_centerHorizontal="true"/>
+    <Button
+        android:id="@+id/signin__button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/singin_button_text"
+        android:layout_below="@+id/login_button"
+        android:layout_centerHorizontal="true"/>
+</RelativeLayout>
