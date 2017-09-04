@@ -53,33 +53,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-
-        /*FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference(FirebaseReferences.MESSAGE_REFERENCE);
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String value = dataSnapshot.getValue(String.class);
-                tv.setText(value);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                tv.setText(R.string.server_error);
-            }
-        });*/
-
-        Button b = (Button) findViewById(R.id.generate_users_button);
-
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DBRegistersGenerator.fillUsers();
-            }
-        });
-
-
     }
 
     @Override
