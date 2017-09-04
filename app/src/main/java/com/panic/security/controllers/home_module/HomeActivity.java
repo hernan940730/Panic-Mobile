@@ -72,7 +72,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.item_home) {
-            // Handle the camera action
+            // Handle action fragment or activity or i dont know
         } else if (id == R.id.item_user_profile) {
 
         } else if (id == R.id.item_friends) {
