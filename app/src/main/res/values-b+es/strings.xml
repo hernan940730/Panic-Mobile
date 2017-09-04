@@ -15,4 +15,16 @@
     <string name="vandalism_crime">Vandalismo</string>
     <string name="drugs_crime">Drogas</string>
     <string name="other_crime">Otro</string>
+
+    <!-- Menu navigation -->
+    <string name="navigation_drawer_open">Abrir menu de navegacion</string>
+    <string name="navigation_drawer_close">Cerrar menu de navegacion</string>
+
+    <!-- Menu items -->
+    <string name="home">Inicio</string>
+    <string name="user_profile">Perfil</string>
+    <string name="friends">Amigos</string>
+    <string name="about_us">Acerca de</string>
+    <string name="more">Mas Opciones</string>
+
 </resources>
