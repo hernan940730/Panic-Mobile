@@ -31,4 +31,11 @@
     <!-- Gender -->
     <string name="male_gender">Hombre</string>
     <string name="female_gender">Mujer</string>
+
+    <!-- Login -->
+    <string name="login">Ingresa a tu cuenta Panic!</string>
+    <string name="username_text">usuario@example.com</string>
+    <string name="password_text">contraseña</string>
+    <string name="login_button_text">Iniciar Sesion</string>
+    <string name="sign_up_button_text">Registrarse</string>
 </resources>
