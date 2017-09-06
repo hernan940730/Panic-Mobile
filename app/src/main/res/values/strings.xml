@@ -37,4 +37,8 @@
     <string name="password_text">password</string>
     <string name="login_button_text">Login</string>
     <string name="sign_up_button_text">Sign Up</string>
+
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
