@@ -31,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.panic.security.FirebaseReferences;
 import com.panic.security.R;
+import com.panic.security.controllers.login_signup_module.LoginActivity;
 import com.panic.security.models.home_module.DBRegistersGenerator;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -65,7 +66,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showLogin() {
-        setContentView(R.layout.activity_login);
+        Intent intent = new Intent( this, LoginActivity.class );
+        startActivity( intent );
     }
 
     @Override
@@ -136,31 +138,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void login(View view) {
-        mEmail = ( EditText ) findViewById( R.id.username );
-        mPassword = ( EditText ) findViewById( R.id.password );
-        String email = mEmail.getText().toString();
-        String password = mPassword.getText().toString();
-        mAuth.signInWithEmailAndPassword( email, password ).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if( task.isSuccessful() ){
-                    // Sign in success
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    updateUI( user );
-                } else{
-                    // SIgn in fails
-                    Toast.makeText( HomeActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                    updateUI( null );
-                }
-            }
-        });
-    }
-
-    public void register( View view ){
-       //TODO : make the regsiter xml
     }
 
 }

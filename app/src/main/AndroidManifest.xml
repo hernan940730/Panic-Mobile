@@ -20,10 +20,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controllers.login_module.LoginActivity"
+            android:name=".controllers.login_signup_module.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_login"
             android:theme="@style/FullscreenTheme" />
+        <activity android:name=".controllers.login_signup_module.SignUpActivity"></activity>
     </application>
 
 </manifest>
