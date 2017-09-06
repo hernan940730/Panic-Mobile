@@ -8,6 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 
 /**
@@ -150,7 +151,7 @@ public abstract class DBRegistersGenerator {
     private static double longFrom = -74.2;
     private static double longTo = -74;
 
-    private static ArrayList<String> userIds;
+    private static ArrayList<String> userIds = new ArrayList<>();
 
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
 
@@ -159,7 +160,7 @@ public abstract class DBRegistersGenerator {
         DatabaseReference childRef = ref.push();
         childRef.child(FirebaseReferences.StolenObject.DESCRIPTION_REFERENCE).setValue
                 ("It was white and beauty, it had many gorgeous things.");
-        childRef.child(FirebaseReferences.StolenObject.NAME_REFERENCE).setValue(ServerValue.TIMESTAMP);
+        childRef.child(FirebaseReferences.StolenObject.NAME_REFERENCE).setValue(stolenObjects[r.nextInt(stolenObjects.length)]);
         return childRef;
     }
 
@@ -217,52 +218,73 @@ public abstract class DBRegistersGenerator {
         return childRef;
     }
 
-    public static void generateUsers () {
-        final DatabaseReference profilesRef = database.getReference(FirebaseReferences.PROFILES_REFERENCE);
-        final DatabaseReference usersRef = database.getReference(FirebaseReferences.USERS_REFERENCE);
+    public static DatabaseReference generateRandomUser () {
+        DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE);
+        DatabaseReference childRef = ref.push ();
+        childRef.child(FirebaseReferences.User.PROFILE_PICTURE_REFERENCE).setValue(childRef.getKey() + ".jpg");
 
-        profilesRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        DatabaseReference profileRef = generateRandomProfile();
 
-                String lastname = dataSnapshot.child(FirebaseReferences.Profile.LAST_NAME_REFERENCE).getValue(String.class);
-                String name = dataSnapshot.child(FirebaseReferences.Profile.NAME_REFERENCE).getValue(String.class);
+        childRef.child(FirebaseReferences.User.PROFILE_ID_REFERENCE).setValue(profileRef.getKey());
+        childRef.child(FirebaseReferences.User.PHONE_NUMBER_REFERENCE).setValue("+57012345678" + r.nextInt(10));
+        childRef.child(FirebaseReferences.User.EMAIL_REFERENCE).setValue(childRef.getKey().substring(
+                Math.min(10, childRef.getKey().length()))
+                + "@gmail.com");
 
-                String id = dataSnapshot.getKey();
-                String email = name + "_" + lastname + "@gmail.com";
-                DatabaseReference childRef = usersRef.push();
-                childRef.child(FirebaseReferences.User.EMAIL_REFERENCE).setValue(email);
-                childRef.child(FirebaseReferences.User.IS_ACTIVE_REFERENCE).setValue(true);
-                childRef.child(FirebaseReferences.User.PHONE_NUMBER_REFERENCE).setValue("+57-1234567890");
-                childRef.child(FirebaseReferences.User.PROFILE_ID_REFERENCE).setValue(id);
-                childRef.child(FirebaseReferences.User.PROFILE_PICTURE_REFERENCE).setValue("/dir/photo");
+        HashSet<String> friendsOutHash = new HashSet<>();
 
+        DatabaseReference friendsOut = childRef.child(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE);
+
+        int friendsOutNum = 0;
+        if (!userIds.isEmpty()) {
+            friendsOutNum = r.nextInt(userIds.size());
+        }
+
+        for (int i = 0; i < friendsOutNum; ++i) {
+            String userID = userIds.get (r.nextInt (userIds.size()));
+            friendsOutHash.add (userID);
+        }
+
+        for (String userId : friendsOutHash) {
+            friendsOut.child(userId).child(FirebaseReferences.User.FriendRequestOut.DATE).setValue(ServerValue.TIMESTAMP);
+            friendsOut.child(userId).child(FirebaseReferences.User.FriendRequestOut.USER_ID).setValue(userId);
+
+            DatabaseReference friend = ref.child(userId).child(FirebaseReferences.User.FRIEND_REQUESTS_IN_REFERENCE).child(
+                    childRef.getKey()
+            );
+            friend.child(FirebaseReferences.User.FriendRequestIn.USER_ID).setValue(childRef.getKey());
+            friend.child(FirebaseReferences.User.FriendRequestIn.DATE).setValue(ServerValue.TIMESTAMP);
+        }
+
+        friendsOutNum *= 2;
+        for (int i = 0; i < friendsOutNum; ++i) {
+            String userId = userIds.get(r.nextInt(userIds.size()));
+            if (!friendsOutHash.contains(userId)) {
+                childRef.child(FirebaseReferences.User.FRIENDS_REFERENCE).child(userId).
+                        child(FirebaseReferences.User.Friend.DATE).setValue(ServerValue.TIMESTAMP);
+                childRef.child(FirebaseReferences.User.FRIENDS_REFERENCE).child(userId).
+                        child(FirebaseReferences.User.Friend.IS_LOCATION_SHARED).setValue(false);
+                childRef.child(FirebaseReferences.User.FRIENDS_REFERENCE).child(userId).
+                        child(FirebaseReferences.User.Friend.USER_ID).setValue(userId);
             }
+        }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        childRef.child(FirebaseReferences.User.IS_ACTIVE_REFERENCE).setValue(true);
 
-            }
+        int reports = r.nextInt(11);
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+        for (int i = 0; i < reports; ++i) {
+            DatabaseReference reportRef = generateRandomReport();
+            childRef.child(FirebaseReferences.User.REPORTS_REFERENCE).child(reportRef.getKey()).setValue(reportRef.getKey());
+        }
 
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+        userIds.add(childRef.getKey());
+        return childRef;
     }
 
-    public static void generateValues () {
-
+    public static void generateValues (final int VAL) {
+        for (int i = 0; i < VAL; ++i) {
+            generateRandomUser();
+        }
     }
 }
