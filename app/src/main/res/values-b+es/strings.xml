@@ -26,7 +26,7 @@
     <string name="friends">Amigos</string>
     <string name="about_us">Acerca de</string>
     <string name="more">Mas Opciones</string>
-
+    <string name="sign_out">Cerar Sesion</string>
 
     <!-- Gender -->
     <string name="male_gender">Hombre</string>

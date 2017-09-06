@@ -20,10 +20,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controllers.login_signup_module.LoginActivity"
+            android:name=".controllers.login_sign_up_module.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/FullscreenTheme" />
-        <activity android:name=".controllers.login_signup_module.SignUpActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".controllers.login_sign_up_module.SignUpActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

@@ -25,6 +25,7 @@
     <string name="friends">Friends</string>
     <string name="about_us">About us</string>
     <string name="more">More Options</string>
+    <string name="sign_out">Sign Out</string>
 
 
     <!-- Gender -->
@@ -48,5 +49,6 @@
     <string name="login_link">Already a member? Login</string>
 
     <string name="authenticating">Authenticating…</string>
+
 
 </resources>
