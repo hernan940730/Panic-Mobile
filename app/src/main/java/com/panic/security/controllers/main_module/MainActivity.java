@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void updateUI(FirebaseUser user) {
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_main);
 
         configMenu();
         tv = (TextView) findViewById(R.id.home_message);
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        showHomeMessage();
+        //showHomeMessage();
     }
 
     /* Menu navigator*/
