@@ -80,7 +80,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private void updateUI(FirebaseUser user) {
         setContentView(R.layout.activity_home);
 
-        //tv = (TextView) findViewById(R.id.home_message);
+        tv = (TextView) findViewById(R.id.home_message);
 
         /* Menu navigator*/
         // take toolbar title

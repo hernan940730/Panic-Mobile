@@ -24,7 +24,7 @@
                 android:title="@string/about_us" />
             <item
                 android:id="@+id/item_sign_out"
-                android:icon="@mipmap/ic_help"
+                android:icon="@mipmap/ic_exit"
                 android:title="@string/sign_out" />
         </menu>
     </item>

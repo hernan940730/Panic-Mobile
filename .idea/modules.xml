@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Panic-Mobile.iml" filepath="$PROJECT_DIR$/Panic-Mobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/PanicSecurity.iml" filepath="$PROJECT_DIR$/PanicSecurity.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/panic-mobile.iml" filepath="$PROJECT_DIR$/panic-mobile.iml" />
     </modules>
   </component>
 </project>
