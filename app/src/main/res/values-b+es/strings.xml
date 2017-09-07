@@ -33,10 +33,11 @@
     <string name="female_gender">Mujer</string>
 
     <!-- Login -->
-    <string name="login_start">Ingresa a tu cuenta Panic!</string>
-    <string name="username_text">usuario@ejemplo.com</string>
-    <string name="password_text">contraseña</string>
-    <string name="login_button_text">Iniciar Sesion</string>
+    <string name="login_text">Ingresa a tu cuenta Panic!</string>
+    <string name="username_login_text">Usuario@ejemplo.com</string>
+    <string name="password_login_text">Contraseña</string>
+    <string name="login_button_text">Iniciar sesión</string>
+    <string name="sign_up_link">Todavía no tienes cuenta? Crea una</string>
 
     <!-- SignUp-->
     <string name="sign_up_text">Crea una nueva cuenta en Panic!</string>
@@ -44,7 +45,7 @@
     <string name="username_sign_up_text">Usuario@ejemplo.com</string>
     <string name="password_sign_up_text">Contraseña</string>
     <string name="sign_up_button_text">Registrarse</string>
-    <string name="login_link">Ya tienes una cuenta? Inicia Sesion</string>
+    <string name="login_link">Ya tienes una cuenta? Inicia sesión</string>
 
     <string name="authenticating">Autenticando…</string>
 </resources>

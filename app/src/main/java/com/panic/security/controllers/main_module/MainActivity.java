@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,10 +32,10 @@ import com.panic.security.controllers.user_profile_module.UserProfileFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    private TextView tv;
-    /* Authentication with FireBase */
+    // Authentication with FireBase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseUser mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +46,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if( user != null ){
-                     // User signed in
-                     updateUI( user );
-                     }else{
-                     // Log In User
-                     showLogin();
-                     }
+                mCurrentUser = firebaseAuth.getCurrentUser();
+                if( mCurrentUser != null ){
+                    // User signed in
+                    updateUI();
+                    }else{
+                    // Log In User
+                    showLogin();
+                    }
                     }
                 };
 
@@ -77,52 +78,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI() {
         setContentView(R.layout.activity_main);
-
         configMenu();
-        tv = (TextView) findViewById(R.id.home_message);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        //showHomeMessage();
+        //TODO
     }
 
     /* Menu navigator*/
     public void configMenu(){
+
         // take toolbar title
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         // add burger icon
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
         //To navigate with the menu
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
 
-    public void showHomeMessage () {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference(FirebaseReferences.MESSAGE_REFERENCE);
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                ((TextView)findViewById(R.id.home_message)).setText(value);
+        //For can access to text view inside nav_header_menu
+        View headerView = navigationView.getHeaderView(0);
+        if (headerView != null) {
+            TextView textUserEmail = (TextView) headerView.findViewById(R.id.text_email_user);
+            if(textUserEmail != null){
+                textUserEmail.setText(mCurrentUser.getEmail());
             }
+        }
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-            }
-        });
     }
 
     @Override

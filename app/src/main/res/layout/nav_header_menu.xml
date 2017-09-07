@@ -13,23 +13,24 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:id="@+id/imagePanic"
+        android:id="@+id/image_panic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:src="@mipmap/ic_panic"/>
 
     <TextView
+        android:id="@+id/text_name_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Nombre Usuario"
+        android:text="User"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/text_email_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="correo.usuario@android.com" />
+        android:text="email.user@android.com" />
 
 </LinearLayout>
