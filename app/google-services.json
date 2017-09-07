@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "802701259038-rstfl5m5fe6ud0vm413sv84186ft45t4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.panic.security",
+            "certificate_hash": "058f11acf6fa52c693e580fc05bc822cb30c6648"
+          }
+        },
+        {
           "client_id": "802701259038-qp59a35g4um18q6uqh6mh40951strm24.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -25,9 +25,30 @@
     <string name="friends">Friends</string>
     <string name="about_us">About us</string>
     <string name="more">More Options</string>
+    <string name="sign_out">Sign Out</string>
 
 
     <!-- Gender -->
     <string name="male_gender">Male</string>
     <string name="female_gender">Female</string>
+
+    <!-- Login -->
+    <string name="login_text">Log into your Panic! account</string>
+    <string name="username_login_text">username@example.com</string>
+    <string name="password_login_text">password</string>
+    <string name="login_button_text">Login</string>
+    <string name="sign_up_link">No account yet? Create one</string>
+
+
+    <!-- SignUp-->
+    <string name="sign_up_text">Create a new Panic! account</string>
+    <string name="sign_up_name">Name</string>
+    <string name="username_sign_up_text">username@example.com</string>
+    <string name="password_sign_up_text">password</string>
+    <string name="sign_up_button_text">Sign Up</string>
+    <string name="login_link">Already a member? Login</string>
+
+    <string name="authenticating">Authenticating…</string>
+
+
 </resources>
