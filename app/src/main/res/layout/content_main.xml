@@ -3,10 +3,11 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.panic.security.controllers.home_module.HomeActivity"
+    tools:context="com.panic.security.controllers.main_module.MainActivity"
     tools:showIn="@layout/app_bar_menu">
 
     <TextView

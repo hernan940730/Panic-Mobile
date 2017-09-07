@@ -14,7 +14,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context=".controllers.home_module.HomeActivity">
+        tools:context=".controllers.main_module.MainActivity">
 
         <ImageView
             android:id="@+id/login_logo"
@@ -23,7 +23,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="69dp"
-            android:src="@mipmap/ic_logo_panic" />
+            android:src="@mipmap/ic_panic" />
 
         <TextView
             android:id="@+id/login_text"

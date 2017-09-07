@@ -16,9 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.panic.security.R;
-import com.panic.security.controllers.home_module.HomeActivity;
-
-import java.nio.channels.InterruptedByTimeoutException;
+import com.panic.security.controllers.main_module.MainActivity;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -72,7 +70,7 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     private void showHome() {
-        Intent intent = new Intent( this, HomeActivity.class );
+        Intent intent = new Intent( this, MainActivity.class );
         startActivity( intent );
     }
 
