@@ -6,19 +6,10 @@ package com.panic.security.entities;
 
 public class Report {
 
-    private String userId;
     private String crimeId;
     private String locationId;
     private String date;
     private String description;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getCrimeId() {
         return crimeId;

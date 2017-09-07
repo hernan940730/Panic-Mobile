@@ -16,6 +16,7 @@ public class User {
     private Boolean isActiveAccount;
     private ArrayList<Friend> friends;
     private ArrayList<FriendRequest> friendRequests;
+    private ArrayList<Report> reports;
 
     public String getProfileId() {
         return profileId;
@@ -80,4 +81,13 @@ public class User {
     public void setFriendRequests(ArrayList<FriendRequest> friendRequests) {
         this.friendRequests = friendRequests;
     }
+
+    public ArrayList<Report> getReports() {
+        return reports;
+    }
+
+    public void setReports(ArrayList<Report> reports) {
+        this.reports = reports;
+    }
+
 }
