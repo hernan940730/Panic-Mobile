@@ -7,7 +7,7 @@ package com.panic.security.entities;
 public class Crime {
 
     private String type;
-    private String date;
+    private Long date;
 
     public String getType() {
         return type;
@@ -17,11 +17,11 @@ public class Crime {
         this.type = type;
     }
 
-    public String getDate() {
+    public Long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Long date) {
         this.date = date;
     }
 }

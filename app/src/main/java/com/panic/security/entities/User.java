@@ -1,6 +1,8 @@
 package com.panic.security.entities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by maikb on 3/09/2017.
@@ -8,22 +10,19 @@ import java.util.ArrayList;
 
 public class User {
 
-    private String profileId;
     private String email;
-    private String password;
-    private String profilePicture;
-    private String phoneNumber;
+    private List<FriendRequestIn> friendRequestsIn;
+    private HashMap<String, FriendRequestOut> friendRequestsOut;
+    private HashMap<String, Friend> friends;
     private Boolean isActiveAccount;
-    private ArrayList<Friend> friends;
-    private ArrayList<FriendRequest> friendRequests;
-    private ArrayList<Report> reports;
+    private String phoneNumber;
+    private String profileId;
+    private String profilePicture;
+    private HashMap<String, String> reports;
 
-    public String getProfileId() {
-        return profileId;
-    }
-
-    public void setProfileId(String profileId) {
-        this.profileId = profileId;
+    @Override
+    public String toString() {
+        return email;
     }
 
     public String getEmail() {
@@ -34,28 +33,28 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public List<FriendRequestIn> getFriendRequestsIn() {
+        return friendRequestsIn;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setFriendRequestsIn(List<FriendRequestIn> friendRequestsIn) {
+        this.friendRequestsIn = friendRequestsIn;
     }
 
-    public String getProfilePicture() {
-        return profilePicture;
+    public HashMap<String, FriendRequestOut> getFriendRequestsOut() {
+        return friendRequestsOut;
     }
 
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setFriendRequestsOut(HashMap<String, FriendRequestOut> friendRequestsOut) {
+        this.friendRequestsOut = friendRequestsOut;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public HashMap<String, Friend> getFriends() {
+        return friends;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setFriends(HashMap<String, Friend> friends) {
+        this.friends = friends;
     }
 
     public Boolean getActiveAccount() {
@@ -66,28 +65,113 @@ public class User {
         isActiveAccount = activeAccount;
     }
 
-    public ArrayList<Friend> getFriends() {
-        return friends;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setFriends(ArrayList<Friend> friends) {
-        this.friends = friends;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public ArrayList<FriendRequest> getFriendRequests() {
-        return friendRequests;
+    public String getProfileId() {
+        return profileId;
     }
 
-    public void setFriendRequests(ArrayList<FriendRequest> friendRequests) {
-        this.friendRequests = friendRequests;
+    public void setProfileId(String profileId) {
+        this.profileId = profileId;
     }
 
-    public ArrayList<Report> getReports() {
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public HashMap<String, String> getReports() {
         return reports;
     }
 
-    public void setReports(ArrayList<Report> reports) {
+    public void setReports(HashMap<String, String> reports) {
         this.reports = reports;
     }
+
+    public class FriendRequestIn {
+
+        private String userId;
+        private Long date;
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public Long getDate() {
+            return date;
+        }
+
+        public void setDate(Long date) {
+            this.date = date;
+        }
+    }
+
+    public class FriendRequestOut {
+
+        private String userId;
+        private Long date;
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public Long getDate() {
+            return date;
+        }
+
+        public void setDate(Long date) {
+            this.date = date;
+        }
+    }
+
+    public class Friend {
+
+        private String userId;
+        private Long date;
+        private Boolean isLocationShared;
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public Long getDate() {
+            return date;
+        }
+
+        public void setDate(Long date) {
+            this.date = date;
+        }
+
+        public Boolean getLocationShared() {
+            return isLocationShared;
+        }
+
+        public void setLocationShared(Boolean locationShared) {
+            isLocationShared = locationShared;
+        }
+
+    }
+
 
 }

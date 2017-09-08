@@ -6,17 +6,8 @@ package com.panic.security.entities;
 
 public class StolenObject {
 
-    private String reportId;
     private String name;
     private String description;
-
-    public String getReportId() {
-        return reportId;
-    }
-
-    public void setReportId(String reportId) {
-        this.reportId = reportId;
-    }
 
     public String getName() {
         return name;
