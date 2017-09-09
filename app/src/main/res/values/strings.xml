@@ -48,4 +48,7 @@
     <string name="login_link">Already a member? Login</string>
 
     <string name="authenticating">Authenticating…</string>
+
+    <!-- Google maps -->
+    <string name="title_activity_maps">Map</string>
 </resources>
