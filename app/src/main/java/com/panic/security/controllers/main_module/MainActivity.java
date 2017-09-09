@@ -1,9 +1,12 @@
 package com.panic.security.controllers.main_module;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -36,10 +39,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mCurrentUser;
+    public final int locationRequestCode = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getLocationPermission();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -50,13 +56,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if( mCurrentUser != null ){
                     // User signed in
                     updateUI();
-                    }else{
+                }else{
                     // Log In User
                     showLogin();
                     }
-                    }
-                };
-
+                }
+            };
     }
 
     private void showLogin() {
@@ -115,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 textUserEmail.setText(mCurrentUser.getEmail());
             }
         }
-
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new HomeFragment()).commit();
     }
 
     @Override
@@ -137,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (id == R.id.item_home) {
-            fragmentManager.beginTransaction().replace(R.id.content_main,new HomeFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_main, new HomeFragment()).commit();
         } else if (id == R.id.item_user_profile) {
             fragmentManager.beginTransaction().replace(R.id.content_main,new UserProfileFragment()).commit();
         } else if (id == R.id.item_friends) {
@@ -158,4 +163,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         showLogin();
     }
 
+    private boolean getLocationPermission () {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            String permissions[] = {Manifest.permission.ACCESS_FINE_LOCATION};
+            ActivityCompat.requestPermissions(this, permissions, locationRequestCode);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case locationRequestCode:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+                    finishAffinity();
+                }
+                break;
+        }
+    }
 }
