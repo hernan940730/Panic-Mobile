@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            moveTaskToBack(true);
         }
     }
 
@@ -121,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void signOut() {
         mAuth.signOut();
         showLogin();
-        finish();
     }
 
     private void getLocationPermission () {

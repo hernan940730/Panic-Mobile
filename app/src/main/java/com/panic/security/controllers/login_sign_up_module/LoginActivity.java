@@ -146,4 +146,9 @@ public class LoginActivity extends AppCompatActivity {
     public void login(View view) {
         signIn( );
     }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 }
