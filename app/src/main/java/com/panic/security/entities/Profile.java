@@ -6,16 +6,16 @@ package com.panic.security.entities;
 
 public class Profile {
 
-    private Long birthday;
+    private long birthday;
     private String gender;
-    private String lastName;
+    private String last_name;
     private String name;
 
-    public Long getBirthday() {
+    public long getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Long birthday) {
+    public void setBirthday(long birthday) {
         this.birthday = birthday;
     }
 
@@ -27,12 +27,12 @@ public class Profile {
         this.gender = gender;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getName() {
