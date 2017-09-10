@@ -67,16 +67,16 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void showHome() {
         Intent intent = new Intent( this, MainActivity.class );
         startActivity( intent );
+        finishAffinity();
     }
 
     public void showLogIn( View view ){
         Intent intent = new Intent( this, LoginActivity.class );
         startActivity( intent );
+        finish();
     }
 
     public void signUp(View view) {
