@@ -1,7 +1,6 @@
 package com.panic.security.entities;
 
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by maikb on 3/09/2017.
@@ -9,25 +8,25 @@ import java.util.List;
 
 public class Report {
 
-    private String crimeId;
-    private Long date;
+    private String crime_id;
+    private long date;
     private String description;
-    private String locationId;
-    private HashMap<String, String> stolenObjects;
+    private String location_id;
+    private HashMap<String, String> stolen_objects;
 
-    public String getCrimeId() {
-        return crimeId;
+    public String getCrime_id() {
+        return crime_id;
     }
 
-    public void setCrimeId(String crimeId) {
-        this.crimeId = crimeId;
+    public void setCrime_id(String crime_id) {
+        this.crime_id = crime_id;
     }
 
-    public Long getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Long date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
@@ -39,19 +38,19 @@ public class Report {
         this.description = description;
     }
 
-    public String getLocationId() {
-        return locationId;
+    public String getLocation_id() {
+        return location_id;
     }
 
-    public void setLocationId(String locationId) {
-        this.locationId = locationId;
+    public void setLocation_id(String location_id) {
+        this.location_id = location_id;
     }
 
-    public HashMap<String, String> getStolenObjects() {
-        return stolenObjects;
+    public HashMap<String, String> getStolen_objects() {
+        return stolen_objects;
     }
 
-    public void setStolenObjects(HashMap<String, String> stolenObjects) {
-        this.stolenObjects = stolenObjects;
+    public void setStolen_objects(HashMap<String, String> stolen_objects) {
+        this.stolen_objects = stolen_objects;
     }
 }

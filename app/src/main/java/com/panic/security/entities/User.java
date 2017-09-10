@@ -1,8 +1,6 @@
 package com.panic.security.entities;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by maikb on 3/09/2017.
@@ -11,13 +9,13 @@ import java.util.List;
 public class User {
 
     private String email;
-    private List<FriendRequestIn> friendRequestsIn;
-    private HashMap<String, FriendRequestOut> friendRequestsOut;
+    private HashMap<String, FriendRequestIn> friend_requests_in;
+    private HashMap<String, FriendRequestOut> friend_requests_out;
     private HashMap<String, Friend> friends;
-    private Boolean isActiveAccount;
-    private String phoneNumber;
-    private String profileId;
-    private String profilePicture;
+    private boolean is_active_account;
+    private String phone_number;
+    private String profile_id;
+    private String profile_picture;
     private HashMap<String, String> reports;
 
     @Override
@@ -33,20 +31,20 @@ public class User {
         this.email = email;
     }
 
-    public List<FriendRequestIn> getFriendRequestsIn() {
-        return friendRequestsIn;
+    public HashMap<String, FriendRequestIn> getFriend_requests_in() {
+        return friend_requests_in;
     }
 
-    public void setFriendRequestsIn(List<FriendRequestIn> friendRequestsIn) {
-        this.friendRequestsIn = friendRequestsIn;
+    public void setFriend_requests_in(HashMap<String, FriendRequestIn> friend_requests_in) {
+        this.friend_requests_in = friend_requests_in;
     }
 
-    public HashMap<String, FriendRequestOut> getFriendRequestsOut() {
-        return friendRequestsOut;
+    public HashMap<String, FriendRequestOut> getFriend_requests_out() {
+        return friend_requests_out;
     }
 
-    public void setFriendRequestsOut(HashMap<String, FriendRequestOut> friendRequestsOut) {
-        this.friendRequestsOut = friendRequestsOut;
+    public void setFriend_requests_out(HashMap<String, FriendRequestOut> friend_requests_out) {
+        this.friend_requests_out = friend_requests_out;
     }
 
     public HashMap<String, Friend> getFriends() {
@@ -57,36 +55,36 @@ public class User {
         this.friends = friends;
     }
 
-    public Boolean getActiveAccount() {
-        return isActiveAccount;
+    public boolean getActiveAccount() {
+        return is_active_account;
     }
 
-    public void setActiveAccount(Boolean activeAccount) {
-        isActiveAccount = activeAccount;
+    public void setActiveAccount(boolean activeAccount) {
+        is_active_account = activeAccount;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone_number() {
+        return phone_number;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
     }
 
-    public String getProfileId() {
-        return profileId;
+    public String getProfile_id() {
+        return profile_id;
     }
 
-    public void setProfileId(String profileId) {
-        this.profileId = profileId;
+    public void setProfile_id(String profile_id) {
+        this.profile_id = profile_id;
     }
 
-    public String getProfilePicture() {
-        return profilePicture;
+    public String getProfile_picture() {
+        return profile_picture;
     }
 
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setProfile_picture(String profile_picture) {
+        this.profile_picture = profile_picture;
     }
 
     public HashMap<String, String> getReports() {
@@ -97,17 +95,17 @@ public class User {
         this.reports = reports;
     }
 
-    public class FriendRequestIn {
+    public static class FriendRequestIn {
 
-        private String userId;
         private Long date;
+        private String user_id;
 
-        public String getUserId() {
-            return userId;
+        public String getUser_id() {
+            return user_id;
         }
 
-        public void setUserId(String userId) {
-            this.userId = userId;
+        public void setUser_id(String user_id) {
+            this.user_id = user_id;
         }
 
         public Long getDate() {
@@ -119,17 +117,18 @@ public class User {
         }
     }
 
-    public class FriendRequestOut {
+    public static class FriendRequestOut {
 
-        private String userId;
         private Long date;
+        private String user_id;
 
-        public String getUserId() {
-            return userId;
+
+        public String getUser_id() {
+            return user_id;
         }
 
-        public void setUserId(String userId) {
-            this.userId = userId;
+        public void setUser_id(String user_id) {
+            this.user_id = user_id;
         }
 
         public Long getDate() {
@@ -141,18 +140,18 @@ public class User {
         }
     }
 
-    public class Friend {
+    public static class Friend {
 
-        private String userId;
+        private String user_id;
         private Long date;
-        private Boolean isLocationShared;
+        private Boolean is_location_shared;
 
-        public String getUserId() {
-            return userId;
+        public String getUser_id() {
+            return user_id;
         }
 
-        public void setUserId(String userId) {
-            this.userId = userId;
+        public void setUser_id(String user_id) {
+            this.user_id = user_id;
         }
 
         public Long getDate() {
@@ -164,11 +163,11 @@ public class User {
         }
 
         public Boolean getLocationShared() {
-            return isLocationShared;
+            return is_location_shared;
         }
 
         public void setLocationShared(Boolean locationShared) {
-            isLocationShared = locationShared;
+            is_location_shared = locationShared;
         }
 
     }

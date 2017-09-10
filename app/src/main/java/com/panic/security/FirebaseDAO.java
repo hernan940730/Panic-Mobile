@@ -16,19 +16,17 @@ import org.json.JSONObject;
 public class FirebaseDAO {
     private FirebaseDatabase database;
 
-    private User user;
-
     public FirebaseDAO () {
         database = FirebaseDatabase.getInstance();
     }
 
-    public User getUserByUID (String UID) {
+    public void getUserByUID (String UID, final DataCallback<User> callback) {
         DatabaseReference userRef = database.getReference(FirebaseReferences.USERS_REFERENCE).child(UID);
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                user = dataSnapshot.getValue(User.class);
-                System.out.println( "email::" + dataSnapshot.getValue(User.class));
+                User user = dataSnapshot.getValue (User.class);
+                callback.onDataReceive (user);
             }
 
             @Override
@@ -36,7 +34,5 @@ public class FirebaseDAO {
 
             }
         });
-
-        return user;
     }
 }
