@@ -1,4 +1,4 @@
-package com.panic.security;
+package com.panic.security.firebase_utils;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -6,8 +6,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.panic.security.entities.User;
-
-import org.json.JSONObject;
 
 /**
  * Created by david on 9/7/17.

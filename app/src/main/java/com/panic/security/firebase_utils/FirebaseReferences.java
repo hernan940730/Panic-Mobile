@@ -1,4 +1,4 @@
-package com.panic.security;
+package com.panic.security.firebase_utils;
 
 /**
  * Created by david on 9/3/17.
