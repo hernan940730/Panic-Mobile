@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -20,25 +19,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.panic.security.R;
-import com.panic.security.controllers.home_module.HomeFragment;
+import com.panic.security.controllers.map_module.MapFragment;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.panic.security.FirebaseReferences;
 import com.panic.security.controllers.user_profile_module.UserProfileFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     // Authentication with FireBase
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseUser mCurrentUser;
     public final int locationRequestCode = 1;
 
     @Override
@@ -49,49 +39,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mAuth = FirebaseAuth.getInstance();
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                mCurrentUser = firebaseAuth.getCurrentUser();
-                if( mCurrentUser != null ){
-                    // User signed in
-                    updateUI();
-                }else{
-                    // Log In User
-                    showLogin();
-                    }
-                }
-            };
+        updateUI();
     }
 
     private void showLogin() {
-        Intent intent = new Intent( this, LoginActivity.class );
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity( intent );
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
+        finish();
     }
 
     private void updateUI() {
         setContentView(R.layout.activity_main);
         configMenu();
-    }
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        //TODO
     }
 
     /* Menu navigator*/
@@ -117,10 +76,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (headerView != null) {
             TextView textUserEmail = (TextView) headerView.findViewById(R.id.text_email_user);
             if(textUserEmail != null){
-                textUserEmail.setText(mCurrentUser.getEmail());
+                textUserEmail.setText(mAuth.getCurrentUser().getEmail());
             }
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new HomeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new MapFragment()).commit();
     }
 
     @Override
@@ -129,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
         }
     }
 
@@ -142,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (id == R.id.item_home) {
-            fragmentManager.beginTransaction().replace(R.id.content_main, new HomeFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_main, new MapFragment()).commit();
         } else if (id == R.id.item_user_profile) {
             fragmentManager.beginTransaction().replace(R.id.content_main,new UserProfileFragment()).commit();
         } else if (id == R.id.item_friends) {
@@ -161,23 +119,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void signOut() {
         mAuth.signOut();
         showLogin();
+        finish();
     }
 
-    private boolean getLocationPermission () {
+    private void getLocationPermission () {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             String permissions[] = {Manifest.permission.ACCESS_FINE_LOCATION};
             ActivityCompat.requestPermissions(this, permissions, locationRequestCode);
-            return false;
         }
-        return true;
     }
 
     @Override
@@ -194,4 +145,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
     }
+
 }
