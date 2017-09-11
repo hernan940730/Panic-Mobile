@@ -13,8 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/round_button"
-        android:translationX="20dp"
-        android:translationY="20dp"
+        android:translationX="@dimen/crimes_first_row_x"
+        android:translationY="175dp"
         android:src="@mipmap/ic_assault" />
 
     <ImageButton
@@ -22,8 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/round_button"
-        android:translationX="20dp"
-        android:translationY="70dp"
+        android:translationX="@dimen/crimes_first_row_x"
+        android:translationY="225dp"
         android:src="@mipmap/ic_auto_theft" />
 
     <ImageButton
@@ -31,8 +31,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/round_button"
-        android:translationX="20dp"
-        android:translationY="120dp"
+        android:translationX="@dimen/crimes_first_row_x"
+        android:translationY="275dp"
         android:src="@mipmap/ic_burglary" />
 
     <ImageButton
@@ -40,8 +40,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/round_button"
-        android:translationX="20dp"
-        android:translationY="170dp"
+        android:translationX="@dimen/crimes_first_row_x"
+        android:translationY="325dp"
         android:src="@mipmap/ic_shoplifting" />
 
     <ImageButton
@@ -49,8 +49,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/round_button"
-        android:translationX="20dp"
-        android:translationY="220dp"
+        android:translationX="@dimen/crimes_second_row_x"
+        android:translationY="150dp"
         android:src="@mipmap/ic_suspicious_activity" />
 
     <ImageButton
@@ -58,8 +58,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/round_button"
-        android:translationX="20dp"
-        android:translationY="270dp"
+        android:translationX="@dimen/crimes_second_row_x"
+        android:translationY="200dp"
         android:src="@mipmap/ic_homicide" />
 
     <ImageButton
@@ -67,8 +67,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/round_button"
-        android:translationX="20dp"
-        android:translationY="320dp"
+        android:translationX="@dimen/crimes_second_row_x"
+        android:translationY="250dp"
         android:src="@mipmap/ic_vandalism" />
 
     <ImageButton
@@ -76,8 +76,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/round_button"
-        android:translationX="20dp"
-        android:translationY="370dp"
+        android:translationX="@dimen/crimes_second_row_x"
+        android:translationY="300dp"
         android:src="@mipmap/ic_drugs" />
 
     <ImageButton
@@ -85,8 +85,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/round_button"
-        android:translationX="20dp"
-        android:translationY="420dp"
+        android:translationX="@dimen/crimes_second_row_x"
+        android:translationY="350dp"
         android:src="@mipmap/ic_other" />
 
     <Button
