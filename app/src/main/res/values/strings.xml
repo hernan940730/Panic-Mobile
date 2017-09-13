@@ -38,16 +38,18 @@
     <string name="password_login_text">password</string>
     <string name="login_button_text">Login</string>
     <string name="sign_up_link">No account yet? Create one</string>
+    <string name="authentication_failed">Authentication Failed</string>
 
     <!-- SignUp -->
     <string name="sign_up_text">Create a new Panic! account</string>
     <string name="sign_up_name">Name</string>
-    <string name="username_sign_up_text">username@example.com</string>
-    <string name="password_sign_up_text">password</string>
+    <string name="sign_up_last_name">Last Name</string>
+    <string name="sign_up_username">username@example.com</string>
+    <string name="sign_up_password">password</string>
+    <string name="sign_up_password_conf">confirm password</string>
     <string name="sign_up_button_text">Sign Up</string>
     <string name="login_link">Already a member? Login</string>
-
-    <string name="authenticating">Authenticating…</string>
+    <string name="password_match">Passwords do not match</string>
 
     <!-- Google maps -->
     <string name="title_activity_maps">Map</string>

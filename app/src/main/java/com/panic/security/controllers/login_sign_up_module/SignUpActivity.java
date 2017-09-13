@@ -23,8 +23,11 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    private EditText mName;
+    private EditText mLastName;
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
+    private EditText mPasswordConfEditText;
 
     private ProgressBar progressbar;
 
@@ -49,8 +52,11 @@ public class SignUpActivity extends AppCompatActivity {
     private void updateUI() {
         setContentView( R.layout.activity_sign_up );
         progressbar = ( ProgressBar ) findViewById( R.id.progress_bar );
+        mName = ( EditText ) findViewById( R.id.name );
+        mLastName = ( EditText ) findViewById( R.id.last_name );
         mEmailEditText = ( EditText ) findViewById( R.id.email );
         mPasswordEditText = ( EditText ) findViewById( R.id.password );
+        mPasswordConfEditText = ( EditText ) findViewById( R.id.password_confirmation );
     }
 
     @Override
@@ -111,6 +117,24 @@ public class SignUpActivity extends AppCompatActivity {
     private boolean validateForm() {
         boolean valid = true;
 
+        String name = mName.getText().toString();
+
+        if( TextUtils.isEmpty( name ) ){
+            mName.setError( "required" );
+            valid = false;
+        }else{
+            mName.setError( null );
+        }
+
+        String lastName = mLastName.getText().toString();
+
+        if( TextUtils.isEmpty( name ) ){
+            mLastName.setError( "required" );
+            valid = false;
+        }else{
+            mLastName.setError( null );
+        }
+
         String email = mEmailEditText.getText().toString();
         if (TextUtils.isEmpty(email)) {
             mEmailEditText.setError("Required.");
@@ -127,6 +151,23 @@ public class SignUpActivity extends AppCompatActivity {
             mPasswordEditText.setError(null);
         }
 
+        String passwordConf = mPasswordConfEditText.getText().toString();
+        if (TextUtils.isEmpty(passwordConf)) {
+            mPasswordConfEditText.setError("Required.");
+            valid = false;
+        } else {
+            mPasswordConfEditText.setError(null);
+        }
+
+        if( valid ){
+            if( !password.equals( passwordConf ) ){
+                valid = false;
+                Toast.makeText( SignUpActivity.this, getResources().getString( R.string.password_match ), Toast.LENGTH_SHORT ).show();
+            }else{
+                mPasswordConfEditText.setError( null );
+            }
+
+        }
         return valid;
     }
 }
