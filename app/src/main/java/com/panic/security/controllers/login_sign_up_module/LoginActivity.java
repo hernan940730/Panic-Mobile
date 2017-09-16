@@ -32,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
 
-
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -128,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String email = mEmailEditText.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            mEmailEditText.setError("Required.");
+            mEmailEditText.setError( getResources().getString( R.string.required )  );
             valid = false;
         } else {
             mEmailEditText.setError(null);
@@ -136,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String password = mPasswordEditText.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            mPasswordEditText.setError("Required.");
+            mPasswordEditText.setError( getResources().getString( R.string.required )   );
             valid = false;
         } else {
             mPasswordEditText.setError(null);

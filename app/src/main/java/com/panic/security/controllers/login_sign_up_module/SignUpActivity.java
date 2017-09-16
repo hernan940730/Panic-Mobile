@@ -15,8 +15,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.panic.security.R;
 import com.panic.security.controllers.main_module.MainActivity;
+import com.panic.security.firebase_utils.FirebaseReferences;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -30,6 +34,8 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText mPasswordConfEditText;
 
     private ProgressBar progressbar;
+
+    private static FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +107,12 @@ public class SignUpActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             progressbar.setVisibility(View.INVISIBLE);
                             FirebaseUser user = mAuth.getCurrentUser();
+                            DatabaseReference ref = database.getReference(FirebaseReferences.PROFILES_REFERENCE);
+                            DatabaseReference childRef = ref.push();
+                            childRef.child(FirebaseReferences.Profile.LAST_NAME_REFERENCE).setValue(
+                                    mLastName.getText().toString() );
+                            childRef.child(FirebaseReferences.Profile.NAME_REFERENCE).setValue(
+                                    mName.getText().toString() );
                             showHome();
                         } else {
                             // If sign in fails, display a message to the user.
@@ -120,7 +132,7 @@ public class SignUpActivity extends AppCompatActivity {
         String name = mName.getText().toString();
 
         if( TextUtils.isEmpty( name ) ){
-            mName.setError( "required" );
+            mName.setError( getResources().getString( R.string.required ) );
             valid = false;
         }else{
             mName.setError( null );
@@ -128,8 +140,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         String lastName = mLastName.getText().toString();
 
-        if( TextUtils.isEmpty( name ) ){
-            mLastName.setError( "required" );
+        if( TextUtils.isEmpty( lastName ) ){
+            mLastName.setError( getResources().getString( R.string.required ) );
             valid = false;
         }else{
             mLastName.setError( null );
@@ -137,7 +149,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         String email = mEmailEditText.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            mEmailEditText.setError("Required.");
+            mEmailEditText.setError( getResources().getString( R.string.required ) );
             valid = false;
         } else {
             mEmailEditText.setError(null);
@@ -145,7 +157,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         String password = mPasswordEditText.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            mPasswordEditText.setError("Required.");
+            mPasswordEditText.setError( getResources().getString( R.string.required ) );
             valid = false;
         } else {
             mPasswordEditText.setError(null);
@@ -153,7 +165,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         String passwordConf = mPasswordConfEditText.getText().toString();
         if (TextUtils.isEmpty(passwordConf)) {
-            mPasswordConfEditText.setError("Required.");
+            mPasswordConfEditText.setError( getResources().getString( R.string.required ) );
             valid = false;
         } else {
             mPasswordConfEditText.setError(null);
