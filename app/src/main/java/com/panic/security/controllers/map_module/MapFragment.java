@@ -23,22 +23,29 @@ public class MapFragment extends Fragment {
 
     private MapView mMapView;
     private GoogleMap googleMap;
+    private CameraPosition curCameraPosition;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.activity_maps, container, false);
+        View view = inflater.inflate (R.layout.activity_maps, container, false);
 
         // Inflate the layout for this fragment
 
+        initMap (view, savedInstanceState);
+
+        return view;
+    }
+
+    public void initMap (View view, Bundle savedInstanceState) {
         mMapView = (MapView) view.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
+        mMapView.onCreate (savedInstanceState);
 
         mMapView.onResume(); // needed to get the map to display immediately
 
         try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
+            MapsInitializer.initialize (getActivity ().getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -58,13 +65,25 @@ public class MapFragment extends Fragment {
 
                 // For dropping a marker at a point on the Map
 
-                LatLng bogota = new LatLng(4.7110,-74.0721);
+                LatLng cityLatLng = new LatLng(4.7110,-74.0721);
 
                 //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
 
                 // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(bogota).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                CameraPosition cityPosition = new CameraPosition.Builder().target(cityLatLng).zoom(12).build();
+                if (curCameraPosition == null) {
+                    googleMap.animateCamera (CameraUpdateFactory.newCameraPosition (cityPosition));
+                }
+                else {
+                    googleMap.moveCamera (CameraUpdateFactory.newCameraPosition (curCameraPosition));
+                }
+
+                googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+                    @Override
+                    public void onCameraMove() {
+                        curCameraPosition = googleMap.getCameraPosition();
+                    }
+                });
 
                 googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                     @Override
@@ -76,8 +95,6 @@ public class MapFragment extends Fragment {
 
             }
         });
-
-        return view;
     }
 
     @Override

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
+    android:background="@color/whiteColor"
     tools:context="com.panic.security.controllers.login_sign_up_module.LoginActivity">
 
     <RelativeLayout
@@ -36,32 +36,45 @@
             android:textColor="@color/whiteColor"
             android:textSize="20sp" />
 
+
         <EditText
-            android:id="@+id/username"
+            android:id="@+id/name"
             android:layout_width="500dp"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/login_text"
-            android:layout_marginTop="39dp"
             android:focusable="true"
             android:hint="@string/sign_up_name"
             android:textColor="@color/whiteColor"
-            android:textColorHighlight="#ffff25e6"
+            android:backgroundTint="@color/whiteColor"
             android:textColorHint="@color/text_hint"
             android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/last_name"
+            android:layout_width="500dp"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:hint="@string/sign_up_last_name"
+            android:textColor="@color/whiteColor"
+            android:textColorHint="@color/text_hint"
+            android:backgroundTint="@color/whiteColor"
+            android:textSize="20sp"
+            android:layout_below="@+id/name"
+            android:layout_alignParentStart="true" />
 
         <EditText
             android:id="@+id/email"
             android:layout_width="500dp"
             android:layout_height="wrap_content"
             android:focusable="true"
-            android:hint="@string/username_sign_up_text"
+            android:hint="@string/sign_up_username"
             android:inputType="textEmailAddress"
             android:textColor="@color/whiteColor"
-            android:textColorHighlight="#ffff25e6"
+            android:backgroundTint="@color/whiteColor"
             android:textColorHint="@color/text_hint"
             android:textSize="20sp"
-            android:layout_below="@+id/username"
+            android:layout_below="@+id/last_name"
             android:layout_alignParentStart="true" />
 
         <EditText
@@ -71,8 +84,23 @@
             android:layout_below="@+id/email"
             android:ems="10"
             android:focusable="true"
-            android:hint="@string/password_sign_up_text"
+            android:hint="@string/sign_up_password"
             android:inputType="textPassword"
+            android:backgroundTint="@color/whiteColor"
+            android:textColor="@color/whiteColor"
+            android:textColorHint="@color/text_hint"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/password_confirmation"
+            android:layout_width="500dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/password"
+            android:ems="10"
+            android:focusable="true"
+            android:hint="@string/sign_up_password_conf"
+            android:inputType="textPassword"
+            android:backgroundTint="@color/whiteColor"
             android:textColor="@color/whiteColor"
             android:textColorHint="@color/text_hint"
             android:textSize="20sp" />
@@ -82,7 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/password"
+            android:layout_below="@+id/password_confirmation"
             android:layout_marginTop="24dp"
             android:background="@color/colorPrimaryDark"
             android:onClick="signUp"

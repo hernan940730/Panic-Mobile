@@ -1,11 +1,13 @@
 package com.panic.security.controllers.login_sign_up_module;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -29,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
-
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -110,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                             showHome();
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, getResources().getString( R.string.authentication_failed ),
                                     Toast.LENGTH_SHORT).show();
                             progressbar.setVisibility(View.INVISIBLE);
                             return;
@@ -126,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String email = mEmailEditText.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            mEmailEditText.setError("Required.");
+            mEmailEditText.setError( getResources().getString( R.string.required )  );
             valid = false;
         } else {
             mEmailEditText.setError(null);
@@ -134,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String password = mPasswordEditText.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            mPasswordEditText.setError("Required.");
+            mPasswordEditText.setError( getResources().getString( R.string.required )   );
             valid = false;
         } else {
             mPasswordEditText.setError(null);
@@ -145,5 +146,10 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(View view) {
         signIn( );
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 }
