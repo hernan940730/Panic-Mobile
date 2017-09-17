@@ -5,6 +5,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import com.panic.security.entities.Crime;
 import com.panic.security.entities.Location;
 import com.panic.security.entities.Profile;
@@ -18,9 +19,17 @@ import com.panic.security.entities.User;
 
 public class FirebaseDAO {
     private FirebaseDatabase database;
+    private static FirebaseDAO firebaseDAO;
 
-    public FirebaseDAO () {
+    private FirebaseDAO () {
         database = FirebaseDatabase.getInstance();
+    }
+
+    public static synchronized FirebaseDAO getInstance () {
+        if (firebaseDAO == null) {
+            firebaseDAO = new FirebaseDAO ();
+        }
+        return firebaseDAO;
     }
 
     public void getUserByID(String ID, final DataCallback<User> callback) {
@@ -118,4 +127,41 @@ public class FirebaseDAO {
             }
         });
     }
+
+    public String pushUser (String ID, User entity) {
+        DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).child (ID);
+        ref.setValue (entity);
+        return ref.getKey ();
+    }
+
+    public String pushProfile (Profile entity) {
+        DatabaseReference ref = database.getReference (FirebaseReferences.PROFILES_REFERENCE).push ();
+        ref.setValue (entity);
+        return ref.getKey ();
+    }
+
+    public String pushCrime (Crime entity) {
+        DatabaseReference ref = database.getReference (FirebaseReferences.CRIMES_REFERENCE).push ();
+        ref.setValue (entity);
+        return ref.getKey ();
+    }
+
+    public String pushLocation (Location entity) {
+        DatabaseReference ref = database.getReference (FirebaseReferences.LOCATIONS_REFERENCE).push ();
+        ref.setValue (entity);
+        return ref.getKey ();
+    }
+
+    public String pushReport (Report entity) {
+        DatabaseReference ref = database.getReference (FirebaseReferences.REPORTS_REFERENCE).push ();
+        ref.setValue (entity);
+        return ref.getKey ();
+    }
+
+    public String pushStolenObject (StolenObject entity) {
+        DatabaseReference ref = database.getReference (FirebaseReferences.STOLEN_OBJECTS_REFERENCE).push ();
+        ref.setValue (entity);
+        return ref.getKey ();
+    }
+
 }

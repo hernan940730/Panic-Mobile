@@ -45,7 +45,7 @@
     <string name="sign_up_text">Crea una nueva cuenta en Panic!</string>
     <string name="sign_up_name">Nombre</string>
     <string name="sign_up_last_name">Apellido</string>
-    <string name="username_sign_up_text">usuario@ejemplo.com</string>
+    <string name="sign_up_username">usuario@ejemplo.com</string>
     <string name="sign_up_password">contraseña</string>
     <string name="sign_up_password_conf">confirmar contraseña</string>
     <string name="sign_up_button_text">Registrarse</string>
