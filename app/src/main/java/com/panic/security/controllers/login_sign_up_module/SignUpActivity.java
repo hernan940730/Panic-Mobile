@@ -14,12 +14,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.panic.security.R;
 import com.panic.security.controllers.main_module.MainActivity;
+import com.panic.security.entities.Profile;
+import com.panic.security.entities.User;
+import com.panic.security.firebase_utils.FirebaseDAO;
 import com.panic.security.firebase_utils.FirebaseReferences;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -106,18 +110,26 @@ public class SignUpActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             progressbar.setVisibility(View.INVISIBLE);
+
                             FirebaseUser user = mAuth.getCurrentUser();
-                            DatabaseReference ref = database.getReference(FirebaseReferences.PROFILES_REFERENCE);
-                            DatabaseReference childRef = ref.push();
-                            childRef.child(FirebaseReferences.Profile.LAST_NAME_REFERENCE).setValue(
-                                    mLastName.getText().toString() );
-                            childRef.child(FirebaseReferences.Profile.NAME_REFERENCE).setValue(
-                                    mName.getText().toString() );
+                            Profile profile = new Profile();
+                            User fireBaseUser = new User();
+                            FirebaseDAO firebaseDAO = FirebaseDAO.getInstance();
+
+                            profile.setName( mName.getText().toString() );
+                            profile.setLast_name( mLastName.getText().toString() );
+                            String profileID = firebaseDAO.pushProfile( profile );
+
+                            fireBaseUser.setEmail( user.getEmail() );
+                            fireBaseUser.setProfile_id( profileID );
+                            firebaseDAO.pushUser( user.getUid(), fireBaseUser );
+
                             showHome();
                         } else {
                             // If sign in fails, display a message to the user.
                             progressbar.setVisibility(View.INVISIBLE);
-                            Toast.makeText(SignUpActivity.this, "Authentication failed.",
+                            FirebaseAuthException e = ( FirebaseAuthException )task.getException();
+                            Toast.makeText(SignUpActivity.this, "Authentication failed: " + e.getMessage(),
                                     Toast.LENGTH_SHORT).show();
                             return;
                         }
