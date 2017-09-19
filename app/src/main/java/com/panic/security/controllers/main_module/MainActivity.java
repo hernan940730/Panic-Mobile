@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
 
         }
-
+        mapFragment = new MapFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new MapFragment()).commit();
     }
 
@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        mapFragment = new MapFragment();
     }
 
     @Override
