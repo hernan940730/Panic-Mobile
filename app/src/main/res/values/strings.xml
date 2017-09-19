@@ -28,6 +28,15 @@
     <string name="more">More Options</string>
     <string name="sign_out">Sign Out</string>
 
+    <!-- User profile -->
+    <string name="user_profile_short_desc">\"Safety is everyone\'s job.\"</string>
+    <string name="user_profile_location">Location:</string>
+    <string name="user_profile_email">Email:</string>
+    <string name="user_profile_phone_number">Phone number:</string>
+    <string name="user_profile_gender">Gender:</string>
+    <string name="user_profile_birthday">Birthday:</string>
+    <string name="user_profile_number_reports">Number of reports:</string>
+
     <!-- Gender -->
     <string name="male_gender">Male</string>
     <string name="female_gender">Female</string>
@@ -54,4 +63,5 @@
 
     <!-- Google maps -->
     <string name="title_activity_maps">Map</string>
+
 </resources>

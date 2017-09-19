@@ -24,6 +24,10 @@ import com.panic.security.controllers.map_module.MapFragment;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
 
 import com.panic.security.controllers.user_profile_module.UserProfileFragment;
+import com.panic.security.entities.Profile;
+import com.panic.security.entities.User;
+import com.panic.security.firebase_utils.DataCallback;
+import com.panic.security.firebase_utils.FirebaseDAO;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -58,6 +62,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /* Menu navigator*/
     public void configMenu(){
 
+        addHeaderMenu();
+
+        //To navigate with the menu
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        //For can access to text view inside nav_header_menu
+        final View headerView = navigationView.getHeaderView(0);
+        if (headerView != null) {
+
+            FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
+                @Override
+                public void onDataReceive(User user) {
+
+                TextView textUserEmail = (TextView) headerView.findViewById(R.id.text_email_user);
+                textUserEmail.setText(user.getEmail());
+
+                FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
+                    @Override
+                    public void onDataReceive(Profile profile) {
+
+                    TextView textNameUser = (TextView) headerView.findViewById(R.id.text_name_user);
+                    textNameUser.setText(profile.getName() + " " + profile.getLast_name());
+
+                    }
+                });
+
+                }
+            });
+
+        }
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new MapFragment()).commit();
+    }
+
+    public void addHeaderMenu(){
         // take toolbar title
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -68,20 +108,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        //To navigate with the menu
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        //For can access to text view inside nav_header_menu
-        View headerView = navigationView.getHeaderView(0);
-        if (headerView != null) {
-            TextView textUserEmail = (TextView) headerView.findViewById(R.id.text_email_user);
-            if(textUserEmail != null){
-                textUserEmail.setText(mAuth.getCurrentUser().getEmail());
-            }
-        }
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new MapFragment()).commit();
     }
 
     @Override
