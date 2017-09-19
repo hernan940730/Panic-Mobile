@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
         mapFragment = new MapFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new MapFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, mapFragment).commit();
     }
 
     public void addHeaderMenu(){
