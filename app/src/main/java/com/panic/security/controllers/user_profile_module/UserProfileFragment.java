@@ -39,13 +39,11 @@ public class UserProfileFragment extends Fragment {
             public void onDataReceive(User user) {
 
                 TextView textUserProfileShortDesc = (TextView) getView().findViewById(R.id.user_profile_short_desc);
-                TextView textUserProfileLocation = (TextView) getView().findViewById(R.id.user_profile_location);
                 TextView textUserProfileEmail = (TextView) getView().findViewById(R.id.user_profile_email);
                 TextView textUserProfilePhoneNumber = (TextView) getView().findViewById(R.id.user_profile_phone_number);
                 TextView textUserProfileNumberReports = (TextView) getView().findViewById(R.id.user_profile_number_reports);
 
                 textUserProfileShortDesc.setText(getResources().getString(R.string.user_profile_short_desc));
-                textUserProfileLocation.setText(getResources().getString(R.string.user_profile_location));
                 if(user.getEmail() != null){
                     textUserProfileEmail.setText(getResources().getString(R.string.user_profile_email) + " " +user.getEmail());
                 }else{
@@ -68,11 +66,17 @@ public class UserProfileFragment extends Fragment {
 
                         TextView textUserProfileName = (TextView) getView().findViewById(R.id.user_profile_name);
                         TextView textUserProfileLastName = (TextView) getView().findViewById(R.id.user_profile_last_name);
+                        TextView textUserProfileLocation = (TextView) getView().findViewById(R.id.user_profile_location);
                         TextView textUserProfileGender = (TextView) getView().findViewById(R.id.user_profile_gender);
                         TextView textUserProfileBirthday = (TextView) getView().findViewById(R.id.user_profile_birthday);
 
                         textUserProfileName.setText(profile.getName());
                         textUserProfileLastName.setText(profile.getLast_name());
+                        if(profile.getCountry() != null){
+                            textUserProfileLocation.setText(getResources().getString(R.string.user_profile_location) + " " + profile.getCountry());
+                        }else{
+                            textUserProfileLocation.setText(getResources().getString(R.string.user_profile_location));
+                        }
                         if(profile.getGender() != null){
                             textUserProfileGender.setText(getResources().getString(R.string.user_profile_gender) + " " +profile.getGender());
                         }else{

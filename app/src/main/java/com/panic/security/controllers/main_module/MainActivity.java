@@ -135,6 +135,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentManager.beginTransaction().replace(R.id.content_main, new UserProfileFragment()).commit();
         } else if (id == R.id.item_friends) {
 
+        } else if (id == R.id.item_my_reports) {
+
+        } else if (id == R.id.item_notifications) {
+
         } else if (id == R.id.item_about) {
 
         } else if ( id == R.id.item_sign_out ){

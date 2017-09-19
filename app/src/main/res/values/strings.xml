@@ -24,6 +24,8 @@
     <string name="home">Home</string>
     <string name="user_profile">Profile</string>
     <string name="friends">Friends</string>
+    <string name="my_reports">My reports</string>
+    <string name="notifications">Notifications</string>
     <string name="about_us">About us</string>
     <string name="more">More Options</string>
     <string name="sign_out">Sign Out</string>
