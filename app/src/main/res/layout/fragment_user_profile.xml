@@ -35,21 +35,23 @@
             android:paddingBottom="24dp">
 
             <ImageView
-                android:id="@+id/edit_info"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:id="@+id/user_profile_edit_info"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_toLeftOf="@+id/add_friend"
+                android:layout_marginRight="15dp"
+                android:layout_toLeftOf="@+id/user_profile_add_friend"
+                android:background="@drawable/image_view_btn_user_profile"
                 android:src="@mipmap/ic_edit" />
 
             <ImageView
-                android:id="@+id/add_friend"
+                android:id="@+id/user_profile_add_friend"
                 android:layout_alignParentRight="true"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="15dp"
+                android:background="@drawable/image_view_btn_user_profile"
                 android:src="@mipmap/ic_add_person" />
 
             <TextView
