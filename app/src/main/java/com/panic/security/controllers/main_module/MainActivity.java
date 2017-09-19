@@ -35,12 +35,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // Authentication with FireBase
     private FirebaseAuth mAuth;
+    private MapFragment mapFragment;
+
     public final int locationRequestCode = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getLocationPermission();
 
         mAuth = FirebaseAuth.getInstance();
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        mapFragment = new MapFragment();
     }
 
     @Override
@@ -129,9 +131,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (id == R.id.item_home) {
-            fragmentManager.beginTransaction().replace(R.id.content_main, new MapFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_main, mapFragment).commit();
         } else if (id == R.id.item_user_profile) {
-            fragmentManager.beginTransaction().replace(R.id.content_main,new UserProfileFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_main, new UserProfileFragment()).commit();
         } else if (id == R.id.item_friends) {
 
         } else if (id == R.id.item_about) {
