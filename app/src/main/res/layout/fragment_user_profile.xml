@@ -34,6 +34,7 @@
             android:background="#FFFFFF"
             android:paddingBottom="24dp">
 
+            <!--
             <ImageView
                 android:id="@+id/user_profile_edit_info"
                 android:layout_width="33dp"
@@ -43,6 +44,7 @@
                 android:layout_toLeftOf="@+id/user_profile_add_friend"
                 android:background="@drawable/image_view_btn_user_profile"
                 android:src="@mipmap/ic_edit" />
+            -->
 
             <ImageView
                 android:id="@+id/user_profile_add_friend"
