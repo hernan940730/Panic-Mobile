@@ -122,7 +122,7 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Toast.makeText(getActivity(), "Add Friend", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Friend request sent", Toast.LENGTH_SHORT).show();
 
             }
         });

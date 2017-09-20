@@ -15,6 +15,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- Search bar -->
+    <com.miguelcatalan.materialsearchview.MaterialSearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/search"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        app:searchBackground="?attr/colorPrimary"
+        app:searchSuggestionBackground="?attr/colorPrimary"
+        app:searchCloseIcon="@drawable/ic_action_navigation_close_inverted"
+        app:searchBackIcon="@drawable/ic_action_navigation_arrow_back_inverted"
+        app:searchSuggestionIcon="@drawable/ic_suggestion"
+        />
+
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
@@ -25,3 +40,4 @@
         app:menu="@menu/activity_drawer_menu" />
 
 </android.support.v4.widget.DrawerLayout>
+

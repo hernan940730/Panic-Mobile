@@ -13,12 +13,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.panic.security.R;
 import com.panic.security.controllers.map_module.MapFragment;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
@@ -29,7 +33,27 @@ import com.panic.security.entities.User;
 import com.panic.security.firebase_utils.DataCallback;
 import com.panic.security.firebase_utils.FirebaseDAO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
+    public String [] listSource = {
+            "Hernan",
+            "Es",
+            "Una",
+            "Fufa",
+            "uno",
+            "dos",
+            "tres",
+            "cuatro",
+            "cinco",
+            "seis",
+            "seven",
+            "ocho",
+            "nine",
+            "diez"
+    };
 
     private final String TAG = "MainActivity";
 
@@ -38,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private MapFragment mapFragment;
 
     public final int locationRequestCode = 1;
+
+    // Search bar
+    MaterialSearchView mSearchView;
+    ListView mListViewSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void updateUI() {
         setContentView(R.layout.activity_main);
         configMenu();
+        addSearchBar();
     }
 
     /* Menu navigator*/
@@ -109,6 +138,67 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+    }
+
+    public void addSearchBar(){
+
+        mSearchView = (MaterialSearchView) findViewById(R.id.search_view);
+
+        mListViewSearch =  (ListView) findViewById(R.id.lst_view_search);
+
+        mSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                mListViewSearch.setVisibility(View.VISIBLE);
+                ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, listSource);
+                mListViewSearch.setAdapter(adapter);
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                // If close search view, search_view will return default
+                String[] listEmpty = {};
+                ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, listEmpty);
+                mListViewSearch.setAdapter(adapter);
+                mListViewSearch.setVisibility(View.GONE);
+            }
+        });
+
+        mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //Do some magic
+                mListViewSearch.setVisibility(View.GONE);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText != null && !newText.isEmpty()){
+                    List<String> listFound = new ArrayList<String>();
+                    for(String item : listSource){
+                        if(item.contains(newText)){
+                            listFound.add(item);
+                        }
+                    }
+                    ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, listFound);
+                    mListViewSearch.setAdapter(adapter);
+                }else{
+                    ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, listSource);
+                    mListViewSearch.setAdapter(adapter);
+                }
+                return true;
+            }
+        });
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        mSearchView.setMenuItem(item);
+        return true;
     }
 
     @Override
