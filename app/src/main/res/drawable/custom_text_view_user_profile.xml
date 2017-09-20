@@ -4,7 +4,7 @@
     <!-- Border -->
     <item>
         <shape>
-            <solid android:color="#ECEFF1"></solid>
+            <solid android:color="@color/line_gray"></solid>
         </shape>
     </item>
     <!-- Body -->

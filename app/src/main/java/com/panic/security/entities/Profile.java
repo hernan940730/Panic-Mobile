@@ -10,6 +10,7 @@ public class Profile {
     private String gender;
     private String last_name;
     private String name;
+    private String country;
 
     public long getBirthday() {
         return birthday;
@@ -42,4 +43,8 @@ public class Profile {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getCountry() { return country; }
+
+    public void setCountry(String country) { this.country = country; }
 }

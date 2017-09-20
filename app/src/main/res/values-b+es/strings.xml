@@ -19,14 +19,17 @@
     <!-- Menu navigation -->
     <string name="navigation_drawer_open">Abrir menu de navegación</string>
     <string name="navigation_drawer_close">Cerrar menu de navegación</string>
+    <string name="search">Buscar</string>
 
     <!-- Menu items -->
     <string name="home">Inicio</string>
     <string name="user_profile">Perfil</string>
     <string name="friends">Amigos</string>
+    <string name="my_reports">Mis reportes</string>
+    <string name="notifications">Notificaciones</string>
     <string name="about_us">Acerca de</string>
     <string name="more">Mas Opciones</string>
-    <string name="sign_out">Cerrar sesion</string>
+    <string name="sign_out">Cerrar sesión</string>
 
     <!-- User profile -->
     <string name="user_profile_short_desc">\"La seguridad la hacemos todos.\"</string>
