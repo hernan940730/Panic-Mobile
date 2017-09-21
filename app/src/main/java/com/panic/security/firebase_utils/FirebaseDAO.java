@@ -13,6 +13,10 @@ import com.panic.security.entities.Report;
 import com.panic.security.entities.StolenObject;
 import com.panic.security.entities.User;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by david on 9/7/17.
  */
@@ -30,6 +34,68 @@ public class FirebaseDAO {
             firebaseDAO = new FirebaseDAO ();
         }
         return firebaseDAO;
+    }
+
+    public void getAllFullNamesForAllUsers(final DataCallback< List<String> > callback) {
+
+        DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE);
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                final List<String> list = new ArrayList<String>();
+
+                Map<String,Object> users =  (Map<String,Object>) dataSnapshot.getValue();
+                //iterate through each user, ignoring their UID
+                for (Map.Entry<String, Object> entry : users.entrySet()){
+
+                    //Get user map
+                    Map singleUser = (Map) entry.getValue();
+                    String idProfileToSingleUser = (String)(singleUser.get(FirebaseReferences.User.PROFILE_ID_REFERENCE));
+
+                    DatabaseReference ref = database.getReference(FirebaseReferences.PROFILES_REFERENCE).child(idProfileToSingleUser);
+                    ref.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Profile entity = dataSnapshot.getValue (Profile.class);
+                            list.add(entity.getName() + " " + entity.getLast_name());
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            callback.onDataReceive (null);
+                        }
+                    });
+
+                }
+
+                callback.onDataReceive (list);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onDataReceive (null);
+            }
+        });
+    }
+
+    public void getAllProfiles(final DataCallback< Map<String,Object> > callback) {
+        DatabaseReference ref = database.getReference().child(FirebaseReferences.PROFILES_REFERENCE);
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String,Object> map =  (Map<String,Object>) dataSnapshot.getValue();
+                callback.onDataReceive (map);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onDataReceive (null);
+            }
+        });
     }
 
     public void getUserByID(String ID, final DataCallback<User> callback) {

@@ -5,40 +5,142 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.panic.security.R;
+import com.panic.security.controllers.main_module.MainActivity;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
 import com.panic.security.firebase_utils.DataCallback;
 import com.panic.security.firebase_utils.FirebaseDAO;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class UserProfileFragment extends Fragment {
 
+    //List to search bar
+    List<String> mListSource;
+
     private FirebaseAuth mAuth;
+
+
+
+    // Search bar
+    MaterialSearchView mSearchView;
+    ListView mListViewSearch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
+        addSearchBar();
         mAuth = FirebaseAuth.getInstance();
-        showUserData();
-        actionEdit(view);
+
+
+        showUserData(mAuth.getCurrentUser().getUid());
+        //actionEdit(view);
         actionAddFriend(view);
 
         // Inflate the layout for this fragment
         return view;
     }
 
-    public void showUserData(){
+    public void fillListToSearch(){
 
-        FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
+        mListSource = new ArrayList<String>();
+
+        FirebaseDAO.getInstance().getAllFullNamesForAllUsers(new DataCallback<List<String>>() {
+            @Override
+            public void onDataReceive(List<String> usersNames) {
+                mListSource = usersNames;
+            }
+        });
+    }
+
+    public void addSearchBar(){
+
+        mSearchView = (MaterialSearchView) getActivity().findViewById(R.id.search_view);
+        mListViewSearch =  (ListView) getActivity().findViewById(R.id.lst_view_search);
+
+        fillListToSearch();
+
+        mSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                mListViewSearch.setVisibility(View.VISIBLE);
+                List<String> listFriends = new ArrayList<String>();
+                listFriends.add("Friend1");
+                listFriends.add("Friend2");
+                listFriends.add("Friend3");
+                listFriends.add("HernanEsUnaFufa");
+                ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listFriends);
+                mListViewSearch.setAdapter(adapter);
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                // If close search view, search_view will return default
+                List<String> listEmpty = new ArrayList<String>();
+                ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listEmpty);
+                mListViewSearch.setAdapter(adapter);
+                mListViewSearch.setVisibility(View.GONE);
+            }
+        });
+
+        mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //Do some magic
+                mListViewSearch.setVisibility(View.GONE);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText != null && !newText.isEmpty()){
+                    List<String> listFound = new ArrayList<String>();
+                    for(String item : mListSource){
+                        if(item.toLowerCase().contains(newText.toLowerCase())){
+                            listFound.add(item);
+                        }
+                    }
+                    ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listFound);
+                    mListViewSearch.setAdapter(adapter);
+                }else{
+                    ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, mListSource);
+                    mListViewSearch.setAdapter(adapter);
+                }
+                return true;
+            }
+        });
+
+        setHasOptionsMenu(true); //To show search bar, call onCreateOptionsMenu
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        mSearchView.setMenuItem(item);
+    }
+
+    public void showUserData(String ID){
+
+        FirebaseDAO.getInstance().getUserByID(ID, new DataCallback<User>() {
             @Override
             public void onDataReceive(User user) {
 
@@ -100,7 +202,7 @@ public class UserProfileFragment extends Fragment {
 
     }
 
-    public void actionEdit(View view){
+    /*public void actionEdit(View view){
 
         ImageView imageViewUserProfileEditInfo = (ImageView) view.findViewById(R.id.user_profile_edit_info);
 
@@ -112,17 +214,23 @@ public class UserProfileFragment extends Fragment {
 
             }
         });
-    }
+    }*/
 
-    public void actionAddFriend(View view){
+    public void actionAddFriend(View view) {
 
-        ImageView imageViewUserProfileAddFriend = (ImageView) view.findViewById(R.id.user_profile_add_friend);
+        final ImageView imageViewUserProfileAddFriend = (ImageView) view.findViewById(R.id.user_profile_add_friend);
 
         imageViewUserProfileAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Toast.makeText(getActivity(), "Friend request sent", Toast.LENGTH_SHORT).show();
+                // TODO If not they are not friends
+                    Toast.makeText(getActivity(), "Friend request sent", Toast.LENGTH_SHORT).show();
+                    imageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
+                // TODO if request friends was sent
+                    imageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
+                // TODO if they are friends
+                    imageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends);
 
             }
         });
