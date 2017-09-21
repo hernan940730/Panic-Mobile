@@ -47,4 +47,29 @@ public class Profile {
     public String getCountry() { return country; }
 
     public void setCountry(String country) { this.country = country; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Profile profile = (Profile) o;
+
+        if (getBirthday() != profile.getBirthday()) return false;
+        if (!getGender().equals(profile.getGender())) return false;
+        if (!getLast_name().equals(profile.getLast_name())) return false;
+        if (!getName().equals(profile.getName())) return false;
+        return getCountry().equals(profile.getCountry());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (getBirthday() ^ (getBirthday() >>> 32));
+        result = 31 * result + getGender().hashCode();
+        result = 31 * result + getLast_name().hashCode();
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + getCountry().hashCode();
+        return result;
+    }
 }

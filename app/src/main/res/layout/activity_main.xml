@@ -24,7 +24,7 @@
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
         app:searchBackground="?attr/colorPrimary"
-        app:searchSuggestionBackground="?attr/colorPrimary"
+        app:searchSuggestionBackground="@color/whiteColor"
         app:searchCloseIcon="@drawable/ic_action_navigation_close_inverted"
         app:searchBackIcon="@drawable/ic_action_navigation_arrow_back_inverted"
         app:searchSuggestionIcon="@drawable/ic_suggestion"
