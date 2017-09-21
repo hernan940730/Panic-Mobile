@@ -36,68 +36,6 @@ public class FirebaseDAO {
         return firebaseDAO;
     }
 
-    public void getAllFullNamesForAllUsers(final DataCallback< List<String> > callback) {
-
-        DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE);
-
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                final List<String> list = new ArrayList<String>();
-
-                Map<String,Object> users =  (Map<String,Object>) dataSnapshot.getValue();
-                //iterate through each user, ignoring their UID
-                for (Map.Entry<String, Object> entry : users.entrySet()){
-
-                    //Get user map
-                    Map singleUser = (Map) entry.getValue();
-                    String idProfileToSingleUser = (String)(singleUser.get(FirebaseReferences.User.PROFILE_ID_REFERENCE));
-
-                    DatabaseReference ref = database.getReference(FirebaseReferences.PROFILES_REFERENCE).child(idProfileToSingleUser);
-                    ref.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Profile entity = dataSnapshot.getValue (Profile.class);
-                            list.add(entity.getName() + " " + entity.getLast_name());
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            callback.onDataReceive (null);
-                        }
-                    });
-
-                }
-
-                callback.onDataReceive (list);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                callback.onDataReceive (null);
-            }
-        });
-    }
-
-    public void getAllProfiles(final DataCallback< Map<String,Object> > callback) {
-        DatabaseReference ref = database.getReference().child(FirebaseReferences.PROFILES_REFERENCE);
-
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String,Object> map =  (Map<String,Object>) dataSnapshot.getValue();
-                callback.onDataReceive (map);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                callback.onDataReceive (null);
-            }
-        });
-    }
-
     public void getUserByID(String ID, final DataCallback<User> callback) {
         DatabaseReference ref = database.getReference(FirebaseReferences.USERS_REFERENCE).child(ID);
         ref.addValueEventListener(new ValueEventListener() {
@@ -162,6 +100,30 @@ public class FirebaseDAO {
         });
     }
 
+    public void getAllFullNamesForAllProfiles(final DataCallback< List<String> > callback) {
+        DatabaseReference ref = database.getReference().child(FirebaseReferences.PROFILES_REFERENCE);
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<String> list = new ArrayList<String>();
+                Map<String,Object> profiles =  (Map<String,Object>) dataSnapshot.getValue();
+                for (Map.Entry<String, Object> entry : profiles.entrySet()){
+                    Map singleProfile = (Map) entry.getValue();
+                    String name = (String)singleProfile.get(FirebaseReferences.Profile.NAME_REFERENCE);
+                    String lastName = (String)singleProfile.get(FirebaseReferences.Profile.LAST_NAME_REFERENCE);
+                    list.add(name + " " + lastName);
+                }
+                callback.onDataReceive (list);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onDataReceive (null);
+            }
+        });
+    }
+
     public void getReportByID (String ID, final DataCallback<Report> callback) {
         DatabaseReference ref = database.getReference(FirebaseReferences.REPORTS_REFERENCE).child(ID);
         ref.addValueEventListener(new ValueEventListener() {
@@ -193,6 +155,58 @@ public class FirebaseDAO {
             }
         });
     }
+
+    public void getProfileIDByFullName(final String fullName, final DataCallback< String > callback) {
+
+        DatabaseReference ref = database.getReference().child(FirebaseReferences.PROFILES_REFERENCE);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String,Object> profiles =  (Map<String,Object>) dataSnapshot.getValue();
+                for (Map.Entry<String, Object> entry : profiles.entrySet()){
+                    Map singleProfile = (Map) entry.getValue();
+                    String name = (String)singleProfile.get(FirebaseReferences.Profile.NAME_REFERENCE);
+                    String lastName = (String)singleProfile.get(FirebaseReferences.Profile.LAST_NAME_REFERENCE);
+                    if(fullName.equals( (name + " " + lastName) )){
+                        callback.onDataReceive (entry.getKey());
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onDataReceive (null);
+            }
+        });
+    }
+
+    public void getUserIDByProfileID(final String profileID, final DataCallback<String> callback) {
+
+        DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = new User();
+                Map<String,Object> users =  (Map<String,Object>) dataSnapshot.getValue();
+                for (Map.Entry<String, Object> entry : users.entrySet()){
+                    Map singleUser = (Map) entry.getValue();
+                    String userProfileID = (String) singleUser.get(FirebaseReferences.User.PROFILE_ID_REFERENCE);
+                    if(userProfileID.equals(profileID)){
+                        callback.onDataReceive (entry.getKey());
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onDataReceive (null);
+            }
+        });
+
+    }
+
 
     public String pushUser (String ID, User entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).child (ID);

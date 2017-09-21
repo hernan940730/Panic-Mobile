@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -31,25 +32,20 @@ import java.util.Map;
 
 public class UserProfileFragment extends Fragment {
 
-    //List to search bar
-    List<String> mListSource;
-
     private FirebaseAuth mAuth;
-
-
-
     // Search bar
     MaterialSearchView mSearchView;
-    ListView mListViewSearch;
+    //List to search bar
+    List<String> mListSource;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-        addSearchBar();
         mAuth = FirebaseAuth.getInstance();
 
+        addSearchBar();
 
         showUserData(mAuth.getCurrentUser().getUid());
         //actionEdit(view);
@@ -59,76 +55,58 @@ public class UserProfileFragment extends Fragment {
         return view;
     }
 
-    public void fillListToSearch(){
-
-        mListSource = new ArrayList<String>();
-
-        FirebaseDAO.getInstance().getAllFullNamesForAllUsers(new DataCallback<List<String>>() {
-            @Override
-            public void onDataReceive(List<String> usersNames) {
-                mListSource = usersNames;
-            }
-        });
-    }
-
     public void addSearchBar(){
 
         mSearchView = (MaterialSearchView) getActivity().findViewById(R.id.search_view);
-        mListViewSearch =  (ListView) getActivity().findViewById(R.id.lst_view_search);
+        mSearchView.setVoiceSearch(false);
+        mSearchView.setCursorDrawable(R.drawable.custom_cursor_search);
 
-        fillListToSearch();
-
-        mSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-            @Override
-            public void onSearchViewShown() {
-                mListViewSearch.setVisibility(View.VISIBLE);
-                List<String> listFriends = new ArrayList<String>();
-                listFriends.add("Friend1");
-                listFriends.add("Friend2");
-                listFriends.add("Friend3");
-                listFriends.add("HernanEsUnaFufa");
-                ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listFriends);
-                mListViewSearch.setAdapter(adapter);
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-                // If close search view, search_view will return default
-                List<String> listEmpty = new ArrayList<String>();
-                ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listEmpty);
-                mListViewSearch.setAdapter(adapter);
-                mListViewSearch.setVisibility(View.GONE);
-            }
-        });
+        fillListSourceToSearch();
 
         mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //Do some magic
-                mListViewSearch.setVisibility(View.GONE);
+
+                FirebaseDAO.getInstance().getProfileIDByFullName(query, new DataCallback<String>() {
+                    @Override
+                    public void onDataReceive(String profileID) {
+
+                        FirebaseDAO.getInstance().getUserIDByProfileID(profileID, new DataCallback<String>() {
+                            @Override
+                            public void onDataReceive(String userID) {
+
+                                showUserData(userID);
+
+                            }
+                        });
+
+                    }
+                });
+
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText != null && !newText.isEmpty()){
-                    List<String> listFound = new ArrayList<String>();
-                    for(String item : mListSource){
-                        if(item.toLowerCase().contains(newText.toLowerCase())){
-                            listFound.add(item);
-                        }
-                    }
-                    ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listFound);
-                    mListViewSearch.setAdapter(adapter);
-                }else{
-                    ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, mListSource);
-                    mListViewSearch.setAdapter(adapter);
-                }
-                return true;
+                //Do some magic
+                return false;
             }
         });
 
         setHasOptionsMenu(true); //To show search bar, call onCreateOptionsMenu
+    }
+
+    public void fillListSourceToSearch(){
+        mListSource = new ArrayList<String>();
+
+        FirebaseDAO.getInstance().getAllFullNamesForAllProfiles(new DataCallback<List<String> >() {
+            @Override
+            public void onDataReceive(List<String> usersNames) {
+                mListSource = usersNames;
+                String[] sourceArr = new String[mListSource.size()];
+                mSearchView.setSuggestions(mListSource.toArray(sourceArr));
+            }
+        });
     }
 
     @Override

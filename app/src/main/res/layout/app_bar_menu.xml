@@ -23,15 +23,4 @@
 
     <include layout="@layout/content_main" />
 
-    <ListView
-        android:id="@+id/lst_view_search"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:visibility="gone"
-        android:background="@color/whiteColor"
-        android:divider="@color/line_gray"
-        android:dividerHeight="1dp">
-    </ListView>
-
 </android.support.design.widget.CoordinatorLayout>
