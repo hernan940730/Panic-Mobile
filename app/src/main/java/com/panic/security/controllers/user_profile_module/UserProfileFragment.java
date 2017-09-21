@@ -36,6 +36,8 @@ public class UserProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
 
+
+
     // Search bar
     MaterialSearchView mSearchView;
     ListView mListViewSearch;
@@ -45,10 +47,11 @@ public class UserProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
+        addSearchBar();
         mAuth = FirebaseAuth.getInstance();
 
-        addSearchBar();
-        showUserData();
+
+        showUserData(mAuth.getCurrentUser().getUid());
         //actionEdit(view);
         actionAddFriend(view);
 
@@ -135,9 +138,9 @@ public class UserProfileFragment extends Fragment {
         mSearchView.setMenuItem(item);
     }
 
-    public void showUserData(){
+    public void showUserData(String ID){
 
-        FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
+        FirebaseDAO.getInstance().getUserByID(ID, new DataCallback<User>() {
             @Override
             public void onDataReceive(User user) {
 
@@ -213,15 +216,21 @@ public class UserProfileFragment extends Fragment {
         });
     }*/
 
-    public void actionAddFriend(View view){
+    public void actionAddFriend(View view) {
 
-        ImageView imageViewUserProfileAddFriend = (ImageView) view.findViewById(R.id.user_profile_add_friend);
+        final ImageView imageViewUserProfileAddFriend = (ImageView) view.findViewById(R.id.user_profile_add_friend);
 
         imageViewUserProfileAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Toast.makeText(getActivity(), "Friend request sent", Toast.LENGTH_SHORT).show();
+                // TODO If not they are not friends
+                    Toast.makeText(getActivity(), "Friend request sent", Toast.LENGTH_SHORT).show();
+                    imageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
+                // TODO if request friends was sent
+                    imageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
+                // TODO if they are friends
+                    imageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends);
 
             }
         });
