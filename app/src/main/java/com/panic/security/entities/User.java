@@ -1,6 +1,7 @@
 package com.panic.security.entities;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by maikb on 3/09/2017.
@@ -55,11 +56,11 @@ public class User {
         this.friends = friends;
     }
 
-    public boolean getActiveAccount() {
+    public boolean getIs_active_account() {
         return is_active_account;
     }
 
-    public void setActiveAccount(boolean activeAccount) {
+    public void setIs_active_account(boolean activeAccount) {
         is_active_account = activeAccount;
     }
 
@@ -97,54 +98,55 @@ public class User {
 
     public static class FriendRequestIn {
 
-        private Long date;
+        private long date;
         private String user_id;
 
-        public String getUser_id() {
+        public String getUserId() {
             return user_id;
         }
 
-        public void setUser_id(String user_id) {
+        public void setUserId(String user_id) {
             this.user_id = user_id;
         }
 
-        public Long getDate() {
+        public long getDate() {
             return date;
         }
 
-        public void setDate(Long date) {
+        public void setDate(long date) {
             this.date = date;
         }
     }
 
     public static class FriendRequestOut {
 
-        private Long date;
         private String user_id;
+        private long date;
 
+        public FriendRequestOut(){}
 
-        public String getUser_id() {
-            return user_id;
+        public FriendRequestOut(String user_id, long date) {
+            this.user_id = user_id;
+            this.date = date;
         }
+
+        public String getUser_id() { return user_id; }
 
         public void setUser_id(String user_id) {
             this.user_id = user_id;
         }
 
-        public Long getDate() {
-            return date;
-        }
+        public long getDate() { return date; }
 
-        public void setDate(Long date) {
-            this.date = date;
-        }
+        public void setDate(long date) { this.date = date; }
+
     }
 
     public static class Friend {
 
         private String user_id;
-        private Long date;
-        private Boolean is_location_shared;
+        private long date;
+        private boolean is_location_shared;
 
         public String getUser_id() {
             return user_id;
@@ -154,23 +156,22 @@ public class User {
             this.user_id = user_id;
         }
 
-        public Long getDate() {
+        public long getDate() {
             return date;
         }
 
-        public void setDate(Long date) {
+        public void setDate(long date) {
             this.date = date;
         }
 
-        public Boolean getLocationShared() {
+        public boolean getIs_location_shared() {
             return is_location_shared;
         }
 
-        public void setLocationShared(Boolean locationShared) {
+        public void setLocationShared(boolean locationShared) {
             is_location_shared = locationShared;
         }
 
     }
-
 
 }
