@@ -173,6 +173,36 @@ public class FirebaseDAO {
         });
     }
 
+    public void getReports (final DataCallback<Report> callback) {
+        DatabaseReference ref = database.getReference(FirebaseReferences.REPORTS_REFERENCE);
+        ref.addChildEventListener (new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                callback.onDataReceive (dataSnapshot.getValue (Report.class));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void getStolenObjectByID (String ID, final DataCallback<StolenObject> callback) {
         final DatabaseReference ref = database.getReference(FirebaseReferences.STOLEN_OBJECTS_REFERENCE).child(ID);
         ref.addValueEventListener(new ValueEventListener() {
