@@ -40,6 +40,10 @@
     <string name="user_profile_birthday">Birthday:</string>
     <string name="user_profile_number_reports">Number of reports:</string>
 
+    <!-- Snackbar messages -->
+    <string name="friend_request_sent">Friend request sent</string>
+    <string name="request_pending_acceptance">Request pending acceptance</string>
+
     <!-- Gender -->
     <string name="male_gender">Male</string>
     <string name="female_gender">Female</string>

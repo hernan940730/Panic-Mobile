@@ -14,6 +14,7 @@ import com.panic.security.entities.StolenObject;
 import com.panic.security.entities.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -187,7 +188,6 @@ public class FirebaseDAO {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = new User();
                 Map<String,Object> users =  (Map<String,Object>) dataSnapshot.getValue();
                 for (Map.Entry<String, Object> entry : users.entrySet()){
                     Map singleUser = (Map) entry.getValue();
@@ -207,6 +207,37 @@ public class FirebaseDAO {
 
     }
 
+    public void areFriends(String currentUserID, String userID, final DataCallback< User.Friend > callback) {
+        DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(currentUserID).child(FirebaseReferences.User.FRIENDS_REFERENCE).child(userID);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User.Friend entity = dataSnapshot.getValue (User.Friend.class);
+                callback.onDataReceive (entity);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onDataReceive (null);
+            }
+        });
+    }
+
+    public void areFriendRequestOut(String currentUserID, String userID, final DataCallback< User.Friend > callback) {
+        DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(currentUserID).child(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE).child(userID);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User.Friend entity = dataSnapshot.getValue (User.Friend.class);
+                callback.onDataReceive (entity);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onDataReceive (null);
+            }
+        });
+    }
 
     public String pushUser (String ID, User entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).child (ID);
@@ -239,9 +270,15 @@ public class FirebaseDAO {
     }
 
     public String pushStolenObject (StolenObject entity) {
-        DatabaseReference ref = database.getReference (FirebaseReferences.STOLEN_OBJECTS_REFERENCE).push ();
+        DatabaseReference ref = database.getReference (FirebaseReferences.STOLEN_OBJECTS_REFERENCE).push();
         ref.setValue (entity);
         return ref.getKey ();
+    }
+
+    public void pushFriendRequestOutToUser(String userID, User.FriendRequestOut friend){
+        DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(userID)
+                .child(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE).child(friend.getUser_id());
+        ref.setValue(friend);
     }
 
 }
