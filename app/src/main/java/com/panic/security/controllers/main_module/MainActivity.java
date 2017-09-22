@@ -153,10 +153,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void getLocationPermission () {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                PackageManager.PERMISSION_GRANTED) {
             String permissions[] = {Manifest.permission.ACCESS_FINE_LOCATION};
-            ActivityCompat.requestPermissions(this, permissions, locationRequestCode);
+            ActivityCompat.requestPermissions (this, permissions, locationRequestCode);
         }
     }
 
