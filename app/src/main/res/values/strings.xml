@@ -19,11 +19,14 @@
     <!-- Menu navigation -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="search">Search</string>
 
     <!-- Menu items -->
     <string name="home">Home</string>
     <string name="user_profile">Profile</string>
     <string name="friends">Friends</string>
+    <string name="my_reports">My reports</string>
+    <string name="notifications">Notifications</string>
     <string name="about_us">About us</string>
     <string name="more">More Options</string>
     <string name="sign_out">Sign Out</string>
@@ -36,6 +39,10 @@
     <string name="user_profile_gender">Gender:</string>
     <string name="user_profile_birthday">Birthday:</string>
     <string name="user_profile_number_reports">Number of reports:</string>
+
+    <!-- Snackbar messages -->
+    <string name="friend_request_sent">Friend request sent</string>
+    <string name="request_pending_acceptance">Request pending acceptance</string>
 
     <!-- Gender -->
     <string name="male_gender">Male</string>

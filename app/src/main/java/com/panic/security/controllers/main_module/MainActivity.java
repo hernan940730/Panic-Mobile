@@ -13,12 +13,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.panic.security.R;
 import com.panic.security.controllers.map_module.MapFragment;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
@@ -28,6 +32,9 @@ import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
 import com.panic.security.firebase_utils.DataCallback;
 import com.panic.security.firebase_utils.FirebaseDAO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -58,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void updateUI() {
         setContentView(R.layout.activity_main);
         configMenu();
+        //addSearchBar();
     }
 
     /* Menu navigator*/
@@ -134,6 +142,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.item_user_profile) {
             fragmentManager.beginTransaction().replace(R.id.content_main, new UserProfileFragment()).commit();
         } else if (id == R.id.item_friends) {
+
+        } else if (id == R.id.item_my_reports) {
+
+        } else if (id == R.id.item_notifications) {
 
         } else if (id == R.id.item_about) {
 

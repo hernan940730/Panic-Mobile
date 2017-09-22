@@ -19,14 +19,17 @@
     <!-- Menu navigation -->
     <string name="navigation_drawer_open">Abrir menu de navegación</string>
     <string name="navigation_drawer_close">Cerrar menu de navegación</string>
+    <string name="search">Buscar</string>
 
     <!-- Menu items -->
     <string name="home">Inicio</string>
     <string name="user_profile">Perfil</string>
     <string name="friends">Amigos</string>
+    <string name="my_reports">Mis reportes</string>
+    <string name="notifications">Notificaciones</string>
     <string name="about_us">Acerca de</string>
     <string name="more">Mas Opciones</string>
-    <string name="sign_out">Cerrar sesion</string>
+    <string name="sign_out">Cerrar sesión</string>
 
     <!-- User profile -->
     <string name="user_profile_short_desc">\"La seguridad la hacemos todos.\"</string>
@@ -36,6 +39,10 @@
     <string name="user_profile_gender">Genero:</string>
     <string name="user_profile_birthday">Fecha de Nacimiento:</string>
     <string name="user_profile_number_reports">Numero de reportes:</string>
+
+    <!-- Snackbar messages -->
+    <string name="friend_request_sent">Solicitud de amistad enviada</string>
+    <string name="request_pending_acceptance">Solicitud pendiente de aceptación</string>
 
     <!-- Gender -->
     <string name="male_gender">Hombre</string>
