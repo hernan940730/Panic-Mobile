@@ -1,33 +1,25 @@
 package com.panic.security.controllers.map_module;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.panic.security.R;
 
-import com.panic.security.UserLocationUtils;
+import com.panic.security.location_utils.UserLocationUtils;
 import com.panic.security.firebase_utils.DataCallback;
 import com.panic.security.models.map_module.MapDrawer;
 
@@ -88,14 +80,18 @@ public class MapFragment extends Fragment {
                 });
 
                 mapDrawer = new MapDrawer(MapFragment.this);
-                UserLocationUtils.getUserLastKnownLocation(getActivity(), new DataCallback<Location>() {
+                mapDrawer.setMapStyle();
+
+                UserLocationUtils.getUserLastKnownLocation (getActivity(), new DataCallback<Location>() {
                     @Override
-                    public void onDataReceive(Location location) {
-                        mapDrawer.setMapStyle (location);
+                    public void onDataReceive (Location location) {
+
                         if (curCameraPosition == null) {
-                            curCameraPosition = new CameraPosition.Builder().target(
-                                    new LatLng(location.getLatitude(), location.getLongitude())
-                            ).zoom(12).build();
+                            if (location == null) {
+                                return;
+                            }
+                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            curCameraPosition = new CameraPosition.Builder().target(latLng).zoom(12).build();
                             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(curCameraPosition));
                         } else {
                             googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(curCameraPosition));

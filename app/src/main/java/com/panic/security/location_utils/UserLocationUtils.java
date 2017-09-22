@@ -1,13 +1,18 @@
-package com.panic.security;
+package com.panic.security.location_utils;
 
 import android.*;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -40,8 +45,36 @@ public class UserLocationUtils {
     private static final String TIME_STAMP_VALUE = "timestamp=";
 
 
-    private  UserLocationUtils () {
-        
+    private UserLocationUtils() {
+
+    }
+
+    public static void addOnLocationProviderEnableListener(final Activity activity, final DataCallback<Location> callback) {
+
+        LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged (Location location) {
+
+            }
+
+            public void onStatusChanged (String provider, int status, Bundle extras) {
+
+            }
+
+            public void onProviderEnabled (String provider) {
+                getUserLastKnownLocation (activity, callback);
+            }
+
+            public void onProviderDisabled (String provider) {
+            }
+        };
+
+// Register the listener with the Location Manager to receive location updates
+        if (ActivityCompat.checkSelfPermission (activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.requestLocationUpdates (LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
     public static void getUserLastKnownLocation (Activity activity, final DataCallback<Location> callback) {
@@ -57,6 +90,7 @@ public class UserLocationUtils {
                 callback.onDataReceive (location);
             }
         });
+
     }
 
     public static synchronized void getUserTimeZoneJSON(Activity activity, final DataCallback<JSONObject> callback) {
@@ -64,6 +98,9 @@ public class UserLocationUtils {
             getUserLastKnownLocation(activity, new DataCallback<Location>() {
                 @Override
                 public void onDataReceive(Location location) {
+                    if (location == null) {
+                        return;
+                    }
                     String requestURL = GOOGLE_TIME_ZONE_URL + JSON_VALUE + LOCATION_VALUE +
                             location.getLatitude() + "," + location.getLongitude() + "&" + TIME_STAMP_VALUE + "0" + "&" + GOOGLE_TIMEZONE_KEY;
 

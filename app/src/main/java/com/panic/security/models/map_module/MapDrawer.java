@@ -1,28 +1,25 @@
 package com.panic.security.models.map_module;
 
 import android.location.Location;
-import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.panic.security.R;
-import com.panic.security.UserLocationUtils;
+import com.panic.security.firebase_utils.FirebaseDAO;
+import com.panic.security.location_utils.UserLocationUtils;
 import com.panic.security.controllers.map_module.MapFragment;
 import com.panic.security.firebase_utils.DataCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
-
-import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by david on 9/18/17.
@@ -47,7 +44,7 @@ public class MapDrawer {
         this.map = mapFragment.getGoogleMap();
     }
 
-    public void setMapStyle (Location location) {
+    public void setMapStyle ( ) {
         UserLocationUtils.getUserTimeZoneJSON(mapFragment.getActivity(), new DataCallback<JSONObject>() {
             @Override
             public void onDataReceive(JSONObject data) {
@@ -70,40 +67,45 @@ public class MapDrawer {
     }
 
     private void drawMapStyle () {
-        if (timeZoneJSON != null) {
-            try {
-                TimeZone timeZone = TimeZone.getTimeZone(timeZoneJSON.getString("timeZoneId"));
+        if (timeZoneJSON == null) {
+            return;
+        }
+        try {
+            TimeZone timeZone = TimeZone.getTimeZone(timeZoneJSON.getString("timeZoneId"));
 
-                if (isSunlight (timeZone)) {
-                    if (!isNormalMapStyle) {
-                        isNormalMapStyle = true;
-                        boolean success = map.setMapStyle(null);
-                        if (!success) {
-                            Log.e(TAG, "Style parsing failed.");
-                        }
+            if (isSunlight (timeZone)) {
+                if (!isNormalMapStyle) {
+                    isNormalMapStyle = true;
+                    boolean success = map.setMapStyle(null);
+                    if (!success) {
+                        Log.e(TAG, "Style parsing failed.");
                     }
                 }
-                else {
-                    if (isNormalMapStyle) {
-                        isNormalMapStyle = false;
-                        boolean success = map.setMapStyle(
-                                MapStyleOptions.loadRawResourceStyle(
-                                        mapFragment.getActivity(), R.raw.dark_styled_map));
-
-                        if (!success) {
-                            Log.e(TAG, "Style parsing failed.");
-                        }
-                    }
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
+            else {
+                if (isNormalMapStyle) {
+                    isNormalMapStyle = false;
+                    boolean success = map.setMapStyle(
+                            MapStyleOptions.loadRawResourceStyle(
+                                    mapFragment.getActivity(), R.raw.dark_styled_map));
+
+                    if (!success) {
+                        Log.e(TAG, "Style parsing failed.");
+                    }
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
     private void drawZones () {
 
+    }
+
+    private void addHeatMap() {
+        
     }
 
     private double getDistanceFromLatLngInKm (LatLng latLng1, LatLng latLng2) {

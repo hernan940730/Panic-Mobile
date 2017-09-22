@@ -27,6 +27,10 @@ dependencies {
     })
 
     /**
+     * Heatmap
+     */
+    compile 'com.google.maps.android:android-maps-utils:0.5+'
+    /**
      * Google Play Services API
      */
     compile 'com.google.android.gms:play-services:11.0.0'

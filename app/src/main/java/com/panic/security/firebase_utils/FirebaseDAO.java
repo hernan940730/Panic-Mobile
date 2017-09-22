@@ -1,5 +1,6 @@
 package com.panic.security.firebase_utils;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -108,6 +109,36 @@ public class FirebaseDAO {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 callback.onDataReceive (null);
+            }
+        });
+    }
+
+    public void getReports (final DataCallback<Report> callback) {
+        DatabaseReference ref = database.getReference(FirebaseReferences.REPORTS_REFERENCE);
+        ref.addChildEventListener (new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                callback.onDataReceive (dataSnapshot.getValue (Report.class));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
