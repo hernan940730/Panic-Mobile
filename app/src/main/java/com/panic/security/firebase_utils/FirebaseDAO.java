@@ -127,12 +127,12 @@ public class FirebaseDAO {
     }
 
     public void getReportByID (String ID, final DataCallback<Report> callback) {
-        DatabaseReference ref = database.getReference(FirebaseReferences.REPORTS_REFERENCE).child(ID);
+        final DatabaseReference ref = database.getReference(FirebaseReferences.REPORTS_REFERENCE).child(ID);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Report entity = dataSnapshot.getValue (Report.class);
-                callback.onDataReceive (entity);
+                callback.onDataReceive (entity);    
             }
 
             @Override
