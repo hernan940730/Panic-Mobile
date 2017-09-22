@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class User {
 
+    private String key;
     private String email;
     private HashMap<String, FriendRequestIn> friend_requests_in;
     private HashMap<String, FriendRequestOut> friend_requests_out;
@@ -19,10 +20,9 @@ public class User {
     private String profile_picture;
     private HashMap<String, String> reports;
 
-    @Override
-    public String toString() {
-        return email;
-    }
+    public String getKey() { return key; }
+
+    public void setKey(String key) { this.key = key; }
 
     public String getEmail() {
         return email;
