@@ -96,8 +96,19 @@
             android:layout_below="@+id/login_button"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp"
-            android:onClick="showSignUp"
+            android:onClick="showSignUpActivity"
             android:text="@string/sign_up_link"
+            android:textColor="@color/whiteColor" />
+
+        <TextView
+            android:id="@+id/password_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sign_up_link"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:onClick="showResetPasswordActivity"
+            android:text="@string/forgot_password"
             android:textColor="@color/whiteColor" />
     </RelativeLayout>
 

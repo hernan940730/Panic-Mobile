@@ -37,11 +37,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private ProgressBar progressbar;
 
+    private int loginAttempts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
+        loginAttempts = 0;
 
+        mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -65,6 +68,12 @@ public class LoginActivity extends AppCompatActivity {
 
         mEmailEditText = ( EditText ) findViewById( R.id.email );
         mPasswordEditText = ( EditText ) findViewById( R.id.password );
+
+        if( loginAttempts < 4 ) {
+            findViewById(R.id.password_reset).setVisibility(View.INVISIBLE);
+        }else{
+            findViewById(R.id.password_reset).setVisibility(View.VISIBLE);
+        }
     }
 
     private void showHome() {
@@ -87,8 +96,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void showSignUp( View view ) {
+    public void showSignUpActivity(View view ) {
         Intent intent = new Intent( this, SignUpActivity.class );
+        startActivity( intent );
+    }
+
+    public void showResetPasswordActivity( View view ){
+        Intent intent = new Intent( this, ResetPasswordActivity.class );
         startActivity( intent );
     }
 
@@ -114,7 +128,8 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, getResources().getString( R.string.authentication_failed ),
                                     Toast.LENGTH_SHORT).show();
                             progressbar.setVisibility(View.INVISIBLE);
-                            return;
+                            loginAttempts += 1;
+                            updateUI();
                         }
 
                         // ...

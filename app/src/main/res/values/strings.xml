@@ -38,6 +38,7 @@
     <string name="password_login_text">password</string>
     <string name="login_button_text">Login</string>
     <string name="sign_up_link">No account yet? Create one</string>
+    <string name="forgot_password">Forgot your password?</string>
     <string name="authentication_failed">Authentication Failed</string>
     <string name="required">Required.</string>
 
@@ -52,6 +53,12 @@
     <string name="login_link">Already a member? Login</string>
     <string name="password_match">Passwords do not match</string>
 
+    <!-- Reset Password -->
+    <string name="reset_password_text">Reset your password</string>
+    <string name="emailSent">E-mail sent to</string>
+    <string name="send_email">Send e-mail</string>
+
     <!-- Google maps -->
     <string name="title_activity_maps">Map</string>
+
 </resources>
