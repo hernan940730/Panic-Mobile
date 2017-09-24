@@ -60,5 +60,6 @@
 
     <!-- Google maps -->
     <string name="title_activity_maps">Map</string>
+    <string name="sign_up_phone_number">xxxxxxxxxx</string>
 
 </resources>

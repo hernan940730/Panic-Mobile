@@ -36,6 +36,7 @@
         <activity
             android:name=".controllers.login_sign_up_module.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="stateVisible|adjustResize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,8 +46,10 @@
         </activity>
         <activity
             android:name=".controllers.login_sign_up_module.SignUpActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".controllers.login_sign_up_module.ResetPasswordActivity"
+
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
