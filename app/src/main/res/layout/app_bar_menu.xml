@@ -22,6 +22,8 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <!-- maps -->
+    <include layout="@layout/activity_maps" />
     <include layout="@layout/content_main" />
 
 </android.support.design.widget.CoordinatorLayout>
