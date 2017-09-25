@@ -1,5 +1,6 @@
 package com.panic.security.models.map_module;
 
+import android.app.Activity;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -10,10 +11,10 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 import com.panic.security.R;
+import com.panic.security.controllers.main_module.MainActivity;
 import com.panic.security.entities.Location;
 import com.panic.security.firebase_utils.FirebaseDAO;
 import com.panic.security.location_utils.UserLocationUtils;
-import com.panic.security.controllers.map_module.MapFragment;
 import com.panic.security.firebase_utils.DataCallback;
 
 import org.json.JSONException;
@@ -32,16 +33,13 @@ public class MapDrawer {
 
     private final String TAG = "MapDrawer";
 
-    private final double MAX_DIST = 30;
+    private GoogleMap mMap;
 
-    private GoogleMap map;
-
-    private MapFragment mapFragment;
+    private Activity mainActivity;
 
     private JSONObject timeZoneJSON;
 
     private boolean isNormalMapStyle = true;
-
 
     /**
      * For Heat Map Functionality
@@ -51,16 +49,15 @@ public class MapDrawer {
     private TileOverlay overlayOptions;
     private double EPS = 1e-100;
 
-
-    public MapDrawer (MapFragment mapFragment) {
-        this.mapFragment = mapFragment;
-        this.map = mapFragment.getGoogleMap();
+    public MapDrawer (Activity activity, GoogleMap mMap) {
+        this.mainActivity = activity;
+        this.mMap = mMap;
         this.reportsLatLng = new ArrayList<>();
-        this.reportsLatLng.add (new WeightedLatLng(new LatLng(-76.337187, 22.330905), EPS));
+        this.reportsLatLng.add (new WeightedLatLng (new LatLng (-76.337187, 22.330905), EPS));
     }
 
     public void setMapStyle ( ) {
-        UserLocationUtils.getUserTimeZoneJSON(mapFragment.getActivity(), new DataCallback<JSONObject>() {
+        UserLocationUtils.getUserTimeZoneJSON (mainActivity, new DataCallback<JSONObject>() {
             @Override
             public void onDataReceive(JSONObject data) {
                 timeZoneJSON = data;
@@ -91,7 +88,7 @@ public class MapDrawer {
             if (isSunlight (timeZone)) {
                 if (!isNormalMapStyle) {
                     isNormalMapStyle = true;
-                    boolean success = map.setMapStyle(null);
+                    boolean success = mMap.setMapStyle(null);
                     if (!success) {
                         Log.e(TAG, "Style parsing failed.");
                     }
@@ -100,9 +97,9 @@ public class MapDrawer {
             else {
                 if (isNormalMapStyle) {
                     isNormalMapStyle = false;
-                    boolean success = map.setMapStyle(
+                    boolean success = mMap.setMapStyle(
                             MapStyleOptions.loadRawResourceStyle(
-                                    mapFragment.getActivity(), R.raw.dark_styled_map));
+                                    mainActivity, R.raw.dark_styled_map));
 
                     if (!success) {
                         Log.e(TAG, "Style parsing failed.");
@@ -136,10 +133,8 @@ public class MapDrawer {
                 weightedData(reportsLatLng).
                 opacity(0.3).
                 build();
-        overlayOptions = map.addTileOverlay(new TileOverlayOptions().tileProvider(heatmapTileProvider));
+        overlayOptions = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(heatmapTileProvider));
     }
-
-
 
     private double getDistanceFromLatLngInKm (LatLng latLng1, LatLng latLng2) {
         double  lat1 = latLng1.latitude,

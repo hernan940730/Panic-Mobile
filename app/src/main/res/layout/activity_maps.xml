@@ -5,4 +5,5 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    mMap:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.panic.security.controllers.main_module.MainActivity" />
