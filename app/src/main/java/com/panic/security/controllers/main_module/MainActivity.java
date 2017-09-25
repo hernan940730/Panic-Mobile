@@ -13,17 +13,28 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.panic.security.R;
 import com.panic.security.controllers.map_module.MapFragment;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
 
 import com.panic.security.controllers.user_profile_module.UserProfileFragment;
+import com.panic.security.entities.Profile;
+import com.panic.security.entities.User;
+import com.panic.security.firebase_utils.DataCallback;
+import com.panic.security.firebase_utils.FirebaseDAO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -31,12 +42,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // Authentication with FireBase
     private FirebaseAuth mAuth;
+    private MapFragment mapFragment;
+
     public final int locationRequestCode = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getLocationPermission();
 
         mAuth = FirebaseAuth.getInstance();
@@ -53,11 +65,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void updateUI() {
         setContentView(R.layout.activity_main);
         configMenu();
+        //addSearchBar();
     }
 
     /* Menu navigator*/
     public void configMenu(){
 
+        addHeaderMenu();
+
+        //To navigate with the menu
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        //For can access to text view inside nav_header_menu
+        final View headerView = navigationView.getHeaderView(0);
+        if (headerView != null) {
+
+            FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
+                @Override
+                public void onDataReceive(User user) {
+
+                TextView textUserEmail = (TextView) headerView.findViewById(R.id.text_email_user);
+                textUserEmail.setText(user.getEmail());
+
+                FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
+                    @Override
+                    public void onDataReceive(Profile profile) {
+
+                    TextView textNameUser = (TextView) headerView.findViewById(R.id.text_name_user);
+                    textNameUser.setText(profile.getName() + " " + profile.getLast_name());
+
+                    }
+                });
+
+                }
+            });
+
+        }
+        mapFragment = new MapFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, mapFragment).commit();
+    }
+
+    public void addHeaderMenu(){
         // take toolbar title
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -68,20 +117,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        //To navigate with the menu
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        //For can access to text view inside nav_header_menu
-        View headerView = navigationView.getHeaderView(0);
-        if (headerView != null) {
-            TextView textUserEmail = (TextView) headerView.findViewById(R.id.text_email_user);
-            if(textUserEmail != null){
-                textUserEmail.setText(mAuth.getCurrentUser().getEmail());
-            }
-        }
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new MapFragment()).commit();
     }
 
     @Override
@@ -103,10 +138,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (id == R.id.item_home) {
-            fragmentManager.beginTransaction().replace(R.id.content_main, new MapFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_main, mapFragment).commit();
         } else if (id == R.id.item_user_profile) {
-            fragmentManager.beginTransaction().replace(R.id.content_main,new UserProfileFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_main, new UserProfileFragment()).commit();
         } else if (id == R.id.item_friends) {
+
+        } else if (id == R.id.item_my_reports) {
+
+        } else if (id == R.id.item_notifications) {
 
         } else if (id == R.id.item_about) {
 
@@ -126,10 +165,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void getLocationPermission () {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
             String permissions[] = {Manifest.permission.ACCESS_FINE_LOCATION};
-            ActivityCompat.requestPermissions(this, permissions, locationRequestCode);
+            ActivityCompat.requestPermissions (this, permissions, locationRequestCode);
         }
     }
 

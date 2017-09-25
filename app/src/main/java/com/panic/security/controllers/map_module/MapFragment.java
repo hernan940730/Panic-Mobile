@@ -2,6 +2,7 @@ package com.panic.security.controllers.map_module;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -12,47 +13,46 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.panic.security.R;
 
+import com.panic.security.location_utils.UserLocationUtils;
+import com.panic.security.firebase_utils.DataCallback;
+import com.panic.security.models.map_module.MapDrawer;
+
 public class MapFragment extends Fragment {
 
     private MapView mMapView;
     private GoogleMap googleMap;
     private CameraPosition curCameraPosition;
+    private MapDrawer mapDrawer;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_maps, container, false);
 
-        View view = inflater.inflate (R.layout.activity_maps, container, false);
 
-        // Inflate the layout for this fragment
-
-        initMap (view, savedInstanceState);
+        getGoogleMap(view, savedInstanceState);
 
         return view;
     }
 
-    public void initMap (View view, Bundle savedInstanceState) {
-        mMapView = (MapView) view.findViewById(R.id.mapView);
+    private void getGoogleMap (View view, Bundle savedInstanceState) {
+
+        mMapView = (MapView) view.findViewById (R.id.mapView);
         mMapView.onCreate (savedInstanceState);
 
         mMapView.onResume(); // needed to get the map to display immediately
 
-        try {
-            MapsInitializer.initialize (getActivity ().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        mMapView.getMapAsync(new OnMapReadyCallback() {
+        mMapView.getMapAsync (new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap mMap) {
+
                 googleMap = mMap;
 
                 // For showing a move to my location button
@@ -61,22 +61,7 @@ public class MapFragment extends Fragment {
                         Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
-                googleMap.setMyLocationEnabled(true);
-
-                // For dropping a marker at a point on the Map
-
-                LatLng cityLatLng = new LatLng(4.7110,-74.0721);
-
-                //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-
-                // For zooming automatically to the location of the marker
-                CameraPosition cityPosition = new CameraPosition.Builder().target(cityLatLng).zoom(12).build();
-                if (curCameraPosition == null) {
-                    googleMap.animateCamera (CameraUpdateFactory.newCameraPosition (cityPosition));
-                }
-                else {
-                    googleMap.moveCamera (CameraUpdateFactory.newCameraPosition (curCameraPosition));
-                }
+                googleMap.setMyLocationEnabled (true);
 
                 googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                     @Override
@@ -93,8 +78,49 @@ public class MapFragment extends Fragment {
                     }
                 });
 
+                mapDrawer = new MapDrawer (MapFragment.this);
+                mapDrawer.setMapStyle ();
+                mapDrawer.drawZones ();
+
+                if (curCameraPosition != null) {
+                    moveCamera(curCameraPosition, false);
+                }
+                else {
+                    UserLocationUtils.getUserLastKnownLocation (getActivity(), new DataCallback<Location>() {
+                        @Override
+                        public void onDataReceive (Location location) {
+                            CameraPosition cameraPosition = null;
+                            if (location != null) {
+                                cameraPosition = new CameraPosition.Builder ().
+                                        target (new LatLng (location.getLatitude (), location.getLongitude ())).
+                                        zoom (12).
+                                        build ();
+                            }
+                            moveCamera (cameraPosition, true);
+                        }
+                    });
+                }
+
+
             }
+
         });
+    }
+
+    public void moveCamera(CameraPosition cameraPosition, boolean animateCamera) {
+        if (cameraPosition == null) {
+            return;
+        }
+        if (animateCamera) {
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+        else {
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
+
+    public GoogleMap getGoogleMap () {
+        return googleMap;
     }
 
     @Override

@@ -14,6 +14,14 @@
             android:id="@+id/item_friends"
             android:icon="@mipmap/ic_friends"
             android:title="@string/friends" />
+        <item
+            android:id="@+id/item_my_reports"
+            android:icon="@mipmap/ic_my_reports"
+            android:title="@string/my_reports" />
+        <item
+            android:id="@+id/item_notifications"
+            android:icon="@mipmap/ic_notification"
+            android:title="@string/notifications" />
     </group>
 
     <item android:title="@string/more">

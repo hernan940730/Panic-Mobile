@@ -8,5 +8,6 @@
     <color name="text_hint">#AAF7F7F7</color>
 
     <color name="black_overlay">#66000000</color>
+    <color name="line_gray">#ECEFF1</color>
 
 </resources>

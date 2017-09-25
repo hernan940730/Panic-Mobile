@@ -81,5 +81,6 @@ public abstract class FirebaseReferences {
         public static final String LAST_NAME_REFERENCE = "last_name";
         public static final String BIRTHDAY_REFERENCE = "birthday";
         public static final String GENDER_REFERENCE = "gender";
+        public static final String COUNTRY_REFERENCE = "country";
     }
 }
