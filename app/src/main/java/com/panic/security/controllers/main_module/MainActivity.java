@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void updateUI() {
         setContentView(R.layout.activity_main);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map_holder);
+                .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         configMenu();
         //addSearchBar();

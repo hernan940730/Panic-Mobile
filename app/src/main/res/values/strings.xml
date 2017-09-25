@@ -77,4 +77,5 @@
 
     <!-- Google maps -->
     <string name="title_activity_maps">Map</string>
+    <string name="share_location">SHARE MY LOCATION</string>
 </resources>
