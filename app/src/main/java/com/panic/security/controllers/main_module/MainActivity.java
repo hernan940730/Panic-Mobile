@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void updateUI() {
         setContentView(R.layout.activity_main);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.map_holder);
         mapFragment.getMapAsync(this);
         configMenu();
         //addSearchBar();
@@ -214,11 +215,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
-            public void onMapLongClick(LatLng latLng) {
+            public void onMapClick(LatLng latLng) {
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(latLng).title("Marker Title").snippet("Marker Description"));
+                CameraUpdate crimeLocation = CameraUpdateFactory.newLatLng( latLng );
+                mMap.animateCamera( crimeLocation );
             }
         });
 
