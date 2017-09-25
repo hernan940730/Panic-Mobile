@@ -55,6 +55,7 @@
     <string name="login_button_text">Iniciar sesión</string>
     <string name="sign_up_link">Todavía no tienes cuenta? Crea una</string>
     <string name="required">Requerido.</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
     <string name="authentication_failed">No se puede iniciar sesion</string>
 
     <!-- SignUp-->
@@ -67,4 +68,9 @@
     <string name="sign_up_button_text">Registrarse</string>
     <string name="login_link">Ya tienes una cuenta? Inicia sesión</string>
     <string name="password_match">Las contraseñas no coinciden</string>
+
+    <!-- Reset Password -->
+    <string name="reset_password_text">Restablece tu contraseña</string>
+    <string name="emailSent">Se ha enviado un correo a</string>
+    <string name="send_email">Enviar correo</string>
 </resources>
