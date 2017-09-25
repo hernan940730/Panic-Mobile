@@ -61,8 +61,9 @@ public class UserProfileFragment extends Fragment {
             public void onDataReceive(User user) {
                 mUserShown = user;
 
-                addSearchBar();
                 showUserData(mUserShown);
+                addSearchBar();
+
                 //actionEdit(view);
                 actionAddFriend(view);
 

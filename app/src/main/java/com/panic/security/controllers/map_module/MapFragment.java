@@ -36,7 +36,6 @@ public class MapFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_maps, container, false);
 
-//        getUserLocation();
 
         getGoogleMap(view, savedInstanceState);
 
@@ -79,28 +78,45 @@ public class MapFragment extends Fragment {
                     }
                 });
 
-                mapDrawer = new MapDrawer(MapFragment.this);
-                mapDrawer.setMapStyle();
+                mapDrawer = new MapDrawer (MapFragment.this);
+                mapDrawer.setMapStyle ();
+                mapDrawer.drawZones ();
 
-                UserLocationUtils.getUserLastKnownLocation (getActivity(), new DataCallback<Location>() {
-                    @Override
-                    public void onDataReceive (Location location) {
-
-                        if (curCameraPosition == null) {
-                            if (location == null) {
-                                return;
+                if (curCameraPosition != null) {
+                    moveCamera(curCameraPosition, false);
+                }
+                else {
+                    UserLocationUtils.getUserLastKnownLocation (getActivity(), new DataCallback<Location>() {
+                        @Override
+                        public void onDataReceive (Location location) {
+                            CameraPosition cameraPosition = null;
+                            if (location != null) {
+                                cameraPosition = new CameraPosition.Builder ().
+                                        target (new LatLng (location.getLatitude (), location.getLongitude ())).
+                                        zoom (12).
+                                        build ();
                             }
-                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            curCameraPosition = new CameraPosition.Builder().target(latLng).zoom(12).build();
-                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(curCameraPosition));
-                        } else {
-                            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(curCameraPosition));
+                            moveCamera (cameraPosition, true);
                         }
-                    }
-                });
+                    });
+                }
+
+
             }
 
         });
+    }
+
+    public void moveCamera(CameraPosition cameraPosition, boolean animateCamera) {
+        if (cameraPosition == null) {
+            return;
+        }
+        if (animateCamera) {
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+        else {
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
     }
 
     public GoogleMap getGoogleMap () {

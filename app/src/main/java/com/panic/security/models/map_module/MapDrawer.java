@@ -1,14 +1,16 @@
 package com.panic.security.models.map_module;
 
-import android.location.Location;
-import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import com.google.maps.android.heatmaps.WeightedLatLng;
 import com.panic.security.R;
+import com.panic.security.entities.Location;
 import com.panic.security.firebase_utils.FirebaseDAO;
 import com.panic.security.location_utils.UserLocationUtils;
 import com.panic.security.controllers.map_module.MapFragment;
@@ -17,6 +19,7 @@ import com.panic.security.firebase_utils.DataCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -39,9 +42,21 @@ public class MapDrawer {
 
     private boolean isNormalMapStyle = true;
 
+
+    /**
+     * For Heat Map Functionality
+     */
+    private List<WeightedLatLng> reportsLatLng;
+    private HeatmapTileProvider heatmapTileProvider;
+    private TileOverlay overlayOptions;
+    private double EPS = 1e-100;
+
+
     public MapDrawer (MapFragment mapFragment) {
         this.mapFragment = mapFragment;
         this.map = mapFragment.getGoogleMap();
+        this.reportsLatLng = new ArrayList<>();
+        this.reportsLatLng.add (new WeightedLatLng(new LatLng(-76.337187, 22.330905), EPS));
     }
 
     public void setMapStyle ( ) {
@@ -54,7 +69,7 @@ public class MapDrawer {
         });
     }
 
-    private boolean isSunlight(TimeZone timeZone) {
+    private boolean isSunlight (TimeZone timeZone) {
         boolean ret = false;
         Calendar calendar = Calendar.getInstance(timeZone);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -100,13 +115,31 @@ public class MapDrawer {
         }
     }
 
-    private void drawZones () {
+    public void drawZones () {
+        addHeatMap();
+        FirebaseDAO.getInstance().getReportLocationsList(new DataCallback<List<Location>>() {
+            @Override
+            public void onDataReceive(List<Location> data) {
+                List<WeightedLatLng> latLngList = new ArrayList<>();
+                for (Location loc : data) {
+                    latLngList.add(new WeightedLatLng(new LatLng(loc.getLatitude(), loc.getLongitude())));
+                }
+                reportsLatLng = latLngList;
+                heatmapTileProvider.setWeightedData(reportsLatLng);
+            }
+        });
 
     }
 
-    private void addHeatMap() {
-        
+    private void addHeatMap () {
+        heatmapTileProvider = new HeatmapTileProvider.Builder().
+                weightedData(reportsLatLng).
+                opacity(0.3).
+                build();
+        overlayOptions = map.addTileOverlay(new TileOverlayOptions().tileProvider(heatmapTileProvider));
     }
+
+
 
     private double getDistanceFromLatLngInKm (LatLng latLng1, LatLng latLng2) {
         double  lat1 = latLng1.latitude,
