@@ -167,21 +167,16 @@ public class UserProfileFragment extends Fragment {
         TextView textUserProfilePhoneNumber = (TextView) getView().findViewById(R.id.user_profile_phone_number);
         TextView textUserProfileNumberReports = (TextView) getView().findViewById(R.id.user_profile_number_reports);
 
+        //TODO Allow change short description to the user
         textUserProfileShortDesc.setText(getResources().getString(R.string.user_profile_short_desc));
         if(user.getEmail() != null){
-            textUserProfileEmail.setText(getResources().getString(R.string.user_profile_email) + " " +user.getEmail());
-        }else{
-            textUserProfileEmail.setText(getResources().getString(R.string.user_profile_email));
+            textUserProfileEmail.setText(user.getEmail());
         }
         if(user.getPhone_number() != null){
-            textUserProfilePhoneNumber.setText(getResources().getString(R.string.user_profile_phone_number) + " " +user.getPhone_number());
-        }else{
-            textUserProfilePhoneNumber.setText(getResources().getString(R.string.user_profile_phone_number));
+            textUserProfilePhoneNumber.setText(user.getPhone_number());
         }
         if(user.getReports() != null){
-            textUserProfileNumberReports.setText(getResources().getString(R.string.user_profile_number_reports) + " " + user.getReports().size());
-        }else{
-            textUserProfileNumberReports.setText(getResources().getString(R.string.user_profile_number_reports) + " 0");
+            textUserProfileNumberReports.setText(String.valueOf(user.getReports().size()));
         }
 
         FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
@@ -197,19 +192,14 @@ public class UserProfileFragment extends Fragment {
                 textUserProfileName.setText(profile.getName());
                 textUserProfileLastName.setText(profile.getLast_name());
                 if(profile.getCountry() != null){
-                    textUserProfileLocation.setText(getResources().getString(R.string.user_profile_location) + " " + profile.getCountry());
-                }else{
-                    textUserProfileLocation.setText(getResources().getString(R.string.user_profile_location));
+                    textUserProfileLocation.setText(profile.getCountry());
                 }
                 if(profile.getGender() != null){
-                    textUserProfileGender.setText(getResources().getString(R.string.user_profile_gender) + " " +profile.getGender());
-                }else{
-                    textUserProfileGender.setText(getResources().getString(R.string.user_profile_gender));
+                    textUserProfileGender.setText(profile.getGender());
                 }
+                //TODO paser long to date and not string
                 if(profile.getBirthday() != 0){
-                    textUserProfileBirthday.setText(getResources().getString(R.string.user_profile_birthday) + " " +profile.getBirthday());
-                }else{
-                    textUserProfileBirthday.setText(getResources().getString(R.string.user_profile_birthday));
+                    textUserProfileBirthday.setText(String.valueOf(profile.getBirthday()));
                 }
 
             }
