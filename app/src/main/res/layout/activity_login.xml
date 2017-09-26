@@ -1,9 +1,9 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#0099cc"
+    android:background="@color/colorPrimary"
     tools:context="com.panic.security.controllers.login_sign_up_module.LoginActivity">
 
     <RelativeLayout
@@ -48,7 +48,7 @@
             android:focusable="true"
             android:hint="@string/username_login_text"
             android:textColor="@color/whiteColor"
-            android:textColorHighlight="#ffff25e6"
+            android:backgroundTint="@color/whiteColor"
             android:textColorHint="@color/text_hint"
             android:textSize="20sp" />
 
@@ -62,6 +62,7 @@
             android:hint="@string/password_login_text"
             android:inputType="textPassword"
             android:textColor="@color/whiteColor"
+            android:backgroundTint="@color/whiteColor"
             android:textColorHint="@color/text_hint"
             android:textSize="20sp" />
 
@@ -96,9 +97,19 @@
             android:layout_below="@+id/login_button"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp"
-            android:onClick="showSignUp"
+            android:onClick="showSignUpActivity"
             android:text="@string/sign_up_link"
             android:textColor="@color/whiteColor" />
-    </RelativeLayout>
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/password_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sign_up_link"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:onClick="showResetPasswordActivity"
+            android:text="@string/forgot_password"
+            android:textColor="@color/whiteColor" />
+    </RelativeLayout>
+</ScrollView>

@@ -40,13 +40,12 @@ public class FirebaseDAO {
 
     public void getUserByID(String ID, final DataCallback<User> callback) {
         final DatabaseReference ref = database.getReference(FirebaseReferences.USERS_REFERENCE).child(ID);
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User entity = dataSnapshot.getValue (User.class);
                 entity.setKey(dataSnapshot.getKey());
                 callback.onDataReceive (entity);
-                ref.removeEventListener(this);
             }
 
             @Override
@@ -58,12 +57,11 @@ public class FirebaseDAO {
 
     public void getCrimeByID (String ID, final DataCallback<Crime> callback) {
         final DatabaseReference ref = database.getReference(FirebaseReferences.CRIMES_REFERENCE).child(ID);
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Crime entity = dataSnapshot.getValue (Crime.class);
                 callback.onDataReceive (entity);
-                ref.removeEventListener(this);
             }
 
             @Override
@@ -75,12 +73,11 @@ public class FirebaseDAO {
 
     public void getLocationByID (String ID, final DataCallback<Location> callback) {
         final DatabaseReference ref = database.getReference(FirebaseReferences.LOCATIONS_REFERENCE).child(ID);
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Location entity = dataSnapshot.getValue (Location.class);
                 callback.onDataReceive (entity);
-                ref.removeEventListener(this);
             }
 
             @Override
@@ -92,12 +89,11 @@ public class FirebaseDAO {
 
     public void getProfileByID (String ID, final DataCallback<Profile> callback) {
         final DatabaseReference ref = database.getReference(FirebaseReferences.PROFILES_REFERENCE).child(ID);
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Profile entity = dataSnapshot.getValue (Profile.class);
                 callback.onDataReceive (entity);
-                //ref.removeEventListener(this);
             }
 
             @Override
@@ -110,7 +106,7 @@ public class FirebaseDAO {
     public void getAllEmailsForAllUsers(final DataCallback< List<String> > callback) {
         final DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE);
 
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<String> list = new ArrayList<String>();
@@ -120,7 +116,6 @@ public class FirebaseDAO {
                     list.add((String)singleProfile.get(FirebaseReferences.User.EMAIL_REFERENCE));
                 }
                 callback.onDataReceive (list);
-                ref.removeEventListener(this);
             }
 
             @Override
@@ -134,7 +129,7 @@ public class FirebaseDAO {
     public void getAllFullNamesForAllProfiles(final DataCallback< List<String> > callback) {
         final DatabaseReference ref = database.getReference().child(FirebaseReferences.PROFILES_REFERENCE);
 
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<String> list = new ArrayList<String>();
@@ -146,7 +141,6 @@ public class FirebaseDAO {
                     list.add(name + " " + lastName);
                 }
                 callback.onDataReceive (list);
-                ref.removeEventListener(this);
             }
 
             @Override
@@ -158,12 +152,11 @@ public class FirebaseDAO {
 
     public void getReportByID (String ID, final DataCallback<Report> callback) {
         final DatabaseReference ref = database.getReference(FirebaseReferences.REPORTS_REFERENCE).child(ID);
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Report entity = dataSnapshot.getValue (Report.class);
                 callback.onDataReceive (entity);
-                ref.removeEventListener(this);
             }
 
             @Override
@@ -173,14 +166,34 @@ public class FirebaseDAO {
         });
     }
 
+    public void getReportLocationsList(final DataCallback<List<Location>> callback) {
+        DatabaseReference ref = database.getReference(FirebaseReferences.LOCATIONS_REFERENCE);
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final List<Location> list = new ArrayList<>();
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    Location location = child.getValue (Location.class);
+                    list.add(location);
+                }
+                callback.onDataReceive(list);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void getStolenObjectByID (String ID, final DataCallback<StolenObject> callback) {
         final DatabaseReference ref = database.getReference(FirebaseReferences.STOLEN_OBJECTS_REFERENCE).child(ID);
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 StolenObject entity = dataSnapshot.getValue (StolenObject.class);
                 callback.onDataReceive (entity);
-                ref.removeEventListener(this);
             }
 
             @Override
@@ -200,7 +213,7 @@ public class FirebaseDAO {
 
                 User user = dataSnapshot.getValue(User.class);
                 user.setKey(dataSnapshot.getKey());
-                if(user.getEmail().equals( email )){
+                if(user.getEmail().equals (email)){
                     callback.onDataReceive(user);
                     ref.removeEventListener(this);
                 }
@@ -271,12 +284,11 @@ public class FirebaseDAO {
 
     public void areFriends(String currentUserID, String userID, final DataCallback< User.Friend > callback) {
         final DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(currentUserID).child(FirebaseReferences.User.FRIENDS_REFERENCE).child(userID);
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User.Friend entity = dataSnapshot.getValue (User.Friend.class);
                 callback.onDataReceive (entity);
-                ref.removeEventListener(this);
             }
 
             @Override
@@ -288,12 +300,11 @@ public class FirebaseDAO {
 
     public void areFriendRequestOut(String currentUserID, String userID, final DataCallback< User.FriendRequestOut > callback) {
         final DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(currentUserID).child(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE).child(userID);
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User.FriendRequestOut entity = dataSnapshot.getValue (User.FriendRequestOut.class);
                 callback.onDataReceive (entity);
-                ref.removeEventListener(this);
             }
 
             @Override

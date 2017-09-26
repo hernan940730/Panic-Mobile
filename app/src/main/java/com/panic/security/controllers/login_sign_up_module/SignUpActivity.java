@@ -16,15 +16,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.panic.security.R;
 import com.panic.security.controllers.main_module.MainActivity;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
 import com.panic.security.firebase_utils.FirebaseDAO;
-import com.panic.security.firebase_utils.FirebaseReferences;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -33,6 +30,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private EditText mName;
     private EditText mLastName;
+    private EditText mPhoneNumberEditText;
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
     private EditText mPasswordConfEditText;
@@ -64,6 +62,7 @@ public class SignUpActivity extends AppCompatActivity {
         progressbar = ( ProgressBar ) findViewById( R.id.progress_bar );
         mName = ( EditText ) findViewById( R.id.name );
         mLastName = ( EditText ) findViewById( R.id.last_name );
+        mPhoneNumberEditText = ( EditText ) findViewById( R.id.phone_number );
         mEmailEditText = ( EditText ) findViewById( R.id.email );
         mPasswordEditText = ( EditText ) findViewById( R.id.password );
         mPasswordConfEditText = ( EditText ) findViewById( R.id.password_confirmation );
@@ -122,6 +121,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                             fireBaseUser.setEmail( user.getEmail() );
                             fireBaseUser.setProfile_id( profileID );
+                            fireBaseUser.setPhone_number( mPhoneNumberEditText.getText().toString() );
                             firebaseDAO.pushUser( user.getUid(), fireBaseUser );
 
                             showHome();
@@ -157,6 +157,14 @@ public class SignUpActivity extends AppCompatActivity {
             valid = false;
         }else{
             mLastName.setError( null );
+        }
+
+        String phoneNumber = mPhoneNumberEditText.getText().toString();
+        if (TextUtils.isEmpty( phoneNumber ) ) {
+            mPhoneNumberEditText.setError( getResources().getString( R.string.required ) );
+            valid = false;
+        } else {
+            mPhoneNumberEditText.setError(null);
         }
 
         String email = mEmailEditText.getText().toString();
