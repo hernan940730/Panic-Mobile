@@ -298,12 +298,28 @@ public class FirebaseDAO {
         });
     }
 
-    public void areFriendRequestOut(String currentUserID, String userID, final DataCallback< User.FriendRequestOut > callback) {
-        final DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(currentUserID).child(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE).child(userID);
+    public void areFriendRequestOut(String currentUserID, String friendID, final DataCallback< User.FriendRequestOut > callback) {
+        final DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(currentUserID).child(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE).child(friendID);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User.FriendRequestOut entity = dataSnapshot.getValue (User.FriendRequestOut.class);
+                callback.onDataReceive (entity);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onDataReceive (null);
+            }
+        });
+    }
+
+    public void areFriendRequestIn(String currentUserID, String friendID, final DataCallback< User.FriendRequestIn> callback) {
+        final DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(currentUserID).child(FirebaseReferences.User.FRIEND_REQUESTS_IN_REFERENCE).child(friendID);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User.FriendRequestIn entity = dataSnapshot.getValue (User.FriendRequestIn.class);
                 callback.onDataReceive (entity);
             }
 
@@ -350,10 +366,14 @@ public class FirebaseDAO {
         return ref.getKey ();
     }
 
-    public void pushFriendRequestOutToUser(String userID, User.FriendRequestOut friend){
-        DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(userID)
+    public void pushFriendRequest(User user, User.FriendRequestOut friend){
+        DatabaseReference refOut = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(user.getKey())
                 .child(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE).child(friend.getUser_id());
-        ref.setValue(friend);
+        refOut.setValue(friend);
+
+        DatabaseReference refIn = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(friend.getUser_id())
+                .child(FirebaseReferences.User.FRIEND_REQUESTS_IN_REFERENCE).child(user.getKey());
+        refIn.setValue(friend);
     }
 
 }

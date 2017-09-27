@@ -70,7 +70,7 @@ public class UserProfileFragment extends Fragment {
                 showUserData(mUserShown);
 
                 //actionEdit(view);
-                actionAddFriend(view);
+                actionAddFriend(user, view);
 
             }
         });
@@ -228,17 +228,20 @@ public class UserProfileFragment extends Fragment {
         });
     }*/
 
-    public void actionAddFriend(View view) {
+    public void actionAddFriend(final User user, View view) {
 
         mImageViewUserProfileAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                FirebaseDAO.getInstance().areFriendRequestOut(mAuth.getCurrentUser().getUid(), mUserShown.getKey(), new DataCallback<User.FriendRequestOut>() {
+                FirebaseDAO.getInstance().areFriendRequestOut(user.getKey(), mUserShown.getKey(), new DataCallback<User.FriendRequestOut>() {
                     @Override
                     public void onDataReceive(User.FriendRequestOut friend) {
                         if(friend == null){
-                            FirebaseDAO.getInstance().pushFriendRequestOutToUser(mAuth.getCurrentUser().getUid(), new User.FriendRequestOut(mUserShown.getKey(), 0L ));
+                            
+                            // TODO mirar si son friendRequestIn agregarlo de una
+
+                            FirebaseDAO.getInstance().pushFriendRequest(user , new User.FriendRequestOut(mUserShown.getKey(), 0L ));
                             mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
                             Toast.makeText(getActivity(), getResources().getString(R.string.friend_request_sent), Toast.LENGTH_SHORT).show();
                             //Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_sent), Snackbar.LENGTH_LONG).show();
