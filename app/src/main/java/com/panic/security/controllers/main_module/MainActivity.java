@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLocationPermission();
+        handlerPassDataBetweenFragments();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -164,6 +165,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void handlerPassDataBetweenFragments(){
+        Intent intent = getIntent();
+        String type = intent.getStringExtra("type");
+
+        if(type != null){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            if(type.equals("query")){
+                User userFound = (User)intent.getSerializableExtra("user_in_search");
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("userFound", userFound);
+                UserProfileFragment userProfileFragment = new UserProfileFragment();
+                userProfileFragment.setArguments(bundle);
+                fragmentManager.beginTransaction().replace(R.id.content_main, userProfileFragment).commit();
+
+            }else if(type.equals("anotherExchangeBetweenFragments")){
+
+            }
+        }
     }
 
     private void signOut() {

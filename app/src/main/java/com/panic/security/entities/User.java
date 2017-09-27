@@ -1,5 +1,6 @@
 package com.panic.security.entities;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ import java.util.Map;
  * Created by maikb on 3/09/2017.
  */
 
-public class User {
+public class User implements Serializable{
 
     private String key;
     private String email;
@@ -96,7 +97,7 @@ public class User {
         this.reports = reports;
     }
 
-    public static class FriendRequestIn {
+    public static class FriendRequestIn implements Serializable{
 
         private long date;
         private String user_id;
@@ -118,7 +119,7 @@ public class User {
         }
     }
 
-    public static class FriendRequestOut {
+    public static class FriendRequestOut implements Serializable{
 
         private String user_id;
         private long date;
@@ -142,7 +143,7 @@ public class User {
 
     }
 
-    public static class Friend {
+    public static class Friend implements Serializable{
 
         private String user_id;
         private long date;

@@ -40,7 +40,7 @@ public class UserProfileFragment extends Fragment {
     MaterialSearchView mSearchView;
     //List to search bar
     List<String> mListSource;
-
+    // ImageToAddFriend
     ImageView mImageViewUserProfileAddFriend;
     // user_id of User that is displayed
     User mUserShown;
@@ -52,17 +52,22 @@ public class UserProfileFragment extends Fragment {
 
         // Image to add friend
         mImageViewUserProfileAddFriend = (ImageView) view.findViewById(R.id.user_profile_add_friend);
-        mImageViewUserProfileAddFriend.setVisibility(View.GONE);
 
         mAuth = FirebaseAuth.getInstance();
 
         FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
             @Override
             public void onDataReceive(User user) {
-                mUserShown = user;
 
+                Bundle bundle = getArguments();
+                if(bundle != null){
+                    User userFound = (User)getArguments().getSerializable("userFound");
+                    mUserShown = userFound;
+                    addSearchBar();
+                }else{
+                    mUserShown = user;
+                }
                 showUserData(mUserShown);
-                addSearchBar();
 
                 //actionEdit(view);
                 actionAddFriend(view);
@@ -92,7 +97,6 @@ public class UserProfileFragment extends Fragment {
 
                         mUserShown = user;
                         showUserData(user);
-                        setAddFriendIcon(mAuth.getCurrentUser().getUid(), user);
                     }
                 });
 
@@ -122,37 +126,6 @@ public class UserProfileFragment extends Fragment {
         });
     }
 
-    public void setAddFriendIcon(String currentUserID, User friendUser){
-
-        if( friendUser.getKey().equals(mAuth.getCurrentUser().getUid()) ){
-            mImageViewUserProfileAddFriend.setVisibility(View.GONE);
-
-        }else{
-            mImageViewUserProfileAddFriend.setVisibility(View.VISIBLE);
-            mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_add_person);
-
-            //Change icon of friend request if friends request was sent
-            FirebaseDAO.getInstance().areFriendRequestOut(currentUserID, friendUser.getKey(), new DataCallback<User.FriendRequestOut>() {
-                @Override
-                public void onDataReceive(User.FriendRequestOut friend) {
-                    if(friend != null){
-                        mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
-                    }
-                }
-            });
-
-            //Change icon of friend request if they are friends
-            FirebaseDAO.getInstance().areFriends(currentUserID, friendUser.getKey(), new DataCallback<User.Friend>() {
-                @Override
-                public void onDataReceive(User.Friend friend) {
-                    if(friend != null){
-                        mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends);
-                    }
-                }
-            });
-        }
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search_menu, menu);
@@ -161,6 +134,9 @@ public class UserProfileFragment extends Fragment {
     }
 
     public void showUserData(User user){
+
+        // Icon of friendship
+        setAddFriendIcon(mAuth.getCurrentUser().getUid(), user);
 
         TextView textUserProfileShortDesc = (TextView) getView().findViewById(R.id.user_profile_short_desc);
         TextView textUserProfileEmail = (TextView) getView().findViewById(R.id.user_profile_email);
@@ -197,7 +173,7 @@ public class UserProfileFragment extends Fragment {
                 if(profile.getGender() != null){
                     textUserProfileGender.setText(profile.getGender());
                 }
-                //TODO paser long to date and not string
+                //TODO parser long to date and not string
                 if(profile.getBirthday() != 0){
                     textUserProfileBirthday.setText(String.valueOf(profile.getBirthday()));
                 }
@@ -205,6 +181,37 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
+    }
+
+    public void setAddFriendIcon(String currentUserID, User friendUser){
+
+        if( friendUser.getKey().equals(mAuth.getCurrentUser().getUid()) ){
+            mImageViewUserProfileAddFriend.setVisibility(View.GONE);
+
+        }else{
+            mImageViewUserProfileAddFriend.setVisibility(View.VISIBLE);
+            mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_add_person);
+
+            //Change icon of friend request if friends request was sent
+            FirebaseDAO.getInstance().areFriendRequestOut(currentUserID, friendUser.getKey(), new DataCallback<User.FriendRequestOut>() {
+                @Override
+                public void onDataReceive(User.FriendRequestOut friend) {
+                    if(friend != null){
+                        mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
+                    }
+                }
+            });
+
+            //Change icon of friend request if they are friends
+            FirebaseDAO.getInstance().areFriends(currentUserID, friendUser.getKey(), new DataCallback<User.Friend>() {
+                @Override
+                public void onDataReceive(User.Friend friend) {
+                    if(friend != null){
+                        mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends);
+                    }
+                }
+            });
+        }
     }
 
     /*public void actionEdit(View view){
