@@ -36,7 +36,7 @@ public class FriendsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
 
-        ListAdapter adapter = new ListAdapter(getActivity(), imgId, lenguaje, description);
+        ListAdapter adapter = new ListAdapter(getActivity(), imgId, lenguaje, description, false);
 
         ListView listViewFriends = (ListView) view.findViewById(R.id.list_view_friends);
         listViewFriends.setAdapter(adapter);

@@ -33,7 +33,7 @@ public class NotificationsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
 
-        ListAdapter adapter = new ListAdapter(getActivity(), imgId, lenguaje, description);
+        ListAdapter adapter = new ListAdapter(getActivity(), imgId, lenguaje, description, true);
 
         ListView listViewFriends = (ListView) view.findViewById(R.id.list_view_friends);
         listViewFriends.setAdapter(adapter);
@@ -42,9 +42,20 @@ public class NotificationsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String selectedItem = lenguaje[position];
-                Toast.makeText(getActivity(), selectedItem, Toast.LENGTH_SHORT).show();
-
+                int viewId = view.getId();
+                switch (viewId) {
+                    case R.id.accept_request:
+                        Toast.makeText(getActivity(), "Boton accepted: " + position, Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.reject_request:
+                        Toast.makeText(getActivity(), "Boton reject: " + position, Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        //item in list
+                        String selectedItem = lenguaje[position];
+                        Toast.makeText(getActivity(), selectedItem, Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
         });
 
