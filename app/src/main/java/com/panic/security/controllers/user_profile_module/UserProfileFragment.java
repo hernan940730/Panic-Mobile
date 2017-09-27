@@ -1,8 +1,11 @@
 package com.panic.security.controllers.user_profile_module;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -46,12 +50,9 @@ public class UserProfileFragment extends Fragment {
     User mUserShown;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        final View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
-
-        // Image to add friend
-        mImageViewUserProfileAddFriend = (ImageView) view.findViewById(R.id.user_profile_add_friend);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mImageViewUserProfileAddFriend = (ImageView) getView().findViewById(R.id.user_profile_add_friend);
         mImageViewUserProfileAddFriend.setVisibility(View.GONE);
 
         mAuth = FirebaseAuth.getInstance();
@@ -65,10 +66,16 @@ public class UserProfileFragment extends Fragment {
                 addSearchBar();
 
                 //actionEdit(view);
-                actionAddFriend(view);
+                actionAddFriend();
 
             }
         });
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        final View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
         // Inflate the layout for this fragment
         return view;
@@ -166,6 +173,7 @@ public class UserProfileFragment extends Fragment {
         TextView textUserProfileEmail = (TextView) getView().findViewById(R.id.user_profile_email);
         TextView textUserProfilePhoneNumber = (TextView) getView().findViewById(R.id.user_profile_phone_number);
         TextView textUserProfileNumberReports = (TextView) getView().findViewById(R.id.user_profile_number_reports);
+        final ImageButton imageButtonProfilePicture = (ImageButton) getView().findViewById(R.id.default_user_profile);
 
         textUserProfileShortDesc.setText(getResources().getString(R.string.user_profile_short_desc));
         if(user.getEmail() != null){
@@ -183,6 +191,13 @@ public class UserProfileFragment extends Fragment {
         }else{
             textUserProfileNumberReports.setText(getResources().getString(R.string.user_profile_number_reports) + " 0");
         }
+
+        FirebaseDAO.getInstance().getProfileImageInBytes(user.getKey(), new DataCallback<byte []>() {
+            @Override
+            public void onDataReceive (byte []data) {
+                imageButtonProfilePicture.setImageBitmap(BitmapFactory.decodeByteArray (data, 0, data.length));
+            }
+        });
 
         FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
             @Override
@@ -224,14 +239,12 @@ public class UserProfileFragment extends Fragment {
         imageViewUserProfileEditInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Toast.makeText(getActivity(), "Edit Profile", Toast.LENGTH_SHORT).show();
-
             }
         });
     }*/
 
-    public void actionAddFriend(View view) {
+    public void actionAddFriend () {
 
         mImageViewUserProfileAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override

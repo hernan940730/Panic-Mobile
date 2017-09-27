@@ -23,7 +23,7 @@ import com.panic.security.controllers.main_module.MainActivity;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * status bar and navigation/system bar) with USER_REFERENCE interaction.
  */
 
 public class LoginActivity extends AppCompatActivity {
@@ -120,11 +120,11 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             progressbar.setVisibility(View.INVISIBLE);
-                            // Sign in success, update UI with the signed-in user's information
+                            // Sign in success, update UI with the signed-in USER_REFERENCE's information
                             FirebaseUser user = mAuth.getCurrentUser();
                             showHome();
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // If sign in fails, display a message to the USER_REFERENCE.
                             Toast.makeText(LoginActivity.this, getResources().getString( R.string.authentication_failed ),
                                     Toast.LENGTH_SHORT).show();
                             progressbar.setVisibility(View.INVISIBLE);
