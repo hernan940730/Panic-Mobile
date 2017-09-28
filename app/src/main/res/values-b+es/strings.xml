@@ -43,7 +43,9 @@
     <string name="user_profile_number_reports">Numero de reportes:</string>
 
     <!-- Snackbar messages -->
+    <string name="you_are_friends">Ustedes ya son amigos</string>
     <string name="friend_request_sent">Solicitud de amistad enviada</string>
+    <string name="friend_request_accepted">Solicitud de amistad aceptada</string>
     <string name="request_pending_acceptance">Solicitud pendiente de aceptación</string>
 
     <!-- Gender -->

@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.panic.security.DBRegistersGenerator;
 import com.panic.security.R;
 import com.panic.security.controllers.main_module.MainActivity;
+import com.panic.security.firebase_utils.CouchbaseDAO;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -43,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initCouchbase();
         loginAttempts = 0;
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -161,6 +163,10 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(View view) {
         signIn( );
+    }
+
+    private void initCouchbase () {
+        CouchbaseDAO.getInstance (this);
     }
 
     @Override

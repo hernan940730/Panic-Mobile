@@ -31,8 +31,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.panic.security.DBRegistersGenerator;
 import com.panic.security.R;
+import com.panic.security.controllers.friends_module.FriendsFragment;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
 
+import com.panic.security.controllers.notifications_module.NotificationsFragment;
 import com.panic.security.controllers.user_profile_module.UserProfileFragment;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
@@ -57,8 +59,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initCouchbase();
         getLocationPermission();
+        handlerPassDataBetweenFragments();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -152,11 +154,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.item_user_profile) {
             fragmentManager.beginTransaction().replace (R.id.content_main, new UserProfileFragment()).commit();
         } else if (id == R.id.item_friends) {
-
+            fragmentManager.beginTransaction().replace (R.id.content_main, new FriendsFragment()).commit();
         } else if (id == R.id.item_my_reports) {
 
         } else if (id == R.id.item_notifications) {
-
+            fragmentManager.beginTransaction().replace (R.id.content_main, new NotificationsFragment()).commit();
         } else if (id == R.id.item_about) {
 
         } else if ( id == R.id.item_sign_out ){
@@ -166,6 +168,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void handlerPassDataBetweenFragments(){
+        Intent intent = getIntent();
+        String type = intent.getStringExtra("type");
+
+        if(type != null){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            if(type.equals("query")){
+                User userFound = (User)intent.getSerializableExtra("user_in_search");
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("userFound", userFound);
+                UserProfileFragment userProfileFragment = new UserProfileFragment();
+                userProfileFragment.setArguments(bundle);
+                fragmentManager.beginTransaction().replace(R.id.content_main, userProfileFragment).commit();
+
+            }else if(type.equals("anotherExchangeBetweenFragments")){
+
+            }
+        }
     }
 
     private void signOut() {
@@ -263,9 +286,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else {
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
-    }
-
-    private void initCouchbase () {
-        CouchbaseDAO.getInstance (this);
     }
 }
