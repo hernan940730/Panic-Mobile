@@ -107,7 +107,7 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                            // Sign in success, update UI with the signed-in USER_REFERENCE's information
                             progressbar.setVisibility(View.INVISIBLE);
 
                             FirebaseUser user = mAuth.getCurrentUser();
@@ -126,7 +126,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                             showHome();
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // If sign in fails, display a message to the USER_REFERENCE.
                             progressbar.setVisibility(View.INVISIBLE);
                             FirebaseAuthException e = ( FirebaseAuthException )task.getException();
                             Toast.makeText(SignUpActivity.this, "Authentication failed: " + e.getMessage(),

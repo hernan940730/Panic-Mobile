@@ -19,7 +19,7 @@ public abstract class FirebaseReferences {
     public static final String REPORTS_REFERENCE = "reports";
     public static final String STOLEN_OBJECTS_REFERENCE = "stolen_objects";
     public static final String USERS_REFERENCE = "users";
-
+    public static final String PROFILE_PICTURES_FOLDER_REFERENCE = "profile_pictures";
     /**
      * Welcome message reference
      */

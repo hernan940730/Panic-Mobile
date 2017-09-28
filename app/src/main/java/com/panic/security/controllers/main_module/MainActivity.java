@@ -36,6 +36,7 @@ import com.panic.security.controllers.notifications_module.NotificationsFragment
 import com.panic.security.controllers.user_profile_module.UserProfileFragment;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
+import com.panic.security.firebase_utils.CouchbaseDAO;
 import com.panic.security.firebase_utils.DataCallback;
 import com.panic.security.firebase_utils.FirebaseDAO;
 import com.panic.security.location_utils.UserLocationUtils;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initCouchbase();
         getLocationPermission();
         handlerPassDataBetweenFragments();
 
@@ -280,5 +282,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else {
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
+    }
+
+    private void initCouchbase () {
+        CouchbaseDAO.getInstance (this);
     }
 }

@@ -1,5 +1,12 @@
 package com.panic.security.firebase_utils;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.widget.ImageView;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -7,6 +14,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.panic.security.entities.Crime;
 import com.panic.security.entities.Location;
 import com.panic.security.entities.Profile;
@@ -14,6 +24,7 @@ import com.panic.security.entities.Report;
 import com.panic.security.entities.StolenObject;
 import com.panic.security.entities.User;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,10 +36,16 @@ import java.util.Map;
 
 public class FirebaseDAO {
     private FirebaseDatabase database;
+    private FirebaseStorage storage;
+    private CouchbaseDAO couchbaseDAO;
+
     private static FirebaseDAO firebaseDAO;
+    private final long ONE_MEGABYTE = 1024 * 1024;
 
     private FirebaseDAO () {
         database = FirebaseDatabase.getInstance();
+        storage = FirebaseStorage.getInstance();
+        couchbaseDAO = CouchbaseDAO.getInstance();
     }
 
     public static synchronized FirebaseDAO getInstance () {
@@ -38,8 +55,33 @@ public class FirebaseDAO {
         return firebaseDAO;
     }
 
-    public void getUserByID(String ID, final DataCallback<User> callback) {
-        final DatabaseReference ref = database.getReference(FirebaseReferences.USERS_REFERENCE).child(ID);
+    public void getUserByID (String ID, final DataCallback<User> callback) {
+
+        final DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).child (ID);
+
+        if (ID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+            User user = couchbaseDAO.getUser();
+            if (user != null) {
+                user.setKey (ID);
+                callback.onDataReceive (user);
+                return;
+            }
+            else {
+                ref.addValueEventListener (new ValueEventListener() {
+                    @Override
+                    public void onDataChange (DataSnapshot dataSnapshot) {
+                        User entity = dataSnapshot.getValue (User.class);
+                        couchbaseDAO.pushUser (entity);
+                    }
+
+                    @Override
+                    public void onCancelled (DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
+
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -53,6 +95,7 @@ public class FirebaseDAO {
                 callback.onDataReceive (null);
             }
         });
+
     }
 
     public void getCrimeByID (String ID, final DataCallback<Crime> callback) {
@@ -89,6 +132,32 @@ public class FirebaseDAO {
 
     public void getProfileByID (String ID, final DataCallback<Profile> callback) {
         final DatabaseReference ref = database.getReference(FirebaseReferences.PROFILES_REFERENCE).child(ID);
+
+        User user = couchbaseDAO.getUser();
+
+        if (user != null) {
+            if (user.getProfile_id ().equals (ID)) {
+                Profile profile = couchbaseDAO.getProfile();
+                if (profile != null) {
+                    callback.onDataReceive(profile);
+                }
+                else {
+                    ref.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Profile entity = dataSnapshot.getValue (Profile.class);
+                            couchbaseDAO.pushProfile (entity);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+        }
+
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -330,6 +399,16 @@ public class FirebaseDAO {
         });
     }
 
+    public void getProfileImageInBytes (String userID, final DataCallback<byte[]> callback) {
+        StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child("hernan940730@gmail.com.jpg");
+        ref.getBytes (ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes){
+                callback.onDataReceive (bytes);
+            }
+        });
+    }
+
     public String pushUser (String ID, User entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).child (ID);
         ref.setValue (entity);
@@ -375,5 +454,6 @@ public class FirebaseDAO {
                 .child(FirebaseReferences.User.FRIEND_REQUESTS_IN_REFERENCE).child(user.getKey());
         refIn.setValue(friend);
     }
+
 
 }
