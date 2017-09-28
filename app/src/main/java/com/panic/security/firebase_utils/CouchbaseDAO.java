@@ -66,6 +66,7 @@ public class CouchbaseDAO {
         }
 
         User user = new User();
+        user.setId((String) properties.get(FirebaseReferences.User.ID_REFERENCE));
         user.setEmail ((String) properties.get(FirebaseReferences.User.EMAIL_REFERENCE));
         user.setFriend_requests_in ((HashMap<String, User.FriendRequestIn>) properties.get(FirebaseReferences.User.FRIEND_REQUESTS_IN_REFERENCE));
         user.setFriend_requests_out ((HashMap<String, User.FriendRequestOut>) properties.get(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE));
@@ -74,7 +75,6 @@ public class CouchbaseDAO {
         user.setPhone_number ((String) properties.get(FirebaseReferences.User.PHONE_NUMBER_REFERENCE));
         user.setProfile_id ((String) properties.get(FirebaseReferences.User.PROFILE_ID_REFERENCE));
         user.setReports ((HashMap<String, String>) properties.get(FirebaseReferences.User.REPORTS_REFERENCE));
-        user.setProfile_picture((String) properties.get(FirebaseReferences.User.PROFILE_PICTURE_REFERENCE));
         return user;
     }
 
@@ -97,6 +97,8 @@ public class CouchbaseDAO {
             birthday = (long) properties.get(FirebaseReferences.Profile.BIRTHDAY_REFERENCE);
         }
 
+        profile.setId((String) properties.get(FirebaseReferences.Profile.ID_REFERENCE));
+        profile.setUser_id((String) properties.get(FirebaseReferences.Profile.USER_ID_REFERENCE));
         profile.setBirthday (birthday);
         profile.setCountry ((String) properties.get(FirebaseReferences.Profile.COUNTRY_REFERENCE));
         profile.setGender ((String) properties.get(FirebaseReferences.Profile.GENDER_REFERENCE));
@@ -110,6 +112,7 @@ public class CouchbaseDAO {
         Document document = database.getDocument (CouchbaseReferences.USER_REFERENCE);
 
         Map<String, Object> properties = new HashMap<>();
+        properties.put(FirebaseReferences.User.ID_REFERENCE, user.getId());
         properties.put(FirebaseReferences.User.EMAIL_REFERENCE, user.getEmail());
         properties.put(FirebaseReferences.User.FRIEND_REQUESTS_IN_REFERENCE, user.getFriend_requests_in());
         properties.put(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE, user.getFriend_requests_out());
@@ -118,7 +121,6 @@ public class CouchbaseDAO {
         properties.put(FirebaseReferences.User.PHONE_NUMBER_REFERENCE, user.getPhone_number());
         properties.put(FirebaseReferences.User.PROFILE_ID_REFERENCE, user.getProfile_id());
         properties.put(FirebaseReferences.User.REPORTS_REFERENCE, user.getReports());
-        properties.put(FirebaseReferences.User.PROFILE_PICTURE_REFERENCE, user.getProfile_picture());
 
         try {
             document.putProperties (properties);
@@ -132,6 +134,8 @@ public class CouchbaseDAO {
         Document document = database.getDocument(CouchbaseReferences.PROFILE_REFERENCE);
 
         Map<String, Object> properties = new HashMap<>();
+        properties.put(FirebaseReferences.Profile.ID_REFERENCE, profile.getId());
+        properties.put(FirebaseReferences.Profile.USER_ID_REFERENCE, profile.getUser_id());
         properties.put(FirebaseReferences.Profile.BIRTHDAY_REFERENCE, profile.getBirthday());
         properties.put(FirebaseReferences.Profile.COUNTRY_REFERENCE, profile.getCountry());
         properties.put(FirebaseReferences.Profile.GENDER_REFERENCE, profile.getGender());
@@ -140,6 +144,15 @@ public class CouchbaseDAO {
 
         try {
             document.putProperties(properties);
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteData () {
+        try {
+            database.getDocument(CouchbaseReferences.USER_REFERENCE).delete();
+            database.getDocument(CouchbaseReferences.PROFILE_REFERENCE).delete();
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }

@@ -117,11 +117,12 @@ public class SignUpActivity extends AppCompatActivity {
 
                             profile.setName( mName.getText().toString() );
                             profile.setLast_name( mLastName.getText().toString() );
-                            String profileID = firebaseDAO.pushProfile( profile );
+                            String profileID = firebaseDAO.pushProfile( user.getUid(), profile );
 
                             fireBaseUser.setEmail( user.getEmail() );
                             fireBaseUser.setProfile_id( profileID );
                             fireBaseUser.setPhone_number( mPhoneNumberEditText.getText().toString() );
+                            fireBaseUser.setIs_active_account(true);
                             firebaseDAO.pushUser( user.getUid(), fireBaseUser );
 
                             showHome();

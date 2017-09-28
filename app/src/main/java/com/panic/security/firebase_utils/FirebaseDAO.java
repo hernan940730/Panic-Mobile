@@ -1,10 +1,8 @@
 package com.panic.security.firebase_utils;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.widget.ImageView;
+import android.support.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -12,9 +10,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.panic.security.entities.Crime;
@@ -24,9 +22,7 @@ import com.panic.security.entities.Report;
 import com.panic.security.entities.StolenObject;
 import com.panic.security.entities.User;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,7 +58,6 @@ public class FirebaseDAO {
         if (ID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
             User user = couchbaseDAO.getUser();
             if (user != null) {
-                user.setKey (ID);
                 callback.onDataReceive (user);
                 return;
             }
@@ -86,7 +81,6 @@ public class FirebaseDAO {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User entity = dataSnapshot.getValue (User.class);
-                entity.setKey(dataSnapshot.getKey());
                 callback.onDataReceive (entity);
             }
 
@@ -272,16 +266,30 @@ public class FirebaseDAO {
         });
     }
 
-    public void getUserByEmail(final String email, final DataCallback<User> callback ){
-
+    public void getUserByEmail (final String email, final DataCallback<User> callback){
         final DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE);
+        /*
+        ref.orderByChild(FirebaseReferences.User.EMAIL_REFERENCE)
+                .equalTo(email)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        callback.onDataReceive(user);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+*/
 
         ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 User user = dataSnapshot.getValue(User.class);
-                user.setKey(dataSnapshot.getKey());
                 if(user.getEmail().equals (email)){
                     callback.onDataReceive(user);
                     ref.removeEventListener(this);
@@ -384,47 +392,60 @@ public class FirebaseDAO {
     }
 
     public void getProfileImageInBytes (String userID, final DataCallback<byte[]> callback) {
-        StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child("hernan940730@gmail.com.jpg");
+        StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
         ref.getBytes (ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes){
                 callback.onDataReceive (bytes);
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                callback.onDataReceive (null);
+            }
         });
+
     }
 
     public String pushUser (String ID, User entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).child (ID);
+        entity.setId(ID);
         ref.setValue (entity);
         return ref.getKey ();
     }
 
-    public String pushProfile (Profile entity) {
+    public String pushProfile ( String userId, Profile entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.PROFILES_REFERENCE).push ();
+        entity.setId(ref.getKey());
+        entity.setUser_id(userId);
         ref.setValue (entity);
         return ref.getKey ();
     }
 
     public String pushCrime (Crime entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.CRIMES_REFERENCE).push ();
+        entity.setId(ref.getKey());
         ref.setValue (entity);
         return ref.getKey ();
     }
 
     public String pushLocation (Location entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.LOCATIONS_REFERENCE).push ();
+        entity.setId(ref.getKey());
         ref.setValue (entity);
         return ref.getKey ();
     }
 
     public String pushReport (Report entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.REPORTS_REFERENCE).push ();
+        entity.setId(ref.getKey());
         ref.setValue (entity);
         return ref.getKey ();
     }
 
     public String pushStolenObject (StolenObject entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.STOLEN_OBJECTS_REFERENCE).push();
+        entity.setId(ref.getKey());
         ref.setValue (entity);
         return ref.getKey ();
     }

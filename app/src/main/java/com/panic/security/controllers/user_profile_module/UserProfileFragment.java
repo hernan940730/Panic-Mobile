@@ -1,12 +1,8 @@
 package com.panic.security.controllers.user_profile_module;
 
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,28 +10,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ServerValue;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.panic.security.R;
-import com.panic.security.controllers.main_module.MainActivity;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
 import com.panic.security.firebase_utils.DataCallback;
 import com.panic.security.firebase_utils.FirebaseDAO;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class UserProfileFragment extends Fragment {
 
@@ -131,7 +120,7 @@ public class UserProfileFragment extends Fragment {
 
     public void setAddFriendIcon(String currentUserID, User friendUser){
 
-        if( friendUser.getKey().equals(mAuth.getCurrentUser().getUid()) ){
+        if( friendUser.getId().equals(mAuth.getCurrentUser().getUid()) ){
             mImageViewUserProfileAddFriend.setVisibility(View.GONE);
 
         }else{
@@ -139,7 +128,7 @@ public class UserProfileFragment extends Fragment {
             mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_add_person);
 
             //Change icon of friend request if friends request was sent
-            FirebaseDAO.getInstance().areFriendRequestOut(currentUserID, friendUser.getKey(), new DataCallback<User.FriendRequestOut>() {
+            FirebaseDAO.getInstance().areFriendRequestOut(currentUserID, friendUser.getId(), new DataCallback<User.FriendRequestOut>() {
                 @Override
                 public void onDataReceive(User.FriendRequestOut friend) {
                     if(friend != null){
@@ -149,7 +138,7 @@ public class UserProfileFragment extends Fragment {
             });
 
             //Change icon of friend request if they are friends
-            FirebaseDAO.getInstance().areFriends(currentUserID, friendUser.getKey(), new DataCallback<User.Friend>() {
+            FirebaseDAO.getInstance().areFriends(currentUserID, friendUser.getId(), new DataCallback<User.Friend>() {
                 @Override
                 public void onDataReceive(User.Friend friend) {
                     if(friend != null){
@@ -192,10 +181,16 @@ public class UserProfileFragment extends Fragment {
             textUserProfileNumberReports.setText(getResources().getString(R.string.user_profile_number_reports) + " 0");
         }
 
-        FirebaseDAO.getInstance().getProfileImageInBytes(user.getKey(), new DataCallback<byte []>() {
+        FirebaseDAO.getInstance().getProfileImageInBytes(user.getId(), new DataCallback<byte []>() {
             @Override
             public void onDataReceive (byte []data) {
-                imageButtonProfilePicture.setImageBitmap(BitmapFactory.decodeByteArray (data, 0, data.length));
+                if (data != null) {
+                    imageButtonProfilePicture.setImageBitmap(BitmapFactory.decodeByteArray (data, 0, data.length));
+                }
+                else {
+                    imageButtonProfilePicture.setImageResource(R.mipmap.ic_default_user_profile);
+                }
+
             }
         });
 
@@ -250,11 +245,11 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                FirebaseDAO.getInstance().areFriendRequestOut(mAuth.getCurrentUser().getUid(), mUserShown.getKey(), new DataCallback<User.FriendRequestOut>() {
+                FirebaseDAO.getInstance().areFriendRequestOut(mAuth.getCurrentUser().getUid(), mUserShown.getId(), new DataCallback<User.FriendRequestOut>() {
                     @Override
                     public void onDataReceive(User.FriendRequestOut friend) {
                         if(friend == null){
-                            FirebaseDAO.getInstance().pushFriendRequestOutToUser(mAuth.getCurrentUser().getUid(), new User.FriendRequestOut(mUserShown.getKey(), 0L ));
+                            FirebaseDAO.getInstance().pushFriendRequestOutToUser(mAuth.getCurrentUser().getUid(), new User.FriendRequestOut(mUserShown.getId(), 0L ));
                             mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
                             Toast.makeText(getActivity(), getResources().getString(R.string.friend_request_sent), Toast.LENGTH_SHORT).show();
                             //Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_sent), Snackbar.LENGTH_LONG).show();
