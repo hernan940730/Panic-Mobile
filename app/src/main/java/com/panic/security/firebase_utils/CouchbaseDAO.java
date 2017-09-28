@@ -3,6 +3,7 @@ package com.panic.security.firebase_utils;
 import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
@@ -11,11 +12,15 @@ import com.couchbase.lite.Document;
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.android.AndroidContext;
 import com.panic.security.R;
+import com.panic.security.entities.Crime;
+import com.panic.security.entities.Location;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -89,23 +94,62 @@ public class CouchbaseDAO {
 
         Profile profile = new Profile();
 
-        long birthday = 0;
-        if (properties.get(FirebaseReferences.Profile.BIRTHDAY_REFERENCE).getClass().equals(Integer.class)){
-            birthday = (int) properties.get(FirebaseReferences.Profile.BIRTHDAY_REFERENCE);
-        }
-        else {
-            birthday = (long) properties.get(FirebaseReferences.Profile.BIRTHDAY_REFERENCE);
-        }
-
         profile.setId((String) properties.get(FirebaseReferences.Profile.ID_REFERENCE));
         profile.setUser_id((String) properties.get(FirebaseReferences.Profile.USER_ID_REFERENCE));
-        profile.setBirthday (birthday);
+        profile.setBirthday (getLongValue(properties.get(FirebaseReferences.Profile.BIRTHDAY_REFERENCE)));
         profile.setCountry ((String) properties.get(FirebaseReferences.Profile.COUNTRY_REFERENCE));
         profile.setGender ((String) properties.get(FirebaseReferences.Profile.GENDER_REFERENCE));
         profile.setLast_name ((String) properties.get(FirebaseReferences.Profile.LAST_NAME_REFERENCE));
         profile.setName ((String) properties.get(FirebaseReferences.Profile.NAME_REFERENCE));
 
         return profile;
+    }
+
+    private long getLongValue (Object value) {
+        long ret = 0;
+        if (value.getClass().equals(Integer.class)){
+            ret = (int) value;
+        }
+        else {
+            ret = (long) value;
+        }
+        return ret;
+    }
+
+    @Nullable
+    public List<Pair<Crime, Location>> getCrimeLocationList() {
+        Document document = database.getDocument (CouchbaseReferences.CRIME_LOCATION_LIST_REFERENCE);
+        Map<String, Object> properties = document.getProperties();
+
+        if (properties == null || properties.isEmpty()) {
+            return null;
+        }
+
+        List<Pair<Crime, Location>> list = new ArrayList<>();
+
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            if(!entry.getValue().getClass().equals(Map.class)) {
+                continue;
+            }
+            Map<String, Object> subProperties = (Map<String, Object>) entry.getValue();
+
+            Crime crime = new Crime(
+                    (String) subProperties.get(CouchbaseReferences.CrimeLocationList.CRIME_ID_REFERENCE),
+                    (String) subProperties.get(CouchbaseReferences.CrimeLocationList.REPORT_ID_REFERENCE),
+                    (String) subProperties.get(CouchbaseReferences.CrimeLocationList.LOCATION_ID_REFERENCE),
+                    (String) subProperties.get(CouchbaseReferences.CrimeLocationList.TYPE_REFERENCE),
+                    getLongValue (subProperties.get(CouchbaseReferences.CrimeLocationList.DATE_REFERENCE))
+            );
+            Location location = new Location (
+                    (String) subProperties.get(CouchbaseReferences.CrimeLocationList.LOCATION_ID_REFERENCE),
+                    (String) subProperties.get(CouchbaseReferences.CrimeLocationList.CRIME_ID_REFERENCE),
+                    (double) subProperties.get(CouchbaseReferences.CrimeLocationList.LATITUDE_REFERENCE),
+                    (double) subProperties.get(CouchbaseReferences.CrimeLocationList.LONGITUDE_REFERENCE)
+            );
+
+            list.add (new Pair<> (crime, location));
+        }
+        return list;
     }
 
     public void pushUser (User user) {
@@ -149,13 +193,42 @@ public class CouchbaseDAO {
         }
     }
 
-    public void deleteData () {
+    public void pushCrimeLocationList (List<Pair<Crime, Location>> list) {
+        Document document = database.getDocument(CouchbaseReferences.CRIME_LOCATION_LIST_REFERENCE);
+        Map<String, Object> properties = new HashMap<>();
+        for (Pair<Crime, Location> pair : list) {
+            Crime crime = pair.first;
+            Location location = pair.second;
+            Map<String, Object> subProperties = getCrimeLocationSubProperties(crime, location);
+            properties.put("report_" + crime.getReport_id(), subProperties);
+        }
         try {
-            database.getDocument(CouchbaseReferences.USER_REFERENCE).delete();
-            database.getDocument(CouchbaseReferences.PROFILE_REFERENCE).delete();
+            document.putProperties(properties);
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
     }
 
+
+    private Map<String, Object> getCrimeLocationSubProperties(Crime crime, Location location) {
+        Map<String, Object> subProperties = new HashMap<>();
+        subProperties.put(CouchbaseReferences.CrimeLocationList.CRIME_ID_REFERENCE, crime.getId());
+        subProperties.put(CouchbaseReferences.CrimeLocationList.DATE_REFERENCE, crime.getDate());
+        subProperties.put(CouchbaseReferences.CrimeLocationList.LATITUDE_REFERENCE, location.getLatitude());
+        subProperties.put(CouchbaseReferences.CrimeLocationList.LOCATION_ID_REFERENCE, location.getId());
+        subProperties.put(CouchbaseReferences.CrimeLocationList.LONGITUDE_REFERENCE, location.getLongitude());
+        subProperties.put(CouchbaseReferences.CrimeLocationList.REPORT_ID_REFERENCE, crime.getReport_id());
+        subProperties.put(CouchbaseReferences.CrimeLocationList.TYPE_REFERENCE, crime.getType());
+        return subProperties;
+    }
+
+    public void deleteData () {
+        try {
+            database.getDocument(CouchbaseReferences.USER_REFERENCE).delete();
+            database.getDocument(CouchbaseReferences.PROFILE_REFERENCE).delete();
+            database.getDocument(CouchbaseReferences.CRIME_LOCATION_LIST_REFERENCE).delete();
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+    }
 }
