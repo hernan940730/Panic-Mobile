@@ -8,6 +8,15 @@
     mMap:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.panic.security.controllers.main_module.MainActivity">
 
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_button"
+        android:translationX="20dp"
+        android:translationY="250dp"
+        android:src="@mipmap/ic_assault" />
+
     <Button
         android:id="@+id/share_location_button"
         android:layout_width="match_parent"
