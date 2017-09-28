@@ -21,6 +21,20 @@ public class User {
     private String profile_id;
     private Map<String, String> reports;
 
+    public User () { }
+
+    public User (String id, String email, Map<String, FriendRequestIn> friend_requests_in, Map<String, FriendRequestOut> friend_requests_out, Map<String, Friend> friends, boolean is_active_account, String phone_number, String profile_id, Map<String, String> reports) {
+        this.id = id;
+        this.email = email;
+        this.friend_requests_in = friend_requests_in;
+        this.friend_requests_out = friend_requests_out;
+        this.friends = friends;
+        this.is_active_account = is_active_account;
+        this.phone_number = phone_number;
+        this.profile_id = profile_id;
+        this.reports = reports;
+    }
+
     public String getId() {
         return id;
     }
@@ -95,8 +109,17 @@ public class User {
 
     public static class FriendRequestIn {
 
-        private long date;
         private String user_id;
+        private long date;
+
+        public FriendRequestIn() {
+
+        }
+
+        public FriendRequestIn(String user_id, long date) {
+            this.user_id = user_id;
+            this.date = date;
+        }
 
         public String getUser_id() {
             return user_id;
@@ -144,6 +167,14 @@ public class User {
         private String user_id;
         private long date;
         private boolean is_location_shared;
+
+        public Friend () { }
+
+        public Friend(String user_id, long date, boolean is_location_shared) {
+            this.user_id = user_id;
+            this.date = date;
+            this.is_location_shared = is_location_shared;
+        }
 
         public String getUser_id() {
             return user_id;

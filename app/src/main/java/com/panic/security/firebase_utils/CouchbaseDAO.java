@@ -65,16 +65,16 @@ public class CouchbaseDAO {
             return null;
         }
 
-        User user = new User();
-        user.setId((String) properties.get(FirebaseReferences.User.ID_REFERENCE));
-        user.setEmail ((String) properties.get(FirebaseReferences.User.EMAIL_REFERENCE));
-        user.setFriend_requests_in ((HashMap<String, User.FriendRequestIn>) properties.get(FirebaseReferences.User.FRIEND_REQUESTS_IN_REFERENCE));
-        user.setFriend_requests_out ((HashMap<String, User.FriendRequestOut>) properties.get(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE));
-        user.setFriends ((HashMap<String, User.Friend>) properties.get(FirebaseReferences.User.FRIENDS_REFERENCE));
-        user.setIs_active_account ((boolean) properties.get(FirebaseReferences.User.IS_ACTIVE_REFERENCE));
-        user.setPhone_number ((String) properties.get(FirebaseReferences.User.PHONE_NUMBER_REFERENCE));
-        user.setProfile_id ((String) properties.get(FirebaseReferences.User.PROFILE_ID_REFERENCE));
-        user.setReports ((HashMap<String, String>) properties.get(FirebaseReferences.User.REPORTS_REFERENCE));
+        User user = new User (
+                (String) properties.get(FirebaseReferences.User.ID_REFERENCE),
+                (String) properties.get(FirebaseReferences.User.EMAIL_REFERENCE),
+                (HashMap<String, User.FriendRequestIn>) properties.get(FirebaseReferences.User.FRIEND_REQUESTS_IN_REFERENCE),
+                (HashMap<String, User.FriendRequestOut>) properties.get(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE),
+                (HashMap<String, User.Friend>) properties.get(FirebaseReferences.User.FRIENDS_REFERENCE),
+                (boolean) properties.get(FirebaseReferences.User.IS_ACTIVE_REFERENCE),
+                (String) properties.get(FirebaseReferences.User.PHONE_NUMBER_REFERENCE),
+                (String) properties.get(FirebaseReferences.User.PROFILE_ID_REFERENCE),
+                (HashMap<String, String>) properties.get(FirebaseReferences.User.REPORTS_REFERENCE));
         return user;
     }
 

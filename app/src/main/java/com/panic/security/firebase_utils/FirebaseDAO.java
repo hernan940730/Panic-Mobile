@@ -10,6 +10,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -172,11 +173,11 @@ public class FirebaseDAO {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> list = new ArrayList<String>();
-                Map<String,Object> users =  (Map<String,Object>) dataSnapshot.getValue();
-                for (Map.Entry<String, Object> entry : users.entrySet()){
-                    Map singleProfile = (Map) entry.getValue();
-                    list.add((String)singleProfile.get(FirebaseReferences.User.EMAIL_REFERENCE));
+                List<String> list = new ArrayList<>();
+                Map<String, User> users = dataSnapshot.getValue(new GenericTypeIndicator<Map<String, User>>() {});
+                for (Map.Entry<String, User> entry : users.entrySet()){
+                    User user = entry.getValue();
+                    list.add(user.getEmail());
                 }
                 callback.onDataReceive (list);
             }
@@ -268,14 +269,23 @@ public class FirebaseDAO {
 
     public void getUserByEmail (final String email, final DataCallback<User> callback){
         final DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE);
-        /*
+
         ref.orderByChild(FirebaseReferences.User.EMAIL_REFERENCE)
                 .equalTo(email)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        User user = dataSnapshot.getValue(User.class);
-                        callback.onDataReceive(user);
+                        GenericTypeIndicator<Map<String, User>> t = new GenericTypeIndicator<Map<String, User>>() {};
+                        Map<String, User> map = dataSnapshot.getValue(t);
+
+                        for (Map.Entry<String, User> entry : map.entrySet()) {
+                            User user = entry.getValue();
+                            callback.onDataReceive (user);
+                        }
+                        if (map.isEmpty()) {
+                            callback.onDataReceive (null);
+                        }
+
                     }
 
                     @Override
@@ -283,8 +293,8 @@ public class FirebaseDAO {
 
                     }
                 });
-*/
 
+/*
         ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -317,7 +327,7 @@ public class FirebaseDAO {
 
             }
         });
-
+*/
     }
 
     public void getUserIDByProfileID(final String profileID, final DataCallback<String> callback) {

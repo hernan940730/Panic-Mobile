@@ -14,6 +14,17 @@ public class Report {
     private String description;
     private Map<String, String> stolen_objects;
 
+    public Report() {
+    }
+
+    public Report(String id, String crime_id, long date, String description, Map<String, String> stolen_objects) {
+        this.id = id;
+        this.crime_id = crime_id;
+        this.date = date;
+        this.description = description;
+        this.stolen_objects = stolen_objects;
+    }
+
     public String getId() {
         return id;
     }
