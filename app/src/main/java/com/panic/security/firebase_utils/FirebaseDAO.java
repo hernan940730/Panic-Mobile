@@ -194,6 +194,23 @@ public class FirebaseDAO {
         });
     }
 
+    public void getFriendsToUser(String userID, final DataCallback< HashMap<String, User.Friend> > callback){
+        final DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(userID);
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User entity = dataSnapshot.getValue (User.class);
+                callback.onDataReceive (entity.getFriends());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onDataReceive (null);
+            }
+        });
+
+    }
 
     public void getAllFullNamesForAllProfiles(final DataCallback< List<String> > callback) {
         final DatabaseReference ref = database.getReference().child(FirebaseReferences.PROFILES_REFERENCE);

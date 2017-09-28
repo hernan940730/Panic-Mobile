@@ -50,7 +50,7 @@ public class UserProfileFragment extends Fragment {
     User mUserShown;
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mImageViewUserProfileAddFriend = (ImageView) getView().findViewById(R.id.user_profile_add_friend);
 

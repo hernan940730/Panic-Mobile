@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +28,7 @@ import com.panic.security.firebase_utils.FirebaseDAO;
 import com.panic.security.list_utils.ListAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class FriendsFragment extends Fragment {
@@ -36,9 +38,6 @@ public class FriendsFragment extends Fragment {
     MaterialSearchView mSearchView;
     //List to search bar
     List<String> mListSource;
-    // ImageToAddFriend
-    //ImageView mImageViewUserProfileAddFriend;
-    // user_id of User that is displayed
 
     private Integer[] imgId = {
             R.mipmap.ic_account,
@@ -69,6 +68,16 @@ public class FriendsFragment extends Fragment {
 
                 // Bar search
                 addSearchBar();
+
+                /*
+                FirebaseDAO.getInstance().getFriendsToUser(user.getKey(), new DataCallback<HashMap<String, User.Friend>>() {
+                    @Override
+                    public void onDataReceive(HashMap<String, User.Friend> friends) {
+
+                        String s = "";
+
+                    }
+                });*/
 
                 // List
                 ListAdapter adapter = new ListAdapter(getActivity(), imgId, lenguaje, description, false);
@@ -113,16 +122,7 @@ public class FriendsFragment extends Fragment {
                         intent.putExtra("type", "query");
                         intent.putExtra("user_in_search", user);
                         getActivity().startActivity(intent);
-                        /*
-                        //To send data from fragment to fragment
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("userFound", 320);
-                        //Set default parameters
-                        UserProfileFragment userProfileFragment = new UserProfileFragment();
-                        userProfileFragment.setArguments(bundle);
 
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace (R.id.content_main, userProfileFragment).commit();*/
                     }
                 });
 
