@@ -259,7 +259,7 @@ public abstract class DBRegistersGenerator {
 
         return childRef;
     }
-    /*
+
     public static DatabaseReference generateRandomUser () {
         DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE);
         DatabaseReference childRef = ref.push ();
@@ -344,7 +344,6 @@ public abstract class DBRegistersGenerator {
         database.getReference(FirebaseReferences.STOLEN_OBJECTS_REFERENCE).removeValue();
 
     }
-    */
 
     public static void generateValues (final int VAL) {
         DatabaseReference ref = database.getReference(FirebaseReferences.USERS_REFERENCE);
