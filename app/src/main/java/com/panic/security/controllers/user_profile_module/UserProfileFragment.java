@@ -293,8 +293,9 @@ public class UserProfileFragment extends Fragment {
 
                                         FirebaseDAO.getInstance().pushFriend(new User.Friend(user.getKey(), mUserShown.getKey(), 0L, false));
                                         FirebaseDAO.getInstance().pushFriend(new User.Friend(mUserShown.getKey(), user.getKey(), 0L, false));
-                                        // TODO borrar friend requestin y friend requestout
-                                        
+                                        FirebaseDAO.getInstance().removeFriendRequestIn(new User.FriendRequestIn(user.getKey(), mUserShown.getKey(), 0L));
+                                        FirebaseDAO.getInstance().removeFriendRequestOut(new User.FriendRequestOut(mUserShown.getKey(), user.getKey(), 0L));
+
                                         mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends);
                                         Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_accepted), Snackbar.LENGTH_LONG).show();
 
