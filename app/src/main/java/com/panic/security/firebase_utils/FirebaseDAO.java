@@ -1,12 +1,21 @@
 package com.panic.security.firebase_utils;
 
+import android.support.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.panic.security.entities.Crime;
 import com.panic.security.entities.Location;
 import com.panic.security.entities.Profile;
@@ -15,7 +24,6 @@ import com.panic.security.entities.StolenObject;
 import com.panic.security.entities.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,10 +33,16 @@ import java.util.Map;
 
 public class FirebaseDAO {
     private FirebaseDatabase database;
+    private FirebaseStorage storage;
+    private CouchbaseDAO couchbaseDAO;
+
     private static FirebaseDAO firebaseDAO;
+    private final long ONE_MEGABYTE = 1024 * 1024;
 
     private FirebaseDAO () {
         database = FirebaseDatabase.getInstance();
+        storage = FirebaseStorage.getInstance();
+        couchbaseDAO = CouchbaseDAO.getInstance();
     }
 
     public static synchronized FirebaseDAO getInstance () {
@@ -38,13 +52,36 @@ public class FirebaseDAO {
         return firebaseDAO;
     }
 
-    public void getUserByID(String ID, final DataCallback<User> callback) {
-        final DatabaseReference ref = database.getReference(FirebaseReferences.USERS_REFERENCE).child(ID);
+    public void getUserByID (String ID, final DataCallback<User> callback) {
+
+        final DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).child (ID);
+
+        if (ID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+            User user = couchbaseDAO.getUser();
+            if (user != null) {
+                callback.onDataReceive (user);
+                return;
+            }
+            else {
+                ref.addValueEventListener (new ValueEventListener() {
+                    @Override
+                    public void onDataChange (DataSnapshot dataSnapshot) {
+                        User entity = dataSnapshot.getValue (User.class);
+                        couchbaseDAO.pushUser (entity);
+                    }
+
+                    @Override
+                    public void onCancelled (DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
+
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User entity = dataSnapshot.getValue (User.class);
-                entity.setKey(dataSnapshot.getKey());
                 callback.onDataReceive (entity);
             }
 
@@ -53,6 +90,7 @@ public class FirebaseDAO {
                 callback.onDataReceive (null);
             }
         });
+
     }
 
     public void getCrimeByID (String ID, final DataCallback<Crime> callback) {
@@ -89,6 +127,32 @@ public class FirebaseDAO {
 
     public void getProfileByID (String ID, final DataCallback<Profile> callback) {
         final DatabaseReference ref = database.getReference(FirebaseReferences.PROFILES_REFERENCE).child(ID);
+
+        User user = couchbaseDAO.getUser();
+
+        if (user != null) {
+            if (user.getProfile_id ().equals (ID)) {
+                Profile profile = couchbaseDAO.getProfile();
+                if (profile != null) {
+                    callback.onDataReceive(profile);
+                }
+                else {
+                    ref.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Profile entity = dataSnapshot.getValue (Profile.class);
+                            couchbaseDAO.pushProfile (entity);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+        }
+
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -109,11 +173,11 @@ public class FirebaseDAO {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> list = new ArrayList<String>();
-                Map<String,Object> users =  (Map<String,Object>) dataSnapshot.getValue();
-                for (Map.Entry<String, Object> entry : users.entrySet()){
-                    Map singleProfile = (Map) entry.getValue();
-                    list.add((String)singleProfile.get(FirebaseReferences.User.EMAIL_REFERENCE));
+                List<String> list = new ArrayList<>();
+                Map<String, User> users = dataSnapshot.getValue(new GenericTypeIndicator<Map<String, User>>() {});
+                for (Map.Entry<String, User> entry : users.entrySet()){
+                    User user = entry.getValue();
+                    list.add(user.getEmail());
                 }
                 callback.onDataReceive (list);
             }
@@ -203,44 +267,32 @@ public class FirebaseDAO {
         });
     }
 
-    public void getUserByEmail(final String email, final DataCallback<User> callback ){
-
+    public void getUserByEmail (final String email, final DataCallback<User> callback){
         final DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE);
 
-        ref.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        ref.orderByChild(FirebaseReferences.User.EMAIL_REFERENCE)
+                .equalTo(email)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        GenericTypeIndicator<Map<String, User>> t = new GenericTypeIndicator<Map<String, User>>() {};
+                        Map<String, User> map = dataSnapshot.getValue(t);
 
-                User user = dataSnapshot.getValue(User.class);
-                user.setKey(dataSnapshot.getKey());
-                if(user.getEmail().equals (email)){
-                    callback.onDataReceive(user);
-                    ref.removeEventListener(this);
-                }
+                        for (Map.Entry<String, User> entry : map.entrySet()) {
+                            User user = entry.getValue();
+                            callback.onDataReceive (user);
+                        }
+                        if (map.isEmpty()) {
+                            callback.onDataReceive (null);
+                        }
 
-            }
+                    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+                    }
+                });
     }
 
     public void getUserIDByProfileID(final String profileID, final DataCallback<String> callback) {
@@ -314,38 +366,61 @@ public class FirebaseDAO {
         });
     }
 
+    public void getProfileImageInBytes (String userID, final DataCallback<byte[]> callback) {
+        StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
+        ref.getBytes (ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes){
+                callback.onDataReceive (bytes);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                callback.onDataReceive (null);
+            }
+        });
+
+    }
+
     public String pushUser (String ID, User entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).child (ID);
+        entity.setId(ID);
         ref.setValue (entity);
         return ref.getKey ();
     }
 
-    public String pushProfile (Profile entity) {
+    public String pushProfile ( String userId, Profile entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.PROFILES_REFERENCE).push ();
+        entity.setId(ref.getKey());
+        entity.setUser_id(userId);
         ref.setValue (entity);
         return ref.getKey ();
     }
 
     public String pushCrime (Crime entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.CRIMES_REFERENCE).push ();
+        entity.setId(ref.getKey());
         ref.setValue (entity);
         return ref.getKey ();
     }
 
     public String pushLocation (Location entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.LOCATIONS_REFERENCE).push ();
+        entity.setId(ref.getKey());
         ref.setValue (entity);
         return ref.getKey ();
     }
 
     public String pushReport (Report entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.REPORTS_REFERENCE).push ();
+        entity.setId(ref.getKey());
         ref.setValue (entity);
         return ref.getKey ();
     }
 
     public String pushStolenObject (StolenObject entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.STOLEN_OBJECTS_REFERENCE).push();
+        entity.setId(ref.getKey());
         ref.setValue (entity);
         return ref.getKey ();
     }
@@ -355,5 +430,6 @@ public class FirebaseDAO {
                 .child(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE).child(friend.getUser_id());
         ref.setValue(friend);
     }
+
 
 }

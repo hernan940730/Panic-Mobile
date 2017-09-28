@@ -23,6 +23,8 @@ import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
 import com.panic.security.firebase_utils.FirebaseDAO;
 
+import java.util.HashMap;
+
 public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -107,26 +109,34 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                            // Sign in success, update UI with the signed-in USER_REFERENCE's information
                             progressbar.setVisibility(View.INVISIBLE);
 
                             FirebaseUser user = mAuth.getCurrentUser();
                             Profile profile = new Profile();
-                            User fireBaseUser = new User();
+
                             FirebaseDAO firebaseDAO = FirebaseDAO.getInstance();
 
                             profile.setName( mName.getText().toString() );
                             profile.setLast_name( mLastName.getText().toString() );
-                            String profileID = firebaseDAO.pushProfile( profile );
+                            String profileID = firebaseDAO.pushProfile( user.getUid(), profile );
 
-                            fireBaseUser.setEmail( user.getEmail() );
-                            fireBaseUser.setProfile_id( profileID );
-                            fireBaseUser.setPhone_number( mPhoneNumberEditText.getText().toString() );
+                            User fireBaseUser = new User (
+                                    user.getUid(),
+                                    user.getEmail(),
+                                    new HashMap<String, User.FriendRequestIn>(),
+                                    new HashMap<String, User.FriendRequestOut>(),
+                                    new HashMap<String, User.Friend>(),
+                                    true,
+                                    mPhoneNumberEditText.getText().toString(),
+                                    profileID,
+                                    new HashMap<String, String>());
+
                             firebaseDAO.pushUser( user.getUid(), fireBaseUser );
 
                             showHome();
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // If sign in fails, display a message to the USER_REFERENCE.
                             progressbar.setVisibility(View.INVISIBLE);
                             FirebaseAuthException e = ( FirebaseAuthException )task.getException();
                             Toast.makeText(SignUpActivity.this, "Authentication failed: " + e.getMessage(),

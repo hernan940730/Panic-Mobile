@@ -29,12 +29,14 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.panic.security.DBRegistersGenerator;
 import com.panic.security.R;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
 
 import com.panic.security.controllers.user_profile_module.UserProfileFragment;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
+import com.panic.security.firebase_utils.CouchbaseDAO;
 import com.panic.security.firebase_utils.DataCallback;
 import com.panic.security.firebase_utils.FirebaseDAO;
 import com.panic.security.location_utils.UserLocationUtils;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initCouchbase();
         getLocationPermission();
 
         mAuth = FirebaseAuth.getInstance();
@@ -166,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void signOut() {
+        CouchbaseDAO.getInstance().deleteData();
         mAuth.signOut();
         showLogin();
     }
@@ -259,5 +263,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else {
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
+    }
+
+    private void initCouchbase () {
+        CouchbaseDAO.getInstance (this);
     }
 }
