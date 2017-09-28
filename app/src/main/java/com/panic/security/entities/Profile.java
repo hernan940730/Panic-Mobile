@@ -14,6 +14,19 @@ public class Profile {
     private String name;
     private String country;
 
+    public Profile() {
+    }
+
+    public Profile(String id, String user_id, long birthday, String gender, String last_name, String name, String country) {
+        this.id = id;
+        this.user_id = user_id;
+        this.birthday = birthday;
+        this.gender = gender;
+        this.last_name = last_name;
+        this.name = name;
+        this.country = country;
+    }
+
     public String getId() {
         return id;
     }

@@ -11,6 +11,16 @@ public class StolenObject {
     private String name;
     private String description;
 
+    public StolenObject() {
+    }
+
+    public StolenObject(String id, String report_id, String name, String description) {
+        this.id = id;
+        this.report_id = report_id;
+        this.name = name;
+        this.description = description;
+    }
+
     public String getId() {
         return id;
     }

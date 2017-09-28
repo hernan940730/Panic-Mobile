@@ -12,6 +12,17 @@ public class Crime {
     private String type;
     private long date;
 
+    public Crime() {
+    }
+
+    public Crime(String id, String report_id, String location_id, String type, long date) {
+        this.id = id;
+        this.report_id = report_id;
+        this.location_id = location_id;
+        this.type = type;
+        this.date = date;
+    }
+
     public String getId() {
         return id;
     }
