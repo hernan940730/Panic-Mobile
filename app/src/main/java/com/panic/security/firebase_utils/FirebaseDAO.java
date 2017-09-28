@@ -293,41 +293,6 @@ public class FirebaseDAO {
 
                     }
                 });
-
-/*
-        ref.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                User user = dataSnapshot.getValue(User.class);
-                if(user.getEmail().equals (email)){
-                    callback.onDataReceive(user);
-                    ref.removeEventListener(this);
-                }
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-*/
     }
 
     public void getUserIDByProfileID(final String profileID, final DataCallback<String> callback) {
