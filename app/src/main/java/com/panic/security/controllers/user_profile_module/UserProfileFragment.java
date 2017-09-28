@@ -14,11 +14,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,12 +51,15 @@ public class UserProfileFragment extends Fragment {
     // user_id of User that is displayed
     User mUserShown;
 
+    ProgressBar mProgressBar;
+
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mImageViewUserProfileAddFriend = (ImageView) getView().findViewById(R.id.user_profile_add_friend);
 
         mAuth = FirebaseAuth.getInstance();
+        mProgressBar = (ProgressBar) view.findViewById(R.id.user_profile_progress_bar);
 
         FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
             @Override
@@ -98,12 +103,18 @@ public class UserProfileFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
+                mProgressBar.setVisibility(View.VISIBLE);
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
                 FirebaseDAO.getInstance().getUserByEmail(query, new DataCallback<User>() {
                     @Override
                     public void onDataReceive(User user) {
 
                         mUserShown = user;
                         showUserData(user);
+
+                        mProgressBar.setVisibility(View.GONE);
+                        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     }
                 });
 
@@ -198,34 +209,51 @@ public class UserProfileFragment extends Fragment {
 
     }
 
-    public void setAddFriendIcon(String currentUserID, User friendUser){
+    public void setAddFriendIcon(final String currentUserID, final User friendUser){
 
         if( friendUser.getKey().equals(mAuth.getCurrentUser().getUid()) ){
             mImageViewUserProfileAddFriend.setVisibility(View.GONE);
 
         }else{
-            mImageViewUserProfileAddFriend.setVisibility(View.VISIBLE);
-            mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_add_person);
 
-            //Change icon of friend request if friends request was sent
-            FirebaseDAO.getInstance().areFriendRequestOut(currentUserID, friendUser.getKey(), new DataCallback<User.FriendRequestOut>() {
+            //Change icon of friend request if friend sent request
+            FirebaseDAO.getInstance().areFriendRequestIn(currentUserID, friendUser.getKey(), new DataCallback<User.FriendRequestIn>() {
                 @Override
-                public void onDataReceive(User.FriendRequestOut friend) {
-                    if(friend != null){
-                        mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
+                public void onDataReceive(User.FriendRequestIn friendIn) {
+                    if(friendIn != null){
+                        mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_accept_request);
+                    }else{
+
+                        //Change icon of friend request if friends request was sent
+                        FirebaseDAO.getInstance().areFriendRequestOut(currentUserID, friendUser.getKey(), new DataCallback<User.FriendRequestOut>() {
+                            @Override
+                            public void onDataReceive(User.FriendRequestOut friendOut) {
+                                if(friendOut != null){
+                                    mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
+                                }else{
+
+                                    //Change icon of friend request if they are friends
+                                    FirebaseDAO.getInstance().areFriends(currentUserID, friendUser.getKey(), new DataCallback<User.Friend>() {
+                                        @Override
+                                        public void onDataReceive(User.Friend friend) {
+                                            if(friend != null){
+                                                mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends);
+                                            }else{
+                                                mImageViewUserProfileAddFriend.setVisibility(View.VISIBLE);
+                                                mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_add_person);
+                                            }
+
+                                        }
+                                    });
+
+                                }
+                            }
+                        });
+
                     }
                 }
             });
 
-            //Change icon of friend request if they are friends
-            FirebaseDAO.getInstance().areFriends(currentUserID, friendUser.getKey(), new DataCallback<User.Friend>() {
-                @Override
-                public void onDataReceive(User.Friend friend) {
-                    if(friend != null){
-                        mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends);
-                    }
-                }
-            });
         }
     }
 
@@ -247,21 +275,53 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                FirebaseDAO.getInstance().areFriendRequestOut(user.getKey(), mUserShown.getKey(), new DataCallback<User.FriendRequestOut>() {
+                FirebaseDAO.getInstance().areFriends(user.getKey(), mUserShown.getKey(), new DataCallback<User.Friend>() {
                     @Override
-                    public void onDataReceive(User.FriendRequestOut friend) {
-                        if(friend == null){
-                            
-                            // TODO mirar si son friendRequestIn agregarlo de una
+                    public void onDataReceive(User.Friend friend) {
 
-                            FirebaseDAO.getInstance().pushFriendRequest(user , new User.FriendRequestOut(mUserShown.getKey(), 0L ));
-                            mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
-                            Toast.makeText(getActivity(), getResources().getString(R.string.friend_request_sent), Toast.LENGTH_SHORT).show();
-                            //Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_sent), Snackbar.LENGTH_LONG).show();
+                        if(friend != null){
+
+                            mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends);
+                            Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.you_are_friends), Snackbar.LENGTH_LONG).show();
+
                         }else{
-                            Toast.makeText(getActivity(), getResources().getString(R.string.request_pending_acceptance), Toast.LENGTH_SHORT).show();
-                            //Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.request_pending_acceptance), Snackbar.LENGTH_LONG).show();
+
+                            FirebaseDAO.getInstance().areFriendRequestIn(user.getKey(), mUserShown.getKey(), new DataCallback<User.FriendRequestIn>() {
+                                @Override
+                                public void onDataReceive(User.FriendRequestIn friendIn) {
+                                    if(friendIn != null){
+
+                                        FirebaseDAO.getInstance().pushFriend(new User.Friend(user.getKey(), mUserShown.getKey(), 0L, false));
+                                        FirebaseDAO.getInstance().pushFriend(new User.Friend(mUserShown.getKey(), user.getKey(), 0L, false));
+                                        // TODO borrar friend requestin y friend requestout
+                                        
+                                        mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends);
+                                        Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_accepted), Snackbar.LENGTH_LONG).show();
+
+                                    }else{
+
+                                        FirebaseDAO.getInstance().areFriendRequestOut(user.getKey(), mUserShown.getKey(), new DataCallback<User.FriendRequestOut>() {
+                                            @Override
+                                            public void onDataReceive(User.FriendRequestOut friendOut) {
+                                                if(friendOut == null){
+
+                                                    FirebaseDAO.getInstance().pushFriendRequestOut(new User.FriendRequestOut(user.getKey(), mUserShown.getKey(), 0L ));
+                                                    FirebaseDAO.getInstance().pushFriendRequestIn(new User.FriendRequestIn(mUserShown.getKey(), user.getKey(), 0L ));
+                                                    mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
+                                                    Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_sent), Snackbar.LENGTH_LONG).show();
+
+                                                }else{
+                                                    Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.request_pending_acceptance), Snackbar.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
+
+                                    }
+                                }
+                            });
+
                         }
+
                     }
                 });
 

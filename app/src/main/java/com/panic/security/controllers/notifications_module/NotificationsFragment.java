@@ -3,6 +3,7 @@ package com.panic.security.controllers.notifications_module;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,11 +28,10 @@ public class NotificationsFragment extends Fragment {
     private String lenguaje[] = {"Maikol Bonilla","Maikol Bonilla","Maikol Bonilla","Maikol Bonilla","Maikol Bonilla"};
     private String description[] = {"Quiere ser tu amigo","Quiere ser tu amigo","Quiere ser tu amigo","Quiere ser tu amigo","Quiere ser tu amigo"};
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_notifications, container, false);
-
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         ListAdapter adapter = new ListAdapter(getActivity(), imgId, lenguaje, description, true);
 
@@ -58,6 +58,13 @@ public class NotificationsFragment extends Fragment {
                 }
             }
         });
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
         return view;
     }

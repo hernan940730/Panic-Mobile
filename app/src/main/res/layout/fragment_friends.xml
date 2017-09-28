@@ -14,10 +14,11 @@
         android:id="@+id/friends_progress_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:paddingTop="250dp"
+        android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
         android:layout_centerVertical="true"
-        android:indeterminateTint="@color/black" />
+        android:indeterminateTint="@color/colorPrimary"/>
 
 </FrameLayout>

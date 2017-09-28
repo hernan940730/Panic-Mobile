@@ -2,6 +2,7 @@ package com.panic.security.controllers.friends_module;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -39,6 +41,8 @@ public class FriendsFragment extends Fragment {
     //List to search bar
     List<String> mListSource;
 
+    ProgressBar mProgressBar;
+
     private Integer[] imgId = {
             R.mipmap.ic_account,
             R.mipmap.ic_add_person,
@@ -55,12 +59,13 @@ public class FriendsFragment extends Fragment {
     private String lenguaje[] = {"Java","PHP","Python","JavaScript","Ruby","C","Go","Perl","Pascal","Maikol","Ada"};
     private String description[] = {"DssaJava","PasdasdHP","Pytasdhasodn","JaasdvaadSascdrasdipt","Rasduasdbasy","Casd","Gadasdsao","Peadasdasdrl","Pasdaasscal","Maikoasdasdl","Adasdasda"};
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.fragment_friends, container, false);
+    @Override
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
+        mProgressBar = (ProgressBar) view.findViewById(R.id.friends_progress_bar);
 
         FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
             @Override
@@ -69,15 +74,14 @@ public class FriendsFragment extends Fragment {
                 // Bar search
                 addSearchBar();
 
-                /*
                 FirebaseDAO.getInstance().getFriendsToUser(user.getKey(), new DataCallback<HashMap<String, User.Friend>>() {
                     @Override
                     public void onDataReceive(HashMap<String, User.Friend> friends) {
 
-                        String s = "";
+                        // TODO get list of friends
 
                     }
-                });*/
+                });
 
                 // List
                 ListAdapter adapter = new ListAdapter(getActivity(), imgId, lenguaje, description, false);
@@ -98,6 +102,13 @@ public class FriendsFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        final View view = inflater.inflate(R.layout.fragment_friends, container, false);
+
         return view;
     }
 
@@ -113,6 +124,9 @@ public class FriendsFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
+                mProgressBar.setVisibility(View.VISIBLE);
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
                 FirebaseDAO.getInstance().getUserByEmail(query, new DataCallback<User>() {
                     @Override
                     public void onDataReceive(User user) {
@@ -122,7 +136,8 @@ public class FriendsFragment extends Fragment {
                         intent.putExtra("type", "query");
                         intent.putExtra("user_in_search", user);
                         getActivity().startActivity(intent);
-
+                        mProgressBar.setVisibility(View.GONE);
+                        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     }
                 });
 

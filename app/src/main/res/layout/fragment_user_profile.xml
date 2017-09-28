@@ -55,8 +55,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="15dp"
                 android:onClick=""
-                android:background="@drawable/image_view_btn_user_profile"
-                android:src="@mipmap/ic_add_person" />
+                android:background="@drawable/image_view_btn_user_profile"/>
 
             <TextView
                 android:id="@+id/user_profile_name"
@@ -238,6 +237,18 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/user_profile_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:indeterminateTint="@color/colorPrimary"/>
+
     </RelativeLayout>
+
 
 </ScrollView>
