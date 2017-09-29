@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,22 +11,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.panic.security.R;
 import com.panic.security.controllers.main_module.MainActivity;
-import com.panic.security.controllers.notifications_module.NotificationsFragment;
-import com.panic.security.controllers.user_profile_module.UserProfileFragment;
 import com.panic.security.entities.User;
-import com.panic.security.firebase_utils.DataCallback;
-import com.panic.security.firebase_utils.FirebaseDAO;
-import com.panic.security.list_utils.ListAdapter;
+import com.panic.security.utils.DataCallback;
+import com.panic.security.utils.DataLoader;
+import com.panic.security.utils.FirebaseDAO;
+import com.panic.security.utils.ListAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -146,7 +141,7 @@ public class FriendsFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //Do some magic
+
                 return false;
             }
         });
@@ -154,17 +149,10 @@ public class FriendsFragment extends Fragment {
         setHasOptionsMenu(true); //To show search bar, call onCreateOptionsMenu
     }
 
-    public void fillListSourceToSearch(){
-        mListSource = new ArrayList<String>();
-
-        FirebaseDAO.getInstance().getAllEmailsForAllUsers(new DataCallback<List<String> >() {
-            @Override
-            public void onDataReceive(List<String> usersEmails) {
-                mListSource = usersEmails;
-                String[] sourceArr = new String[mListSource.size()];
-                mSearchView.setSuggestions(mListSource.toArray(sourceArr));
-            }
-        });
+    public void fillListSourceToSearch() {
+        mListSource = DataLoader.getInstance().getEmails();
+        String[] sourceArr = new String[mListSource.size()];
+        mSearchView.setSuggestions(mListSource.toArray(sourceArr));
     }
 
     @Override

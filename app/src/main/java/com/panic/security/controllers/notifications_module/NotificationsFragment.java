@@ -1,7 +1,5 @@
 package com.panic.security.controllers.notifications_module;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,7 +11,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.panic.security.R;
-import com.panic.security.list_utils.ListAdapter;
+import com.panic.security.utils.ListAdapter;
 
 public class NotificationsFragment extends Fragment {
 

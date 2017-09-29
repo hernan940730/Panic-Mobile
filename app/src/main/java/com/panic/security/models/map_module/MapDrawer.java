@@ -17,9 +17,9 @@ import com.google.maps.android.heatmaps.WeightedLatLng;
 import com.panic.security.R;
 import com.panic.security.entities.Crime;
 import com.panic.security.entities.Location;
-import com.panic.security.firebase_utils.FirebaseDAO;
-import com.panic.security.location_utils.UserLocationUtils;
-import com.panic.security.firebase_utils.DataCallback;
+import com.panic.security.utils.FirebaseDAO;
+import com.panic.security.utils.UserLocationUtils;
+import com.panic.security.utils.DataCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
