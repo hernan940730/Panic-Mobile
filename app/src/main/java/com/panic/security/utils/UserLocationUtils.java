@@ -1,4 +1,4 @@
-package com.panic.security.location_utils;
+package com.panic.security.utils;
 
 import android.*;
 import android.app.Activity;
@@ -12,13 +12,9 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.panic.security.firebase_utils.DataCallback;
+import com.panic.security.utils.DataCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +23,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.TimeZone;
 
 import javax.net.ssl.HttpsURLConnection;
 

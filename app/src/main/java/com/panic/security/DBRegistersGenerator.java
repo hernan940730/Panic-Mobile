@@ -1,18 +1,14 @@
 package com.panic.security;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.panic.security.entities.Crime;
 import com.panic.security.entities.Location;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.Report;
 import com.panic.security.entities.StolenObject;
 import com.panic.security.entities.User;
-import com.panic.security.firebase_utils.FirebaseReferences;
+import com.panic.security.utils.FirebaseReferences;
 
 import java.util.ArrayList;
 import java.util.HashMap;
