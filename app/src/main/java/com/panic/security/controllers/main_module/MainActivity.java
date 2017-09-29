@@ -51,11 +51,11 @@ import com.panic.security.entities.Crime;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.Report;
 import com.panic.security.entities.User;
-import com.panic.security.firebase_utils.CouchbaseDAO;
-import com.panic.security.firebase_utils.DataCallback;
-import com.panic.security.firebase_utils.FirebaseDAO;
-import com.panic.security.firebase_utils.FirebaseReferences;
-import com.panic.security.location_utils.UserLocationUtils;
+import com.panic.security.utils.CouchbaseDAO;
+import com.panic.security.utils.DataCallback;
+import com.panic.security.utils.FirebaseDAO;
+import com.panic.security.utils.FirebaseReferences;
+import com.panic.security.utils.UserLocationUtils;
 import com.panic.security.models.map_module.MapDrawer;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, View.OnClickListener{

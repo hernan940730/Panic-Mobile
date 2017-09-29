@@ -1,7 +1,5 @@
 package com.panic.security.utils;
 
-import android.app.Activity;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -44,7 +42,9 @@ public class DataLoader {
         FirebaseDAO.getInstance().getAllEmailsForAllUsers(new DataCallback<List<String>>() {
             @Override
             public void onDataReceive(List<String> emails) {
-                DataLoader.this.emails = emails;
+                if(emails != null){
+                    DataLoader.this.emails = emails;
+                }
                 addLoadData("loadEmails");
             }
         });
@@ -58,18 +58,20 @@ public class DataLoader {
         for(DataLoaderListener listener : listeners){
             listener.onLoadCompleted();
         }
+        removeListeners();
     }
 
     public synchronized void addLoadData(String id){
         countLoadData.add(id);
         if(countLoadData.size() == totalLoadData){
             reportListeners();
-            removeListeners();
         }
     }
 
     public void removeListeners(){
         listeners.clear();
     }
+
+
 
 }

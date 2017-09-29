@@ -1,6 +1,9 @@
 package com.panic.security.controllers;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -10,6 +13,7 @@ import com.panic.security.utils.CouchbaseDAO;
 import com.panic.security.utils.DataLoader;
 import com.panic.security.utils.DataLoaderListener;
 
+
 public class LoadActivity extends AppCompatActivity implements DataLoaderListener {
 
     @Override
@@ -17,10 +21,14 @@ public class LoadActivity extends AppCompatActivity implements DataLoaderListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load);
         loaderCouchbase();
-        
+
         DataLoader.getInstance().addListener(this);
 
-        DataLoader.getInstance().loadData();
+        if(hasActiveInternetConnection()){
+            DataLoader.getInstance().loadData();
+        }else{
+            onLoadCompleted();
+        }
 
     }
 
@@ -33,6 +41,14 @@ public class LoadActivity extends AppCompatActivity implements DataLoaderListene
 
     private void loaderCouchbase() {
         CouchbaseDAO.getInstance (this);
+    }
+
+    public boolean hasActiveInternetConnection() {
+        ConnectivityManager cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = ( activeNetwork != null && activeNetwork.isConnectedOrConnecting() );
+        return isConnected;
     }
 
 }
