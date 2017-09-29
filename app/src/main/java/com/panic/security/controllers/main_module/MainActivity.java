@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             "drugs_crime",
             "other_crime"
     };
+    private static int NUM_LINES = 6;
 
     private boolean isMarker = false;
     private String mtext = "";
@@ -390,11 +391,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         // Create Dialog for description input
-        AlertDialog.Builder builder = new AlertDialog.Builder( this );
+        AlertDialog.Builder builder = new AlertDialog.Builder( this, R.style.AlertDialogStyle);
         builder.setTitle( getResources().getString( R.string.reportDescriptionTitle ) );
         final EditText input = new EditText( this );
-        input.setInputType( InputType.TYPE_CLASS_TEXT );
-
+        input.setInputType( InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES );
+        input.setLines( NUM_LINES );
         builder.setView( input );
 
         builder.setPositiveButton(getResources().getString( R.string.accept ), new DialogInterface.OnClickListener() {
