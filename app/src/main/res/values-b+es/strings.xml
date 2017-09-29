@@ -66,6 +66,7 @@
     <string name="sign_up_text">Crea una nueva cuenta en Panic!</string>
     <string name="sign_up_name">Nombre</string>
     <string name="sign_up_last_name">Apellido</string>
+    <string name="sign_up_phone_number">Telefóno Celular</string>
     <string name="sign_up_username">usuario@ejemplo.com</string>
     <string name="sign_up_password">contraseña</string>
     <string name="sign_up_password_conf">confirmar contraseña</string>
@@ -77,4 +78,13 @@
     <string name="reset_password_text">Restablece tu contraseña</string>
     <string name="emailSent">Se ha enviado un correo a</string>
     <string name="send_email">Enviar correo</string>
+
+    <!-- Google maps -->
+    <string name="title_activity_maps">Mapa</string>
+    <string name="share_location">COMPARTIR MI UBICACIÓN</string>
+
+    <!-- Reports -->
+    <string name="reportDescriptionTitle">Describe qué pasó</string>
+    <string name="accept">Aceptar</string>
+    <string name="cancel">Cancelar</string>
 </resources>
