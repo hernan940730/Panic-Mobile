@@ -293,13 +293,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        mMap.getUiSettings().setMapToolbarEnabled( false );
+
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 isMarker = true;
                 marker = latLng;
                 mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Marker Title").snippet("Marker Description"));
+                mMap.addMarker( new MarkerOptions().position(latLng) );
                 CameraUpdate crimeLocation = CameraUpdateFactory.newLatLng( latLng );
                 mMap.animateCamera( crimeLocation );
                 showCrimesButtons();
