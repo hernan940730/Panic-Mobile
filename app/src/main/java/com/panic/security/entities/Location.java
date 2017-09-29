@@ -8,8 +8,36 @@ import java.io.Serializable;
 
 public class Location implements Serializable {
 
+    private String id;
+    private String crime_id;
     private double latitude;
     private double longitude;
+
+    public Location() {
+    }
+
+    public Location(String id, String crime_id, double latitude, double longitude) {
+        this.id = id;
+        this.crime_id = crime_id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCrime_id() {
+        return crime_id;
+    }
+
+    public void setCrime_id(String crime_id) {
+        this.crime_id = crime_id;
+    }
 
     public double getLatitude() {
         return latitude;

@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.panic.security.DBRegistersGenerator;
 import com.panic.security.R;
 import com.panic.security.controllers.friends_module.FriendsFragment;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
@@ -191,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void signOut() {
+        CouchbaseDAO.getInstance().deleteData();
         mAuth.signOut();
         showLogin();
     }

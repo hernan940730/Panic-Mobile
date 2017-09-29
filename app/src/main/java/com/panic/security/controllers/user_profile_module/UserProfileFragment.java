@@ -1,12 +1,8 @@
 package com.panic.security.controllers.user_profile_module;
 
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,19 +21,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ServerValue;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.panic.security.R;
-import com.panic.security.controllers.main_module.MainActivity;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
 import com.panic.security.firebase_utils.DataCallback;
 import com.panic.security.firebase_utils.FirebaseDAO;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class UserProfileFragment extends Fragment {
 
@@ -174,10 +166,16 @@ public class UserProfileFragment extends Fragment {
             textUserProfileNumberReports.setText(String.valueOf(user.getReports().size()));
         }
 
-        FirebaseDAO.getInstance().getProfileImageInBytes(user.getKey(), new DataCallback<byte []>() {
+        FirebaseDAO.getInstance().getProfileImageInBytes(user.getId(), new DataCallback<byte []>() {
             @Override
             public void onDataReceive (byte []data) {
-                imageButtonProfilePicture.setImageBitmap(BitmapFactory.decodeByteArray (data, 0, data.length));
+                if (data != null) {
+                    imageButtonProfilePicture.setImageBitmap(BitmapFactory.decodeByteArray (data, 0, data.length));
+                }
+                else {
+                    imageButtonProfilePicture.setImageResource(R.mipmap.ic_default_user_profile);
+                }
+
             }
         });
 

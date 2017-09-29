@@ -23,6 +23,8 @@ import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
 import com.panic.security.firebase_utils.FirebaseDAO;
 
+import java.util.HashMap;
+
 public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -112,16 +114,24 @@ public class SignUpActivity extends AppCompatActivity {
 
                             FirebaseUser user = mAuth.getCurrentUser();
                             Profile profile = new Profile();
-                            User fireBaseUser = new User();
+
                             FirebaseDAO firebaseDAO = FirebaseDAO.getInstance();
 
                             profile.setName( mName.getText().toString() );
                             profile.setLast_name( mLastName.getText().toString() );
-                            String profileID = firebaseDAO.pushProfile( profile );
+                            String profileID = firebaseDAO.pushProfile( user.getUid(), profile );
 
-                            fireBaseUser.setEmail( user.getEmail() );
-                            fireBaseUser.setProfile_id( profileID );
-                            fireBaseUser.setPhone_number( mPhoneNumberEditText.getText().toString() );
+                            User fireBaseUser = new User (
+                                    user.getUid(),
+                                    user.getEmail(),
+                                    new HashMap<String, User.FriendRequestIn>(),
+                                    new HashMap<String, User.FriendRequestOut>(),
+                                    new HashMap<String, User.Friend>(),
+                                    true,
+                                    mPhoneNumberEditText.getText().toString(),
+                                    profileID,
+                                    new HashMap<String, String>());
+
                             firebaseDAO.pushUser( user.getUid(), fireBaseUser );
 
                             showHome();

@@ -5,6 +5,7 @@
     <!-- Error messages-->
     <string name="server_error">Fallo al conectar al servidor!</string>
     <string name="couchbase_error">Error al abrir la base de datos Couchbase</string>
+    <string name="crime_type_not_found_error">Fallo al encontrar el tipo de crimen</string>
 
     <!-- Crime types -->
     <string name="assault_crime">Asalto</string>
