@@ -12,7 +12,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -236,6 +235,12 @@ public class FirebaseDAO {
                                          final DataCallback<List<Pair<Crime, Location>>> callback) {
         final DatabaseReference ref = database.getReference(FirebaseReferences.CRIMES_REFERENCE);
 
+        List<Pair<Crime, Location>> crimeLocationList = couchbaseDAO.getCrimeLocationList();
+
+        if (crimeLocationList != null) {
+            callback.onDataReceive (crimeLocationList);
+        }
+
         ref.addListenerForSingleValueEvent (new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -249,12 +254,13 @@ public class FirebaseDAO {
                         Map<String, Location> locations = dataSnapshot.getValue(
                                 new GenericTypeIndicator<Map<String, Location>>() {}
                         );
-                        List<Pair<Crime, Location>> pairs = new ArrayList<Pair<Crime, Location>>();
+                        List<Pair<Crime, Location>> pairs = new ArrayList<>();
                         for (Map.Entry<String, Location> entry : locations.entrySet()) {
                             Location location = entry.getValue();
                             Crime crime = crimes.get (location.getCrime_id());
                             pairs.add (new Pair<>(crime, location));
                         }
+                        //couchbaseDAO.pushCrimeLocationList (pairs);
                         callback.onDataReceive (pairs);
                         addCrimeLocationListener (listener);
                     }
@@ -287,7 +293,8 @@ public class FirebaseDAO {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Location location = dataSnapshot.getValue(Location.class);
-                        listener.onDataReceive (new Pair<>(crime, location));
+                        Pair<Crime, Location> pair = new Pair<>(crime, location);
+                        listener.onDataReceive (pair);
                     }
 
                     @Override
