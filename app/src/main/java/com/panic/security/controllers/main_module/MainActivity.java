@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initCouchbase();
         getLocationPermission();
         handlerPassDataBetweenFragments();
 
@@ -284,9 +283,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else {
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
-    }
-
-    private void initCouchbase () {
-        CouchbaseDAO.getInstance (this);
     }
 }
