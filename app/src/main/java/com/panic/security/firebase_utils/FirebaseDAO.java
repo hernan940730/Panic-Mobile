@@ -1,6 +1,7 @@
 package com.panic.security.firebase_utils;
 
 import android.support.annotation.NonNull;
+import android.util.Pair;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -11,7 +12,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -24,6 +24,7 @@ import com.panic.security.entities.StolenObject;
 import com.panic.security.entities.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -230,18 +231,85 @@ public class FirebaseDAO {
         });
     }
 
-    public void getReportLocationsList(final DataCallback<List<Location>> callback) {
-        DatabaseReference ref = database.getReference(FirebaseReferences.LOCATIONS_REFERENCE);
+    public void addCrimeLocationListener(final DataCallback<Pair<Crime, Location>> listener,
+                                         final DataCallback<List<Pair<Crime, Location>>> callback) {
+        final DatabaseReference ref = database.getReference(FirebaseReferences.CRIMES_REFERENCE);
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent (new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final List<Location> list = new ArrayList<>();
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    Location location = child.getValue (Location.class);
-                    list.add(location);
-                }
-                callback.onDataReceive(list);
+                final Map<String, Crime> crimes = dataSnapshot
+                        .getValue(new GenericTypeIndicator<HashMap<String, Crime>>(){});
+                final DatabaseReference locationsRef = database
+                        .getReference(FirebaseReferences.LOCATIONS_REFERENCE);
+                locationsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Map<String, Location> locations = dataSnapshot.getValue(
+                                new GenericTypeIndicator<Map<String, Location>>() {}
+                        );
+                        List<Pair<Crime, Location>> pairs = new ArrayList<Pair<Crime, Location>>();
+                        for (Map.Entry<String, Location> entry : locations.entrySet()) {
+                            Location location = entry.getValue();
+                            Crime crime = crimes.get (location.getCrime_id());
+                            pairs.add (new Pair<>(crime, location));
+                        }
+                        callback.onDataReceive (pairs);
+                        addCrimeLocationListener (listener);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void addCrimeLocationListener(final DataCallback<Pair<Crime, Location>> listener) {
+        final DatabaseReference ref = database.getReference(FirebaseReferences.CRIMES_REFERENCE);
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                final Crime crime = dataSnapshot.getValue (Crime.class);
+                DatabaseReference locationRef = database.getReference(FirebaseReferences.LOCATIONS_REFERENCE)
+                        .child(crime.getLocation_id());
+                locationRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Location location = dataSnapshot.getValue(Location.class);
+                        listener.onDataReceive (new Pair<>(crime, location));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
