@@ -67,7 +67,7 @@
     <string name="sign_up_text">Create a new Panic! account</string>
     <string name="sign_up_name">Name</string>
     <string name="sign_up_last_name">Last Name</string>
-    <string name="sign_up_phone_number">xxxxxxxxxx</string>
+    <string name="sign_up_phone_number">Phone Number</string>
     <string name="sign_up_username">username@example.com</string>
     <string name="sign_up_password">password</string>
     <string name="sign_up_password_conf">confirm password</string>
@@ -82,4 +82,10 @@
 
     <!-- Google maps -->
     <string name="title_activity_maps">Map</string>
+    <string name="share_location">SHARE MY LOCATION</string>
+
+    <!-- Reports -->
+    <string name="reportDescriptionTitle">Describe what happened</string>
+    <string name="accept">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>
