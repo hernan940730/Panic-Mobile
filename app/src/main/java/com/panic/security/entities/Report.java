@@ -1,12 +1,14 @@
 package com.panic.security.entities;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by maikb on 3/09/2017.
  */
 
-public class Report {
+public class Report implements Serializable {
 
     private String id;
     private String crime_id;

@@ -1,10 +1,12 @@
 package com.panic.security.entities;
 
+import java.io.Serializable;
+
 /**
  * Created by maikb on 3/09/2017.
  */
 
-public class Crime {
+public class Crime implements Serializable {
 
     private String id;
     private String report_id;

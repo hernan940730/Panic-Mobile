@@ -5,7 +5,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/gray_line">
 
         <ImageView
             android:id="@+id/header_cover_image"
@@ -54,8 +55,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="15dp"
                 android:onClick=""
-                android:background="@drawable/image_view_btn_user_profile"
-                android:src="@mipmap/ic_add_person" />
+                android:background="@drawable/image_view_btn_user_profile"/>
 
             <TextView
                 android:id="@+id/user_profile_name"
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="76dp"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -74,7 +74,7 @@
                 android:layout_below="@+id/user_profile_name"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="3dp"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -85,11 +85,10 @@
                 android:layout_below="@+id/user_profile_last_name"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="14sp"
                 android:textStyle="italic" />
         </RelativeLayout>
-
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -98,53 +97,158 @@
             android:layout_marginTop="1dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/user_profile_location"
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/custom_text_view_user_profile"
-                android:clickable="true"
-                android:padding="20dp" />
+                android:background="@drawable/background_with_gray_line"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingLeft="12dp"
+                    android:text="@string/user_profile_number_reports" />
+                <TextView
+                    android:id="@+id/user_profile_number_reports"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="2dp"
+                    android:paddingLeft="12dp"
+                    android:paddingBottom="8dp"
+                    android:clickable="true"
+                    android:text="0"
+                    android:textColor="@color/black"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/user_profile_email"
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/custom_text_view_user_profile"
-                android:clickable="true"
-                android:padding="20dp" />
+                android:background="@drawable/background_with_gray_line"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingLeft="12dp"
+                    android:text="@string/user_profile_email" />
+                <TextView
+                    android:id="@+id/user_profile_email"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="2dp"
+                    android:paddingLeft="12dp"
+                    android:paddingBottom="8dp"
+                    android:clickable="true"
+                    android:textColor="@color/black"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/user_profile_phone_number"
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/custom_text_view_user_profile"
-                android:clickable="true"
-                android:padding="20dp" />
+                android:background="@drawable/background_with_gray_line"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingLeft="12dp"
+                    android:text="@string/user_profile_phone_number" />
+                <TextView
+                    android:id="@+id/user_profile_phone_number"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="2dp"
+                    android:paddingLeft="12dp"
+                    android:paddingBottom="8dp"
+                    android:clickable="true"
+                    android:textColor="@color/black"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/user_profile_gender"
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/custom_text_view_user_profile"
-                android:clickable="true"
-                android:padding="20dp" />
+                android:background="@drawable/background_with_gray_line"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingLeft="12dp"
+                    android:text="@string/user_profile_location" />
+                <TextView
+                    android:id="@+id/user_profile_location"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="2dp"
+                    android:paddingLeft="12dp"
+                    android:paddingBottom="8dp"
+                    android:clickable="true"
+                    android:textColor="@color/black"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/user_profile_birthday"
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/custom_text_view_user_profile"
-                android:clickable="true"
-                android:padding="20dp" />
+                android:background="@drawable/background_with_gray_line"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingLeft="12dp"
+                    android:text="@string/user_profile_gender" />
+                <TextView
+                    android:id="@+id/user_profile_gender"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="2dp"
+                    android:paddingLeft="12dp"
+                    android:paddingBottom="8dp"
+                    android:clickable="true"
+                    android:textColor="@color/black"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/user_profile_number_reports"
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/custom_text_view_user_profile"
-                android:clickable="true"
-                android:padding="20dp" />
+                android:background="@drawable/background_with_gray_line"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingLeft="12dp"
+                    android:text="@string/user_profile_birthday" />
+                <TextView
+                    android:id="@+id/user_profile_birthday"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="2dp"
+                    android:paddingLeft="12dp"
+                    android:paddingBottom="8dp"
+                    android:clickable="true"
+                    android:textColor="@color/black"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/user_profile_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:indeterminateTint="@color/colorPrimary"/>
+
     </RelativeLayout>
+
+
 </ScrollView>
