@@ -1,0 +1,24 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.panic.security.controllers.friends_module.FriendsFragment">
+
+    <ListView
+        android:id="@+id/list_view_friends"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/whiteColor"/>
+
+    <ProgressBar
+        android:id="@+id/friends_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="250dp"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:indeterminateTint="@color/colorPrimary"/>
+
+</FrameLayout>
