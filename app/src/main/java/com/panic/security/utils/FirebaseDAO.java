@@ -1,4 +1,4 @@
-package com.panic.security.firebase_utils;
+package com.panic.security.utils;
 
 import android.support.annotation.NonNull;
 import android.util.Pair;
@@ -168,10 +168,64 @@ public class FirebaseDAO {
         });
     }
 
+    public ValueEventListener addUserListener(String userID, final DataCallback< User > listener){
+
+        final DatabaseReference userRef = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(userID);
+
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                User user = dataSnapshot.getValue(User.class);
+                listener.onDataReceive(user);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        userRef.addListenerForSingleValueEvent(valueEventListener);
+        return valueEventListener;
+    }
+
+    public void detachUserListener(String userID, ValueEventListener listener){
+        final DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(userID);
+        ref.removeEventListener(listener);
+    }
+
+    public ValueEventListener addProfileListener(String profileID, final DataCallback< Profile > listener){
+
+        final DatabaseReference userRef = database.getReference().child(FirebaseReferences.PROFILES_REFERENCE).child(profileID);
+
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Profile profile = dataSnapshot.getValue(Profile.class);
+                listener.onDataReceive(profile);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        userRef.addListenerForSingleValueEvent(valueEventListener);
+        return valueEventListener;
+    }
+
+    public void detachProfileListener(String profileID, ValueEventListener listener){
+        final DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE).child(profileID);
+        ref.removeEventListener(listener);
+    }
+
     public void getAllEmailsForAllUsers(final DataCallback< List<String> > callback) {
         final DatabaseReference ref = database.getReference().child(FirebaseReferences.USERS_REFERENCE);
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<String> list = new ArrayList<>();

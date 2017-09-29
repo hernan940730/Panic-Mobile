@@ -21,7 +21,7 @@ import com.panic.security.R;
 import com.panic.security.controllers.main_module.MainActivity;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
-import com.panic.security.firebase_utils.FirebaseDAO;
+import com.panic.security.utils.FirebaseDAO;
 
 import java.util.HashMap;
 

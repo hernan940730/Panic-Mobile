@@ -1,4 +1,4 @@
-package com.panic.security.list_utils;
+package com.panic.security.utils;
 
 import android.app.Activity;
 import android.app.Fragment;

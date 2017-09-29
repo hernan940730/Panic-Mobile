@@ -1,8 +1,7 @@
-package com.panic.security.firebase_utils;
+package com.panic.security.utils;
 
 import android.app.Activity;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
 
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by david on 9/27/17.
