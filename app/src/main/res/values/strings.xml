@@ -83,4 +83,7 @@
     <!-- Google maps -->
     <string name="title_activity_maps">Map</string>
     <string name="share_location">SHARE MY LOCATION</string>
+    <string name="reportDescriptionTitle">Describe what happened</string>
+    <string name="accept">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>
