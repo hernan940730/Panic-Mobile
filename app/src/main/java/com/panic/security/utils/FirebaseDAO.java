@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -566,11 +567,33 @@ public class FirebaseDAO {
         return ref.getKey ();
     }
 
-    public String pushReport (Report entity) {
-        DatabaseReference ref = database.getReference (FirebaseReferences.REPORTS_REFERENCE).push ();
-        entity.setId(ref.getKey());
-        ref.setValue (entity);
-        return ref.getKey ();
+    public String pushReport (Report report, Crime crime, Location location) {
+        DatabaseReference reportRef = database.getReference (FirebaseReferences.REPORTS_REFERENCE).push ();
+        DatabaseReference crimeRef = database.getReference (FirebaseReferences.CRIMES_REFERENCE).push ();
+        DatabaseReference locationRef = database.getReference (FirebaseReferences.LOCATIONS_REFERENCE).push ();
+
+        location.setCrime_id(crimeRef.getKey());
+        location.setId(locationRef.getKey());
+
+        crime.setId(crimeRef.getKey());
+        crime.setReport_id(reportRef.getKey());
+        crime.setLocation_id(locationRef.getKey());
+
+        report.setId(reportRef.getKey());
+        report.setCrime_id(crimeRef.getKey());
+
+        locationRef.setValue(location);
+        crimeRef.setValue(crime);
+        reportRef.setValue(report);
+        reportRef.child(FirebaseReferences.Report.DATE_REFERENCE).setValue(ServerValue.TIMESTAMP);
+
+        database.getReference (FirebaseReferences.USERS_REFERENCE)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(FirebaseReferences.User.REPORTS_REFERENCE)
+                .child(report.getId())
+                .setValue(report.getId());
+
+        return reportRef.getKey ();
     }
 
     public String pushStolenObject (StolenObject entity) {

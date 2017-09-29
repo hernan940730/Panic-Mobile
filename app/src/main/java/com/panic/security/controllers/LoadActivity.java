@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.panic.security.R;
+import com.panic.security.controllers.login_sign_up_module.LoginActivity;
 import com.panic.security.controllers.main_module.MainActivity;
 import com.panic.security.utils.CouchbaseDAO;
 import com.panic.security.utils.DataLoader;
@@ -34,7 +35,7 @@ public class LoadActivity extends AppCompatActivity implements DataLoaderListene
 
     @Override
     public void onLoadCompleted() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity( intent );
         finish();
     }
