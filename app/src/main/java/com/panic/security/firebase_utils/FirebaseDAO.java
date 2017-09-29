@@ -197,7 +197,7 @@ public class FirebaseDAO {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User entity = dataSnapshot.getValue (User.class);
-                callback.onDataReceive (entity.getFriends());
+                callback.onDataReceive ((HashMap<String, User.Friend>) entity.getFriends());
             }
 
             @Override

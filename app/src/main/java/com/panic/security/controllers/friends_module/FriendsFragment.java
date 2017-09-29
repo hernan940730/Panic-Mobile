@@ -74,7 +74,7 @@ public class FriendsFragment extends Fragment {
                 // Bar search
                 addSearchBar();
 
-                FirebaseDAO.getInstance().getFriendsToUser(user.getKey(), new DataCallback<HashMap<String, User.Friend>>() {
+                FirebaseDAO.getInstance().getFriendsToUser(user.getId(), new DataCallback<HashMap<String, User.Friend>>() {
                     @Override
                     public void onDataReceive(HashMap<String, User.Friend> friends) {
 

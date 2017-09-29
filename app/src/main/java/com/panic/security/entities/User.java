@@ -110,7 +110,6 @@ public class User implements Serializable {
 
     public static class FriendRequestIn implements Serializable{
 
-        private String user_id;
         private long date;
         private String friend_id;
         private String user_id;
