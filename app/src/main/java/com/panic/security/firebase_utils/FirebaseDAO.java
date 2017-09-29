@@ -235,12 +235,6 @@ public class FirebaseDAO {
                                          final DataCallback<List<Pair<Crime, Location>>> callback) {
         final DatabaseReference ref = database.getReference(FirebaseReferences.CRIMES_REFERENCE);
 
-        List<Pair<Crime, Location>> crimeLocationList = couchbaseDAO.getCrimeLocationList();
-
-        if (crimeLocationList != null) {
-            callback.onDataReceive (crimeLocationList);
-        }
-
         ref.addListenerForSingleValueEvent (new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -254,13 +248,12 @@ public class FirebaseDAO {
                         Map<String, Location> locations = dataSnapshot.getValue(
                                 new GenericTypeIndicator<Map<String, Location>>() {}
                         );
-                        List<Pair<Crime, Location>> pairs = new ArrayList<>();
+                        List<Pair<Crime, Location>> pairs = new ArrayList<Pair<Crime, Location>>();
                         for (Map.Entry<String, Location> entry : locations.entrySet()) {
                             Location location = entry.getValue();
                             Crime crime = crimes.get (location.getCrime_id());
                             pairs.add (new Pair<>(crime, location));
                         }
-                        //couchbaseDAO.pushCrimeLocationList (pairs);
                         callback.onDataReceive (pairs);
                         addCrimeLocationListener (listener);
                     }
@@ -293,8 +286,7 @@ public class FirebaseDAO {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Location location = dataSnapshot.getValue(Location.class);
-                        Pair<Crime, Location> pair = new Pair<>(crime, location);
-                        listener.onDataReceive (pair);
+                        listener.onDataReceive (new Pair<>(crime, location));
                     }
 
                     @Override
