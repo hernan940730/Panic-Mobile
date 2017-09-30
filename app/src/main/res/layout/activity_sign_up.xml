@@ -143,7 +143,6 @@
             android:layout_marginTop="12dp"
             android:onClick="showLogIn"
             android:text="@string/login_link"
-
             android:textColor="@color/whiteColor" />
 
         <ProgressBar

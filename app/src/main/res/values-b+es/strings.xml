@@ -4,6 +4,8 @@
 
     <!-- Error messages-->
     <string name="server_error">Fallo al conectar al servidor!</string>
+    <string name="couchbase_error">Error al abrir la base de datos Couchbase</string>
+    <string name="crime_type_not_found_error">Fallo al encontrar el tipo de crimen</string>
 
     <!-- Crime types -->
     <string name="assault_crime">Asalto</string>
@@ -17,16 +19,34 @@
     <string name="other_crime">Otro</string>
 
     <!-- Menu navigation -->
-    <string name="navigation_drawer_open">Abrir menu de navegacion</string>
-    <string name="navigation_drawer_close">Cerrar menu de navegacion</string>
+    <string name="navigation_drawer_open">Abrir menu de navegación</string>
+    <string name="navigation_drawer_close">Cerrar menu de navegación</string>
+    <string name="search">Buscar</string>
 
     <!-- Menu items -->
     <string name="home">Inicio</string>
     <string name="user_profile">Perfil</string>
     <string name="friends">Amigos</string>
+    <string name="my_reports">Mis reportes</string>
+    <string name="notifications">Notificaciones</string>
     <string name="about_us">Acerca de</string>
     <string name="more">Mas Opciones</string>
-    <string name="sign_out">Cerrar Sesion</string>
+    <string name="sign_out">Cerrar sesión</string>
+
+    <!-- User profile -->
+    <string name="user_profile_short_desc">\"La seguridad la hacemos todos.\"</string>
+    <string name="user_profile_location">Ubicación:</string>
+    <string name="user_profile_email">Correo:</string>
+    <string name="user_profile_phone_number">Celular:</string>
+    <string name="user_profile_gender">Genero:</string>
+    <string name="user_profile_birthday">Fecha de Nacimiento:</string>
+    <string name="user_profile_number_reports">Numero de reportes:</string>
+
+    <!-- Snackbar messages -->
+    <string name="you_are_friends">Ustedes ya son amigos</string>
+    <string name="friend_request_sent">Solicitud de amistad enviada</string>
+    <string name="friend_request_accepted">Solicitud de amistad aceptada</string>
+    <string name="request_pending_acceptance">Solicitud pendiente de aceptación</string>
 
     <!-- Gender -->
     <string name="male_gender">Hombre</string>
@@ -46,6 +66,7 @@
     <string name="sign_up_text">Crea una nueva cuenta en Panic!</string>
     <string name="sign_up_name">Nombre</string>
     <string name="sign_up_last_name">Apellido</string>
+    <string name="sign_up_phone_number">Telefóno Celular</string>
     <string name="sign_up_username">usuario@ejemplo.com</string>
     <string name="sign_up_password">contraseña</string>
     <string name="sign_up_password_conf">confirmar contraseña</string>
@@ -57,4 +78,13 @@
     <string name="reset_password_text">Restablece tu contraseña</string>
     <string name="emailSent">Se ha enviado un correo a </string>
     <string name="send_email">Enviar correo</string>
+
+    <!-- Google maps -->
+    <string name="title_activity_maps">Mapa</string>
+    <string name="share_location">COMPARTIR MI UBICACIÓN</string>
+
+    <!-- Reports -->
+    <string name="reportDescriptionTitle">Describe qué pasó</string>
+    <string name="accept">Aceptar</string>
+    <string name="cancel">Cancelar</string>
 </resources>

@@ -1,18 +1,39 @@
 package com.panic.security.entities;
 
+import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by maikb on 3/09/2017.
  */
 
-public class Report {
+public class Report implements Serializable {
 
+    private String id;
     private String crime_id;
     private long date;
     private String description;
-    private String location_id;
-    private HashMap<String, String> stolen_objects;
+    private Map<String, String> stolen_objects;
+
+    public Report() {
+    }
+
+    public Report(String id, String crime_id, long date, String description, Map<String, String> stolen_objects) {
+        this.id = id;
+        this.crime_id = crime_id;
+        this.date = date;
+        this.description = description;
+        this.stolen_objects = stolen_objects;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCrime_id() {
         return crime_id;
@@ -38,19 +59,11 @@ public class Report {
         this.description = description;
     }
 
-    public String getLocation_id() {
-        return location_id;
-    }
-
-    public void setLocation_id(String location_id) {
-        this.location_id = location_id;
-    }
-
-    public HashMap<String, String> getStolen_objects() {
+    public Map<String, String> getStolen_objects() {
         return stolen_objects;
     }
 
-    public void setStolen_objects(HashMap<String, String> stolen_objects) {
+    public void setStolen_objects(Map<String, String> stolen_objects) {
         this.stolen_objects = stolen_objects;
     }
 }

@@ -1,14 +1,11 @@
 package com.panic.security.controllers.login_sign_up_module;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -20,10 +17,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.panic.security.R;
 import com.panic.security.controllers.main_module.MainActivity;
+import com.panic.security.utils.CouchbaseDAO;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * status bar and navigation/system bar) with USER_REFERENCE interaction.
  */
 
 public class LoginActivity extends AppCompatActivity {
@@ -42,10 +40,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 <<<<<<< Updated upstream
         loginAttempts = 0;
+<<<<<<< HEAD
 
 =======
         initCouchbase();
 >>>>>>> Stashed changes
+=======
+>>>>>>> 1714c860bd7f3ace0135e0917d4727459efb055e
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -116,11 +117,11 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             progressbar.setVisibility(View.INVISIBLE);
-                            // Sign in success, update UI with the signed-in user's information
+                            // Sign in success, update UI with the signed-in USER_REFERENCE's information
                             FirebaseUser user = mAuth.getCurrentUser();
                             showHome();
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // If sign in fails, display a message to the USER_REFERENCE.
                             Toast.makeText(LoginActivity.this, getResources().getString( R.string.authentication_failed ),
                                     Toast.LENGTH_SHORT).show();
                             progressbar.setVisibility(View.INVISIBLE);

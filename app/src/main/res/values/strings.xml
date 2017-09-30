@@ -4,6 +4,9 @@
 
     <!-- Error messages-->
     <string name="server_error">Fail to connect to server!</string>
+    <string name="couchbase_error">Error opening Couchbase Database</string>
+    <string name="crime_type_not_found_error">Fail to found crime type</string>
+
 
     <!-- Crime types -->
     <string name="assault_crime">Assault</string>
@@ -19,14 +22,32 @@
     <!-- Menu navigation -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="search">Search</string>
 
     <!-- Menu items -->
     <string name="home">Home</string>
     <string name="user_profile">Profile</string>
     <string name="friends">Friends</string>
+    <string name="my_reports">My reports</string>
+    <string name="notifications">Notifications</string>
     <string name="about_us">About us</string>
     <string name="more">More Options</string>
     <string name="sign_out">Sign Out</string>
+
+    <!-- User profile -->
+    <string name="user_profile_short_desc">\"Safety is everyone\'s job.\"</string>
+    <string name="user_profile_location">Location:</string>
+    <string name="user_profile_email">Email:</string>
+    <string name="user_profile_phone_number">Phone number:</string>
+    <string name="user_profile_gender">Gender:</string>
+    <string name="user_profile_birthday">Birthday:</string>
+    <string name="user_profile_number_reports">Number of reports:</string>
+
+    <!-- Snackbar messages -->
+    <string name="you_are_friends">You are already friends</string>
+    <string name="friend_request_sent">Friend request sent</string>
+    <string name="friend_request_accepted">Friend request accepted</string>
+    <string name="request_pending_acceptance">Request pending acceptance</string>
 
     <!-- Gender -->
     <string name="male_gender">Male</string>
@@ -46,6 +67,7 @@
     <string name="sign_up_text">Create a new Panic! account</string>
     <string name="sign_up_name">Name</string>
     <string name="sign_up_last_name">Last Name</string>
+    <string name="sign_up_phone_number">Phone Number</string>
     <string name="sign_up_username">username@example.com</string>
     <string name="sign_up_password">password</string>
     <string name="sign_up_password_conf">confirm password</string>
@@ -60,6 +82,11 @@
 
     <!-- Google maps -->
     <string name="title_activity_maps">Map</string>
-    <string name="sign_up_phone_number">xxxxxxxxxx</string>
+    <string name="title_activity_load">LoadActivity</string>
+    <string name="share_location">SHARE MY LOCATION</string>
 
+    <!-- Reports -->
+    <string name="reportDescriptionTitle">Describe what happened</string>
+    <string name="accept">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

@@ -18,6 +18,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
 }
 
 dependencies {
@@ -25,11 +30,14 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
+    /**
+     * Heatmap
+     */
+    compile 'com.google.maps.android:android-maps-utils:0.5+'
     /**
      * Google Play Services API
      */
-    compile 'com.google.android.gms:play-services:10.0.1'
+    compile 'com.google.android.gms:play-services:11.0.0'
 
     /**
      * Firebase API
@@ -37,10 +45,21 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:design:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.google.firebase:firebase-database:10.0.1'
-    compile 'com.google.firebase:firebase-auth:10.0.1'
+    compile 'com.google.firebase:firebase-database:11.0.0'
+    compile 'com.google.firebase:firebase-auth:11.0.0'
+    compile 'com.google.firebase:firebase-storage:11.0.0'
     compile 'com.android.support:support-v4:26.+'
     testCompile 'junit:junit:4.12'
+    /*
+     * Search bar
+     */
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
+
+    /**
+     * Couchbase lite - NoSQL database
+     */
+    compile 'com.couchbase.lite:couchbase-lite-android:1.4.0'
+    compile 'org.jetbrains:annotations-java5:15.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.panic.security.controllers.main_module.MainActivity">
@@ -21,6 +22,8 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <!-- maps -->
+    <include layout="@layout/activity_maps" />
     <include layout="@layout/content_main" />
 
 </android.support.design.widget.CoordinatorLayout>
