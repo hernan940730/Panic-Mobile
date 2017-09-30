@@ -55,6 +55,6 @@
 
     <!-- Reset Password -->
     <string name="reset_password_text">Restablece tu contraseña</string>
-    <string name="emailSent">Se ha enviado un correo a</string>
+    <string name="emailSent">Se ha enviado un correo a </string>
     <string name="send_email">Enviar correo</string>
 </resources>
