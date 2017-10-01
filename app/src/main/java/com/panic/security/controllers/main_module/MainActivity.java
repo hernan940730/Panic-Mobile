@@ -2,7 +2,6 @@ package com.panic.security.controllers.main_module;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -95,10 +94,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CameraPosition curCameraPosition;
     private MapDrawer mapDrawer;
     private ImageButton crimes [];
+    private ImageButton closeButton;
     private Animation animFadeIn ;
     private LatLng location;
     private Marker marker;
-
     public final int locationRequestCode = 1;
 
     @Override
@@ -137,7 +136,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         crimes[7] =( ImageButton ) findViewById( R.id.drugs_button );
         crimes[8] =( ImageButton ) findViewById( R.id.other_button );
 
-        clearCrimesButtons();
+        setUpCrimesButtons();
+
+        closeButton = (ImageButton)findViewById( R.id.close_button );
+        closeButton.setOnClickListener( this );
 
         final Button shareLocationButton = (Button) findViewById(R.id.share_location_button);
         shareLocationButton.setOnClickListener(new View.OnClickListener() {
@@ -217,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if( isMarker ) {
             marker.remove();
             isMarker = false;
-            clearCrimesButtons();
+            hideCrimesButtons();
         } else {
             moveTaskToBack(true);
         }
@@ -380,9 +382,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for(int i = 0; i < CRIMES_LIST.length; i++ ){
             crimes[i].setVisibility( View.VISIBLE );
         }
+        closeButton.setVisibility( View.VISIBLE );
     }
 
-    private void clearCrimesButtons() {
+    private void setUpCrimesButtons() {
 
         for(int i = 0; i < CRIMES_LIST.length; i++ ){
             crimes[i].setVisibility( View.GONE );
@@ -394,6 +397,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for(int i = 0; i < CRIMES_LIST.length; i++ ){
             crimes[i].setVisibility( View.INVISIBLE );
         }
+        closeButton.setVisibility( View.INVISIBLE );
     }
 
     private void moveCamera(CameraPosition cameraPosition, boolean animateCamera) {
@@ -449,22 +453,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 crime = CRIMES_LIST[8];
                 mCrimeName = getResources().getString( R.string.other_crime );
                 break;
+            case R.id.close_button:
+                marker.remove();
+                isMarker = false;
+                hideCrimesButtons();
+                break;
         }
         // Show Calendar
-        final Calendar c = Calendar.getInstance();
-        int year = c.get( Calendar.YEAR );
-        int month = c.get( Calendar.MONTH );
-        int day = c.get( Calendar.DAY_OF_MONTH );
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                Calendar c = Calendar.getInstance();
-                c.set(year, month, day);
-                showDescriptionUI(c.getTimeInMillis());
-            }
-        }, year, month, day);
-        datePickerDialog.getDatePicker().setMaxDate( c.getTimeInMillis() );
-        datePickerDialog.show();
+        if( isMarker ){
+            final Calendar c = Calendar.getInstance();
+            int year = c.get( Calendar.YEAR );
+            int month = c.get( Calendar.MONTH );
+            int day = c.get( Calendar.DAY_OF_MONTH );
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                    Calendar c = Calendar.getInstance();
+                    c.set(year, month, day);
+                    showDescriptionUI(c.getTimeInMillis());
+                }
+            }, year, month, day);
+            datePickerDialog.getDatePicker().setMaxDate( c.getTimeInMillis() );
+            datePickerDialog.show();
+        }
     }
 
     private void showDescriptionUI (final long timeInMillis){
