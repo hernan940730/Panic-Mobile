@@ -84,6 +84,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_load">LoadActivity</string>
     <string name="share_location">SHARE MY LOCATION</string>
+    <string name="stop_share_location">STOP SHARING MY LOCATION</string>
 
     <!-- Reports -->
     <string name="reportDescriptionTitle">Describe what happened</string>

@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.panic.security.DBRegistersGenerator;
 import com.panic.security.R;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
 import com.panic.security.controllers.main_module.MainActivity;
@@ -21,6 +22,7 @@ public class LoadActivity extends AppCompatActivity implements DataLoaderListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load);
+
         loaderCouchbase();
 
         DataLoader.getInstance().addListener(this);
@@ -30,7 +32,6 @@ public class LoadActivity extends AppCompatActivity implements DataLoaderListene
         }else{
             onLoadCompleted();
         }
-
     }
 
     @Override
