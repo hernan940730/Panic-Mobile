@@ -19,7 +19,9 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
         android:textColor="@color/black"
-        android:layout_toEndOf="@+id/image_in_row"/>
+        android:layout_toEndOf="@+id/image_in_row"
+        android:maxLines="1"
+        android:maxLength="36"/>
     <TextView
         android:id="@+id/second_text_in_row"
         android:layout_width="wrap_content"
@@ -27,7 +29,9 @@
         android:text="TextView"
         android:layout_marginLeft="10dp"
         android:layout_below="@+id/main_text_in_row"
-        android:layout_toEndOf="@+id/image_in_row" />
+        android:layout_toEndOf="@+id/image_in_row"/>
+        <!--android:maxLines="1"
+        android:ellipsize="end"-->
 
     <ImageButton
         android:id="@+id/accept_request"

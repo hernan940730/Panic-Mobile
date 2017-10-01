@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Panic Security</string>
+    <string name="app_name_short">Panic!</string>
 
     <!-- Error messages-->
     <string name="server_error">Fail to connect to server!</string>
