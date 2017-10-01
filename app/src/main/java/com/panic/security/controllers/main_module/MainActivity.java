@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -328,6 +329,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mMap.setMyLocationEnabled (true);
 
+        View locationButton = ((View) this.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+
+        rlp.setMargins(
+                0,
+                getResources().getDimensionPixelSize(R.dimen.y_location_margin),
+                0,
+                0
+        );
+
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override
             public void onCameraMove() {
@@ -368,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (location != null) {
                         cameraPosition = new CameraPosition.Builder ().
                                 target (new LatLng (location.getLatitude (), location.getLongitude ())).
-                                zoom (12).
+                                zoom (17).
                                 build ();
                     }
                     moveCamera (cameraPosition, true);

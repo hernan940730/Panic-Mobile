@@ -160,26 +160,27 @@ public class UserProfileFragment extends Fragment {
             textUserProfileNumberReports.setText(String.valueOf(user.getReports().size()));
         }
 
-        FirebaseDAO.getInstance().getProfileImageInBytes(user.getId(), new DataCallback<byte[]>() {
+        FirebaseDAO.getInstance().getProfileImageInBitmap(user.getId(), getActivity(), new DataCallback<Bitmap>() {
             @Override
-            public void onDataReceive (byte[] bytes) {
-                if (bytes != null) {
+            public void onDataReceive(Bitmap data) {
+                if (data != null) {
                     imageButtonProfilePicture.setPadding(2, 2, 2, 2);
-                    imageButtonProfilePicture.setImageBitmap(ImageConverter.getRoundedCornerBitmap (
-                            BitmapFactory.decodeByteArray (bytes, 0, bytes.length)
-                    ));
+                    imageButtonProfilePicture.setImageBitmap(
+                            ImageConverter.getRoundedCornerBitmap (data)
+                    );
                 }
                 else {
                     imageButtonProfilePicture.setImageResource(R.mipmap.ic_default_user_profile);
                 }
-
             }
         });
 
         FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
             @Override
             public void onDataReceive(Profile profile) {
-
+                if (profile == null) {
+                    return;
+                }
                 TextView textUserProfileName = (TextView) getView().findViewById(R.id.user_profile_name);
                 TextView textUserProfileLastName = (TextView) getView().findViewById(R.id.user_profile_last_name);
                 TextView textUserProfileLocation = (TextView) getView().findViewById(R.id.user_profile_location);

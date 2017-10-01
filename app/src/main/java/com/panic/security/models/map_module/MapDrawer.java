@@ -2,10 +2,10 @@ package com.panic.security.models.map_module;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.util.Log;
-import android.util.Pair;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -20,9 +20,9 @@ import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 import com.panic.security.R;
-import com.panic.security.entities.Crime;
-import com.panic.security.entities.Location;
-import com.panic.security.utils.FirebaseDAO;
+import com.panic.security.utils.DataLoader;
+import com.panic.security.utils.DataLoaderListener;
+import com.panic.security.utils.ImageConverter;
 import com.panic.security.utils.StorageManager;
 import com.panic.security.utils.UserLocationUtils;
 import com.panic.security.utils.DataCallback;
@@ -41,7 +41,7 @@ import java.util.TimeZone;
  * Created by david on 9/18/17.
  */
 
-public class MapDrawer {
+public class MapDrawer implements DataLoaderListener {
 
     private final String TAG = "MapDrawer";
 
@@ -53,14 +53,14 @@ public class MapDrawer {
 
     private boolean isNormalMapStyle = true;
 
-    private Map<String, Double> crimeWeights;
+
     private List<WeightedLatLng> weightedLatLngList;
 
     /**
      * For Heat Map Functionality
      */
-    private Map<String, WeightedLatLng> weightedLatLngMap;
     private HeatmapTileProvider heatmapTileProvider;
+
     private TileOverlay overlayOptions;
 
     private List<Marker> friendsMarkers;
@@ -68,11 +68,11 @@ public class MapDrawer {
     public MapDrawer (Activity activity, GoogleMap mMap) {
         this.mainActivity = activity;
         this.mMap = mMap;
-        this.weightedLatLngMap = new HashMap<>();
         this.weightedLatLngList = new ArrayList<>();
         this.friendsMarkers = new ArrayList<>();
-
-        initCrimeWeights ();
+        this.weightedLatLngList = DataLoader.getInstance().getCrimeLocationList();
+        this.weightedLatLngList.add(new WeightedLatLng(new LatLng(0, 0)));
+        DataLoader.getInstance().addOnCrimeChangedListener(this);
         UserLocationUtils.getInstance().addReceiveLocationListener(new DataCallback<Map<String, LatLng>>() {
             @Override
             public void onDataReceive(Map<String, LatLng> data) {
@@ -90,12 +90,21 @@ public class MapDrawer {
 
         for (Map.Entry<String, LatLng> entry : friends.entrySet()) {
             String friendId = entry.getKey();
-            Bitmap imageBitmap = StorageManager.loadProfileImageMarker(friendId, mainActivity);
+            Bitmap imageBitmap = StorageManager.loadProfileImage(friendId, mainActivity);
             BitmapDescriptor bitmapDescriptor = null;
-            if (imageBitmap != null) {
-                bitmapDescriptor = BitmapDescriptorFactory
-                        .fromBitmap(Bitmap.createScaledBitmap(imageBitmap, 150, 150, false));
+            if (imageBitmap == null) {
+                imageBitmap = BitmapFactory
+                        .decodeResource(mainActivity.getResources(), R.mipmap.ic_account);
             }
+            bitmapDescriptor = BitmapDescriptorFactory
+                    .fromBitmap(
+                            ImageConverter
+                            .getMarkerBitmap(
+                                    Bitmap.createScaledBitmap(
+                                            imageBitmap, 150, 150, false
+                                    )
+                            )
+                    );
             if (bitmapDescriptor == null) {
                 StorageManager.saveProfileImage(friendId, mainActivity);
             }
@@ -104,19 +113,6 @@ public class MapDrawer {
                     .icon(bitmapDescriptor);
             friendsMarkers.add (mMap.addMarker(markerOptions));
         }
-    }
-
-    private void initCrimeWeights () {
-        crimeWeights = new HashMap<>();
-        crimeWeights.put("vandalism_crime", 0.3);
-        crimeWeights.put("suspicious_activity_crime", 0.3);
-        crimeWeights.put("shop_lifting_crime", 0.2);
-        crimeWeights.put("other_crime", 0.4);
-        crimeWeights.put("assault_crime", 1.0);
-        crimeWeights.put("auto_theft_crime", 0.8);
-        crimeWeights.put("burglary_crime", 0.9);
-        crimeWeights.put("drugs_crime", 0.7);
-        crimeWeights.put("homicide_crime", 1.0);
     }
 
     public void setMapStyle ( ) {
@@ -176,61 +172,18 @@ public class MapDrawer {
     }
 
     public void drawZones () {
-        FirebaseDAO.getInstance().addCrimeLocationListener(new DataCallback<Pair<Crime, Location>>() {
-            @Override
-            public void onDataReceive(Pair<Crime, Location> data) {
-                putWeightInMap(data);
-                updateHeatMap();
-            }
-        }, new DataCallback<List<Pair<Crime, Location>>>() {
-            @Override
-            public void onDataReceive(List<Pair<Crime, Location>> data) {
-                for (Pair<Crime, Location> pair : data) {
-                    putWeightInMap (pair);
-                }
-                updateHeatMap();
-            }
-        });
 
-    }
-
-    private void putWeightInMap(Pair<Crime, Location> data) {
-        Crime crime = data.first;
-        Location location = data.second;
-
-        double weight = 0.0;
-        if (crimeWeights.containsKey(crime.getType())) {
-            weight = crimeWeights.get(crime.getType());
-        } else {
-            Toast.makeText(mainActivity.getApplicationContext(), R.string.crime_type_not_found_error, Toast.LENGTH_SHORT);
-        }
-
-        weightedLatLngMap.put(crime.getId(), new WeightedLatLng(
-                new LatLng(location.getLatitude(), location.getLongitude()),
-                weight
-            )
-        );
-
-    }
-
-    private void updateHeatMap () {
-        if (weightedLatLngList.size() != weightedLatLngMap.size()) {
-            initWeightedLatLngList();
-        }
-        else {
-            return;
-        }
         if (heatmapTileProvider == null) {
             initHeatMap();
         }
-        heatmapTileProvider.setWeightedData (weightedLatLngList);
+        updateZones();
     }
 
-    private void initWeightedLatLngList () {
-        weightedLatLngList = new ArrayList<>();
-        for (Map.Entry<String, WeightedLatLng> entry : weightedLatLngMap.entrySet()) {
-            weightedLatLngList.add (entry.getValue());
+    public void updateZones() {
+        if (overlayOptions != null) {
+            overlayOptions.remove();
         }
+        initHeatMap();
     }
 
     private void initHeatMap() {
@@ -245,6 +198,7 @@ public class MapDrawer {
                 .opacity(0.4)
                 .build();
         overlayOptions = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(heatmapTileProvider));
+
     }
 
     private double getDistanceFromLatLngInKm (LatLng latLng1, LatLng latLng2) {
@@ -268,4 +222,8 @@ public class MapDrawer {
         return deg * (Math.PI / 180.0);
     }
 
+    @Override
+    public void onLoadCompleted() {
+        updateZones();
+    }
 }

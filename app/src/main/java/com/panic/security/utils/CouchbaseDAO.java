@@ -30,6 +30,7 @@ public class CouchbaseDAO {
     private Manager manager;
     private Database database;
     private boolean isUserListenerSet;
+    private boolean isProfileListenerSet;
 
     private static CouchbaseDAO couchbaseDAO;
 
@@ -153,12 +154,14 @@ public class CouchbaseDAO {
     }
 
     public void pushUser (User user) {
-        Document document = database.getDocument (CouchbaseReferences.USER_REFERENCE);
 
         if(user == null) {
             return;
         }
+
         isUserListenerSet = true;
+        Document document = database.getDocument (CouchbaseReferences.USER_REFERENCE);
+
         Map<String, Object> properties = new HashMap<>();
         properties.put(FirebaseReferences.User.ID_REFERENCE, user.getId());
         properties.put(FirebaseReferences.User.EMAIL_REFERENCE, user.getEmail());
@@ -179,6 +182,12 @@ public class CouchbaseDAO {
     }
 
     public void pushProfile (Profile profile) {
+
+        if (profile == null) {
+            return;
+        }
+
+        isProfileListenerSet = true;
         Document document = database.getDocument(CouchbaseReferences.PROFILE_REFERENCE);
 
         Map<String, Object> properties = new HashMap<>();

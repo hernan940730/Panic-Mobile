@@ -103,13 +103,13 @@
 
     <ImageButton
         android:id="@+id/close_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
+        android:layout_width="@dimen/close_button"
+        android:layout_height="@dimen/close_button"
+        android:background="@drawable/round_button"
         android:textSize="20sp"
         android:src="@drawable/ic_dialog_close_dark"
         android:translationY="20dp"
-        android:translationX="330dp"
+        android:translationX="290dp"
         android:visibility="gone"/>
 
 </fragment>
