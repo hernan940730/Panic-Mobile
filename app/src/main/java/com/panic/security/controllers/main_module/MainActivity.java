@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private boolean isMarker = false;
     private String mText = "";
+    private String crime = "";
     private String mCrimeName;
 
     // Authentication with FireBase
@@ -396,7 +397,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onClick(View view) {
         int i = view.getId();
-        String crime = "";
+        crime = "";
         switch ( i ){
             case R.id.assault_button:
                 crime = CRIMES_LIST[0];
@@ -446,6 +447,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mText = input.getText().toString();
+                if( !TextUtils.isEmpty(mText) ){
+                    reportCrime( crime, location);
+                }
             }
         });
 
@@ -456,9 +460,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         builder.show();
-        if( !TextUtils.isEmpty(mText) ){
-            reportCrime( crime, location);
-        }
 
     }
 
