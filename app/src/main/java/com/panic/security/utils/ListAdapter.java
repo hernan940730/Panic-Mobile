@@ -2,6 +2,8 @@ package com.panic.security.utils;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +29,7 @@ public class ListAdapter extends ArrayAdapter<String>{
 
     private Activity context;
     private List<User> users;
-    private List<Integer> imagesID;
+    private List<Bitmap> images;
     private List<String> itemsNames;
     private boolean withButtons;
 
@@ -35,17 +37,17 @@ public class ListAdapter extends ArrayAdapter<String>{
         super(context, R.layout.row_list_view);
         this.context = context;
         users = new ArrayList<>();
-        imagesID = new ArrayList<>();
+        images = new ArrayList<>();
         itemsNames = new ArrayList<>();
         withButtons = false;
     }
 
-    public ListAdapter(Activity context, List<User> users, List<Integer> imagesID, List<String> itemsNames, List<String> itemsDescriptions, List<List<ImageButton>> itemsButtons) {
+    public ListAdapter(Activity context, List<User> users, List<Bitmap> images, List<String> itemsNames, List<List<ImageButton>> itemsButtons) {
         super(context, R.layout.row_list_view, itemsNames);
 
         this.context = context;
         this.users = users;
-        this.imagesID = imagesID;
+        this.images = images;
         this.itemsNames = itemsNames;
         withButtons = false;
     }
@@ -63,7 +65,8 @@ public class ListAdapter extends ArrayAdapter<String>{
         TextView txtTitle = (TextView) rowView.findViewById(R.id.main_text_in_row);
         TextView txtDescription = (TextView) rowView.findViewById(R.id.second_text_in_row);
 
-        imageView.setImageResource(imagesID.get(position));
+        imageView.setImageBitmap(images.get(position));
+
         txtTitle.setText(itemsNames.get(position));
         txtDescription.setText(users.get(position).getEmail());
 
@@ -98,15 +101,15 @@ public class ListAdapter extends ArrayAdapter<String>{
         return itemsNames.size();
     }
 
-    public void addItem(User user, String name, Integer image) {
+    public void addItem(User user, String name, Bitmap image) {
         users.add(user);
-        imagesID.add(image);
+        images.add(image);
         itemsNames.add(name);
     }
 
-    public void addItem(User user, String name, Integer image, boolean buttons) {
+    public void addItem(User user, String name, Bitmap image, boolean buttons) {
         users.add(user);
-        imagesID.add(image);
+        images.add(image);
         itemsNames.add(name);
         withButtons = buttons;
     }

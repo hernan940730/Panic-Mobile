@@ -93,10 +93,23 @@
     <string name="cancel">Cancel</string>
     <string name="email_not_verified">Email %s is not verified</string>
     <string name="verify_email">Verify your email.</string>
+    <string name="assault">Assault</string>
+    <string name="auto_theft">Auto theft</string>
+    <string name="burglary">Burglary</string>
+    <string name="shop_lifting">Shop lifting</string>
+    <string name="suspicious_activity">Suspicious activity</string>
+    <string name="homicide">Homicide</string>
+    <string name="vandalism">Vandalism</string>
+    <string name="drugs">Drugs</string>
+    <string name="other">Other</string>
+    <string name="without_reports">Oops! You need to make some reports</string>
 
     <!-- Friends -->
     <string name="title_friend_requests">Friend requests</string>
     <string name="title_friends">Friends</string>
-    <string name="withoutFriends">Oops! You need to do some friends</string>
+    <string name="without_friends">Oops! You need to make some friends</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

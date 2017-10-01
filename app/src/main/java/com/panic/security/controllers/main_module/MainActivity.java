@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -48,6 +47,7 @@ import com.panic.security.controllers.friends_module.FriendsFragment;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
 
 import com.panic.security.controllers.notifications_module.NotificationsFragment;
+import com.panic.security.controllers.reports_module.ReportsFragment;
 import com.panic.security.controllers.user_profile_module.UserProfileFragment;
 import com.panic.security.entities.Crime;
 import com.panic.security.entities.Profile;
@@ -78,7 +78,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static int NUM_LINES = 6;
 
     private boolean isMarker = false;
-    private String mtext = "";
+    private String mText = "";
+    private String crime = "";
+    private String mCrimeName;
 
     // Authentication with FireBase
     private FirebaseAuth mAuth;
@@ -230,10 +232,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.item_friends) {
             fragmentManager.beginTransaction().replace (R.id.content_main, new FriendsFragment()).commit();
         } else if (id == R.id.item_my_reports) {
-
-        } else if (id == R.id.item_notifications) {
+            fragmentManager.beginTransaction().replace (R.id.content_main, new ReportsFragment()).commit();
+        } /*else if (id == R.id.item_notifications) {
             fragmentManager.beginTransaction().replace (R.id.content_main, new NotificationsFragment()).commit();
-        } else if (id == R.id.item_about) {
+        } */else if (id == R.id.item_about) {
 
         } else if ( id == R.id.item_sign_out ){
             signOut();
@@ -396,48 +398,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onClick(View view) {
         int i = view.getId();
-        String crime = "";
+        crime = "";
         switch ( i ){
             case R.id.assault_button:
                 crime = CRIMES_LIST[0];
+                mCrimeName = getResources().getString( R.string.assault );
                 break;
             case R.id.auto_theft_button:
                 crime = CRIMES_LIST[1];
+                mCrimeName = getResources().getString( R.string.auto_theft);
                 break;
             case R.id.burglary_button:
                 crime = CRIMES_LIST[2];
+                mCrimeName = getResources().getString( R.string.burglary );
                 break;
             case R.id.shop_lifting_button:
                 crime = CRIMES_LIST[3];
+                mCrimeName = getResources().getString( R.string.shop_lifting );
                 break;
             case R.id.suspicious_button:
                 crime = CRIMES_LIST[4];
+                mCrimeName = getResources().getString( R.string.suspicious_activity );
                 break;
             case R.id.homicide_button:
                 crime = CRIMES_LIST[5];
+                mCrimeName = getResources().getString( R.string.homicide );
                 break;
             case R.id.vandalism_button:
                 crime = CRIMES_LIST[6];
+                mCrimeName = getResources().getString( R.string.vandalism );
                 break;
             case R.id.drugs_button:
                 crime = CRIMES_LIST[7];
+                mCrimeName = getResources().getString( R.string.drugs );
                 break;
             case R.id.other_button:
                 crime = CRIMES_LIST[8];
+                mCrimeName = getResources().getString( R.string.other );
                 break;
         }
         // Create Dialog for description input
         AlertDialog.Builder builder = new AlertDialog.Builder( this, R.style.AlertDialogStyle);
-        builder.setTitle( getResources().getString( R.string.reportDescriptionTitle ) );
+        builder.setTitle( mCrimeName + " - " + getResources().getString( R.string.reportDescriptionTitle ) );
         final EditText input = new EditText( this );
-        input.setInputType( InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES );
-        input.setLines( NUM_LINES );
+        input.setInputType( InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES );
         builder.setView( input );
 
         builder.setPositiveButton(getResources().getString( R.string.accept ), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                mtext = input.getText().toString();
+                mText = input.getText().toString();
+                if( !TextUtils.isEmpty(mText) ){
+                    reportCrime( crime, location);
+                }
             }
         });
 
@@ -448,9 +461,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         builder.show();
-        if( !TextUtils.isEmpty( mtext ) ){
-            reportCrime( crime, location);
-        }
 
     }
 
@@ -464,7 +474,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         crime.setType( crimeToReport );
 
         Report report = new Report();
-        report.setDescription( mtext );
+        report.setDescription(mText);
 
         pushReport( report, crime, location );
     }
