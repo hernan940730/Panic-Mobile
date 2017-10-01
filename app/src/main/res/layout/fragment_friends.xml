@@ -1,6 +1,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
     android:fillViewport="true"
     android:background="@color/whiteColor">
 
@@ -15,21 +15,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="ANDROID" />
-
-        <ListView
-            android:id="@+id/list_view_friends"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dip"
-            android:background="@color/whiteColor"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dip"
-            android:gravity="center_vertical"
-            android:text="IOS" />
+            android:background="@drawable/background_with_gray_line"
+            android:textSize="16dp"
+            android:text="@string/title_friend_requests" />
 
         <ListView
             android:id="@+id/list_view_request"
@@ -39,24 +27,43 @@
             android:background="@color/whiteColor" >
         </ListView>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_with_gray_line"
+            android:textSize="16dp"
+            android:text="@string/title_friends" />
+
+        <ListView
+            android:id="@+id/list_view_friends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip"
+            android:background="@color/whiteColor"/>
+
         <ProgressBar
             android:id="@+id/friends_progress_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="250dp"
+            android:gravity="center"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/image_without_friends"
-            android:layout_width="225dp"
-            android:layout_height="225dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:visibility="gone"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_horizontal"
             android:src="@mipmap/ic_without_friends"
             android:layout_marginTop="51dp" />
 
         <TextView
             android:id="@+id/txt_without_friends"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:visibility="gone"

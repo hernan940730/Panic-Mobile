@@ -94,7 +94,7 @@
     <string name="verify_email">Verify your email.</string>
 
     <!-- Friends -->
-    <string name="title_request_friends">Request friends</string>
+    <string name="title_friend_requests">Friend requests</string>
     <string name="title_friends">Friends</string>
     <string name="withoutFriends">Oops! You need to do some friends</string>
 

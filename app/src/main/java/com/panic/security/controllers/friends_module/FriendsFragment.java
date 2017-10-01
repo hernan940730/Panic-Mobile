@@ -66,8 +66,8 @@ public class FriendsFragment extends Fragment {
                 // Bar search
                 addSearchBar();
                 // Show friends
-                showFriends(user);
                 showNotifications(user);
+                showFriends(user);
 
             }
         });
@@ -76,8 +76,15 @@ public class FriendsFragment extends Fragment {
 
     public void showFriends(User user){
 
+        ImageView imageViewWithoutFriends = (ImageView) getView().findViewById(R.id.image_without_friends);
+        TextView textViewWithoutFriends = (TextView) getView().findViewById(R.id.txt_without_friends);
+
+        imageViewWithoutFriends.setVisibility(View.GONE);
+        textViewWithoutFriends.setVisibility(View.GONE);
+
         // List
-        final ListView listViewFriends = (ListView) getView().findViewById(R.id.list_view_request);
+        final ListView listViewFriends = (ListView) getView().findViewById(R.id.list_view_friends);
+        listViewFriends.setVisibility(View.VISIBLE);
         final ListAdapter adapter = new ListAdapter(getActivity());
 
         if(user.getFriends() != null){
@@ -122,9 +129,7 @@ public class FriendsFragment extends Fragment {
             }
 
         }else{
-            ImageView imageViewWithoutFriends = (ImageView) getView().findViewById(R.id.image_without_friends);
-            TextView textViewWithoutFriends = (TextView) getView().findViewById(R.id.txt_without_friends);
-
+            listViewFriends.setVisibility(View.GONE);
             imageViewWithoutFriends.setVisibility(View.VISIBLE);
             textViewWithoutFriends.setVisibility(View.VISIBLE);
         }
@@ -134,7 +139,7 @@ public class FriendsFragment extends Fragment {
     public void showNotifications(User user){
 
         // List
-        final ListView listViewFriends = (ListView) getView().findViewById(R.id.list_view_friends);
+        final ListView listViewFriends = (ListView) getView().findViewById(R.id.list_view_request);
         final ListAdapter adapterNotifications = new ListAdapter(getActivity());
 
         adapterNotifications.addItem(user.getId(), "Test" , "Description", 0);
