@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -53,18 +54,21 @@ public class ImageConverter {
         paint.setAntiAlias(true);
         canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(color);
+        paint.setXfermode (new PorterDuffXfermode (PorterDuff.Mode.CLEAR));
+        Path path = new Path();
+        path.moveTo((float)(cx2 / 2.), cy);
+        path.lineTo(cx2, (float)(cy / 2.));
+        path.lineTo(cx2, cy);
+        path.lineTo((float)(cx2 / 2.), cy);
+        path.close();
+        canvas.drawPath(path, paint);
+        path.moveTo((float)(cx2 / 2.), cy);
+        path.lineTo(0, (float)(cy / 2.));
+        path.lineTo(0, cy);
+        path.lineTo((float)(cx2 / 2.), cy);
+        path.close();
+        canvas.drawPath(path, paint);
         paint.setXfermode (new PorterDuffXfermode (PorterDuff.Mode.SRC_IN));
-        float mx [] = {
-                -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-                0.0f,  -1.0f,  0.0f,  1.0f,  0.0f,
-                0.0f,  0.0f,  -1.0f,  1.0f,  0.0f,
-                1.0f,  1.0f,  1.0f,  1.0f,  0.0f
-        };
-        ColorMatrix cm = new ColorMatrix(mx);
-
-        paint.setColorFilter(new ColorMatrixColorFilter(cm));
-        canvas.drawCircle(cx1, cy,radius, paint);
-        canvas.drawCircle(cx2, cy,radius, paint);
         canvas.drawBitmap (bitmap, rect, rect, paint);
 
         return output;

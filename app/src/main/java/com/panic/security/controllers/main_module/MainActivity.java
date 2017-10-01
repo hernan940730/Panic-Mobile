@@ -500,4 +500,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return reportRef.getKey ();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        UserLocationUtils.getInstance().revokeSendLocationListener();
+        super.onDestroy();
+    }
 }
