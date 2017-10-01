@@ -164,7 +164,8 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onDataReceive (byte[] bytes) {
                 if (bytes != null) {
-                    imageButtonProfilePicture.setImageBitmap(ImageConverter.getRoundedCornerBitmap(
+                    imageButtonProfilePicture.setPadding(2, 2, 2, 2);
+                    imageButtonProfilePicture.setImageBitmap(ImageConverter.getRoundedCornerBitmap (
                             BitmapFactory.decodeByteArray (bytes, 0, bytes.length)
                     ));
                 }

@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -91,7 +90,7 @@ public class MapDrawer {
 
         for (Map.Entry<String, LatLng> entry : friends.entrySet()) {
             String friendId = entry.getKey();
-            Bitmap imageBitmap = StorageManager.loadProfileImage(friendId, mainActivity);
+            Bitmap imageBitmap = StorageManager.loadProfileImageMarker(friendId, mainActivity);
             BitmapDescriptor bitmapDescriptor = null;
             if (imageBitmap != null) {
                 bitmapDescriptor = BitmapDescriptorFactory
