@@ -37,6 +37,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -86,7 +87,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private MapDrawer mapDrawer;
     private ImageButton crimes [];
     private Animation animFadeIn ;
-    private LatLng marker;
+    private LatLng location;
+    private Marker marker;
 
     public final int locationRequestCode = 1;
 
@@ -204,7 +206,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if( isMarker ) {
-            mMap.clear();
+            marker.remove();
+            isMarker = false;
             clearCrimesButtons();
         } else {
             moveTaskToBack(true);
@@ -321,10 +324,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
+                if( isMarker ){
+                    marker.remove();
+                    isMarker = false;
+                }
                 isMarker = true;
-                marker = latLng;
-                mMap.clear();
-                mMap.addMarker( new MarkerOptions().position(latLng) );
+                location = latLng;
+                marker = mMap.addMarker( new MarkerOptions().position(latLng) );
                 CameraUpdate crimeLocation = CameraUpdateFactory.newLatLng( latLng );
                 mMap.animateCamera( crimeLocation );
                 showCrimesButtons();
@@ -438,7 +444,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         builder.show();
         if( !TextUtils.isEmpty( mtext ) ){
-            reportCrime( crime, marker );
+            reportCrime( crime, location);
         }
 
     }
