@@ -153,6 +153,10 @@ public class CouchbaseDAO {
     public void pushUser (User user) {
         Document document = database.getDocument (CouchbaseReferences.USER_REFERENCE);
 
+        if(user == null) {
+            return;
+        }
+
         Map<String, Object> properties = new HashMap<>();
         properties.put(FirebaseReferences.User.ID_REFERENCE, user.getId());
         properties.put(FirebaseReferences.User.EMAIL_REFERENCE, user.getEmail());
