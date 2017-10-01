@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             "drugs_crime",
             "other_crime"
     };
+
     private static int NUM_LINES = 6;
 
     private boolean isMarker = false;

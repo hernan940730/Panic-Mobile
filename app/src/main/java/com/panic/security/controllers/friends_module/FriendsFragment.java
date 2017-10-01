@@ -100,11 +100,11 @@ public class FriendsFragment extends Fragment {
                                     @Override
                                     public void onDataReceive (byte[] bytes) {
                                         if (bytes != null) {
-                                            adapter.addItem(user, (profile.getName() + " " + profile.getLast_name()),
+                                            adapter.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(),
                                                     ImageConverter.getRoundedCornerBitmap(BitmapFactory.decodeByteArray (bytes, 0, bytes.length)));
                                             listViewFriends.setAdapter(adapter);
                                         } else {
-                                            adapter.addItem(user, (profile.getName() + " " + profile.getLast_name()),
+                                            adapter.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(),
                                                     BitmapFactory.decodeResource(getResources(), R.mipmap.ic_account));
                                             listViewFriends.setAdapter(adapter);
                                         }
@@ -171,12 +171,12 @@ public class FriendsFragment extends Fragment {
                                     @Override
                                     public void onDataReceive (byte[] bytes) {
                                         if (bytes != null) {
-                                            adapterNotifications.addItem(user, (profile.getName() + " " + profile.getLast_name()),
+                                            adapterNotifications.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(),
                                                     ImageConverter.getRoundedCornerBitmap(BitmapFactory.decodeByteArray (bytes, 0, bytes.length)), true);
                                             listViewRequest.setAdapter(adapterNotifications);
                                         } else {
                                             Bitmap defaultFriendImage = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_accept_request);
-                                            adapterNotifications.addItem(user, (profile.getName() + " " + profile.getLast_name()), defaultFriendImage);
+                                            adapterNotifications.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(), defaultFriendImage);
                                             listViewRequest.setAdapter(adapterNotifications);
                                         }
                                     }

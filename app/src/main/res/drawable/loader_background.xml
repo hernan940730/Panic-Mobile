@@ -7,7 +7,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/ic_logo_panic" />
+            android:src="@mipmap/ic_panic" />
     </item>
 
 </layer-list>

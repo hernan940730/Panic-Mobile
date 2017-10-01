@@ -27,10 +27,18 @@ import java.util.List;
 
 public class ListAdapter extends ArrayAdapter<String>{
 
+    private TextView txtDescription;
+    private TextView txtTitle;
+    private ImageView imageView;
+
+    private ImageButton acceptRequest;
+    private ImageButton rejectRequest;
+
     private Activity context;
     private List<User> users;
     private List<Bitmap> images;
     private List<String> itemsNames;
+    private List<String> itemsDescription;
     private boolean withButtons;
 
     public ListAdapter(Activity context){
@@ -39,16 +47,7 @@ public class ListAdapter extends ArrayAdapter<String>{
         users = new ArrayList<>();
         images = new ArrayList<>();
         itemsNames = new ArrayList<>();
-        withButtons = false;
-    }
-
-    public ListAdapter(Activity context, List<User> users, List<Bitmap> images, List<String> itemsNames, List<List<ImageButton>> itemsButtons) {
-        super(context, R.layout.row_list_view, itemsNames);
-
-        this.context = context;
-        this.users = users;
-        this.images = images;
-        this.itemsNames = itemsNames;
+        itemsDescription = new ArrayList<>();
         withButtons = false;
     }
 
@@ -56,22 +55,25 @@ public class ListAdapter extends ArrayAdapter<String>{
         return users;
     }
 
+    public TextView getTxtDescription() {
+        return txtDescription;
+    }
+
     public View getView(final int position, View view, final ViewGroup parent){
 
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.row_list_view, null, true);
 
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.image_in_row);
-        TextView txtTitle = (TextView) rowView.findViewById(R.id.main_text_in_row);
-        TextView txtDescription = (TextView) rowView.findViewById(R.id.second_text_in_row);
+        imageView = (ImageView) rowView.findViewById(R.id.image_in_row);
+        txtTitle = (TextView) rowView.findViewById(R.id.main_text_in_row);
+        txtDescription = (TextView) rowView.findViewById(R.id.second_text_in_row);
 
         imageView.setImageBitmap(images.get(position));
-
         txtTitle.setText(itemsNames.get(position));
-        txtDescription.setText(users.get(position).getEmail());
+        txtDescription.setText(itemsDescription.get(position));
 
-        ImageButton acceptRequest = (ImageButton) rowView.findViewById(R.id.accept_request);
-        ImageButton rejectRequest = (ImageButton) rowView.findViewById(R.id.reject_request);
+        acceptRequest = (ImageButton) rowView.findViewById(R.id.accept_request);
+        rejectRequest = (ImageButton) rowView.findViewById(R.id.reject_request);
 
         if(!withButtons){
             acceptRequest.setVisibility(View.GONE);
@@ -101,17 +103,25 @@ public class ListAdapter extends ArrayAdapter<String>{
         return itemsNames.size();
     }
 
-    public void addItem(User user, String name, Bitmap image) {
+    public void addItem(User user, String name, String description, Bitmap image) {
         users.add(user);
         images.add(image);
+        itemsDescription.add(description);
         itemsNames.add(name);
     }
 
-    public void addItem(User user, String name, Bitmap image, boolean buttons) {
+    public void addItem(User user, String name, String description, Bitmap image, boolean buttons) {
         users.add(user);
         images.add(image);
         itemsNames.add(name);
+        itemsDescription.add(description);
         withButtons = buttons;
+    }
+
+    public void addItem(String name, String description, Bitmap image) {
+        images.add(image);
+        itemsNames.add(name);
+        itemsDescription.add(description);
     }
 
 }
