@@ -6,6 +6,9 @@ import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.widget.ImageView;
+
+import com.panic.security.R;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,10 +28,10 @@ public class StorageManager {
         FirebaseDAO.getInstance().getProfileImageInBytes(uid, new DataCallback<byte[]>() {
             @Override
             public void onDataReceive(byte[] data) {
-                if(data == null){
+                if (data == null) {
                     return;
                 }
-                saveProfileImage(uid, data, activity);
+                saveProfileImage (uid, data, activity);
             }
         });
     }
@@ -37,9 +40,8 @@ public class StorageManager {
         ContextWrapper cw = new ContextWrapper(activity.getApplicationContext());
         File directory = cw.getDir (profileImageDir, Context.MODE_PRIVATE);
 
-        Bitmap bitmapImage = ImageConverter.getMarkerBitmap(
-                BitmapFactory.decodeByteArray (bytes, 0, bytes.length)
-        );
+        Bitmap bitmapImage = BitmapFactory.decodeByteArray (bytes, 0, bytes.length);
+
         // path to /data/data/yourapp/app_data/imageDir
 
         // Create imageDir
@@ -61,19 +63,24 @@ public class StorageManager {
         }
     }
 
-    public static Bitmap loadProfileImage(String uid, Activity activity) {
-        Bitmap b = null;
+    public static Bitmap loadProfileImage (String uid, Activity activity) {
+        ImageView imageView = new ImageView(activity);
+        imageView.setImageResource(R.mipmap.ic_default_user_profile);
+        Bitmap b = imageView.getDrawingCache();
         try {
             ContextWrapper cw = new ContextWrapper(activity.getApplicationContext());
             File directory = cw.getDir (profileImageDir, Context.MODE_PRIVATE);
 
             File f = new File(directory, uid);
             b = BitmapFactory.decodeStream (new FileInputStream (f));
-
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return b;
+    }
+
+    public static Bitmap loadProfileImageMarker (String uid, Activity activity) {
+        return ImageConverter.getMarkerBitmap (loadProfileImage (uid, activity));
     }
 }
