@@ -30,7 +30,7 @@ public class NotificationsFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+/*
         ListAdapter adapter = new ListAdapter(getActivity(), imgId, lenguaje, description, true);
 
         ListView listViewFriends = (ListView) view.findViewById(R.id.list_view_friends);
@@ -56,7 +56,7 @@ public class NotificationsFragment extends Fragment {
                 }
             }
         });
-
+*/
     }
 
     @Override

@@ -1,24 +1,80 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.panic.security.controllers.friends_module.FriendsFragment">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:background="@color/whiteColor">
 
-    <ListView
-        android:id="@+id/list_view_friends"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/whiteColor"/>
-
-    <ProgressBar
-        android:id="@+id/friends_progress_bar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="250dp"
-        android:visibility="gone"
-        android:layout_centerHorizontal="true"
-        android:layout_centerInParent="true"
-        android:layout_centerVertical="true"
-        android:indeterminateTint="@color/colorPrimary"/>
+        android:orientation="vertical"
+        android:padding="10dip"
+        android:background="@color/whiteColor">
 
-</FrameLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_with_gray_line"
+            android:textSize="16dp"
+            android:text="@string/title_friend_requests" />
+
+        <ListView
+            android:id="@+id/list_view_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip"
+            android:background="@color/whiteColor" >
+        </ListView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_with_gray_line"
+            android:textSize="16dp"
+            android:text="@string/title_friends" />
+
+        <ListView
+            android:id="@+id/list_view_friends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip"
+            android:background="@color/whiteColor"/>
+
+        <ProgressBar
+            android:id="@+id/friends_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="250dp"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/image_without_friends"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:visibility="gone"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_horizontal"
+            android:src="@mipmap/ic_without_friends"
+            android:layout_marginTop="51dp" />
+
+        <TextView
+            android:id="@+id/txt_without_friends"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:paddingTop="15dp"
+            android:text="@string/withoutFriends" />
+
+    </LinearLayout>
+
+</ScrollView>
+
+
+
+
+

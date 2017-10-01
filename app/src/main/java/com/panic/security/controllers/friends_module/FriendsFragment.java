@@ -11,13 +11,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.panic.security.R;
 import com.panic.security.controllers.main_module.MainActivity;
+import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
 import com.panic.security.utils.DataCallback;
 import com.panic.security.utils.DataLoader;
@@ -27,6 +33,7 @@ import com.panic.security.utils.ListAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FriendsFragment extends Fragment {
 
@@ -40,16 +47,6 @@ public class FriendsFragment extends Fragment {
 
     private Integer[] imgId = {
             R.mipmap.ic_account,
-            R.mipmap.ic_add_person,
-            R.mipmap.ic_are_friends,
-            R.mipmap.ic_check_circle,
-            R.mipmap.ic_account,
-            R.mipmap.ic_add_person,
-            R.mipmap.ic_are_friends,
-            R.mipmap.ic_check_circle,
-            R.mipmap.ic_edit,
-            R.mipmap.ic_check_circle,
-            R.mipmap.ic_edit
     };
     private String lenguaje[] = {"Java","PHP","Python","JavaScript","Ruby","C","Go","Perl","Pascal","Maikol","Ada"};
     private String description[] = {"DssaJava","PasdasdHP","Pytasdhasodn","JaasdvaadSascdrasdipt","Rasduasdbasy","Casd","Gadasdsao","Peadasdasdrl","Pasdaasscal","Maikoasdasdl","Adasdasda"};
@@ -68,36 +65,137 @@ public class FriendsFragment extends Fragment {
 
                 // Bar search
                 addSearchBar();
-
-                FirebaseDAO.getInstance().getFriendsToUser(user.getId(), new DataCallback<HashMap<String, User.Friend>>() {
-                    @Override
-                    public void onDataReceive(HashMap<String, User.Friend> friends) {
-
-                        // TODO get list of friends
-
-                    }
-                });
-
-                // List
-                ListAdapter adapter = new ListAdapter(getActivity(), imgId, lenguaje, description, false);
-
-                ListView listViewFriends = (ListView) view.findViewById(R.id.list_view_friends);
-                listViewFriends.setAdapter(adapter);
-
-                /*listViewFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                        String selectedItem = lenguaje[position];
-                        Toast.makeText(getActivity(), selectedItem, Toast.LENGTH_SHORT).show();
-
-                    }
-                });*/
+                // Show friends
+                showNotifications(user);
+                showFriends(user);
 
             }
         });
 
     }
+
+    public void showFriends(User user){
+
+        ImageView imageViewWithoutFriends = (ImageView) getView().findViewById(R.id.image_without_friends);
+        TextView textViewWithoutFriends = (TextView) getView().findViewById(R.id.txt_without_friends);
+
+        imageViewWithoutFriends.setVisibility(View.GONE);
+        textViewWithoutFriends.setVisibility(View.GONE);
+
+        // List
+        final ListView listViewFriends = (ListView) getView().findViewById(R.id.list_view_friends);
+        listViewFriends.setVisibility(View.VISIBLE);
+        final ListAdapter adapter = new ListAdapter(getActivity());
+
+        if(user.getFriends() != null){
+
+            for (Map.Entry<String, User.Friend> friend : user.getFriends().entrySet()){
+                FirebaseDAO.getInstance().getUserByID(friend.getKey(), new DataCallback<User>() {
+                    @Override
+                    public void onDataReceive(final User user) {
+
+                        FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
+                            @Override
+                            public void onDataReceive(Profile profile) {
+
+                                Integer image = new Integer(R.mipmap.ic_account);
+                                adapter.addItem(user.getId(), (profile.getName() + " " + profile.getLast_name()), user.getEmail(), image);
+                                listViewFriends.setAdapter(adapter);
+
+                                // Event when one item is selected
+                                listViewFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                                        FirebaseDAO.getInstance().getUserByID(adapter.getUserIDs().get(position), new DataCallback<User>() {
+                                            @Override
+                                            public void onDataReceive(User userSelected) {
+                                                //To send user selected from fragment to activity
+                                                Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
+                                                intent.putExtra("type", "list_friends");
+                                                intent.putExtra("user_selected", userSelected);
+                                                getActivity().startActivity(intent);
+                                            }
+                                        });
+
+                                    }
+                                });
+
+                            }
+                        });
+
+                    }
+                });
+            }
+
+        }else{
+            listViewFriends.setVisibility(View.GONE);
+            imageViewWithoutFriends.setVisibility(View.VISIBLE);
+            textViewWithoutFriends.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    public void showNotifications(User user){
+
+        // List
+        final ListView listViewFriends = (ListView) getView().findViewById(R.id.list_view_request);
+        final ListAdapter adapterNotifications = new ListAdapter(getActivity());
+
+        adapterNotifications.addItem(user.getId(), "Test" , "Description", 0);
+        listViewFriends.setAdapter(adapterNotifications);
+
+        /*if(user.getFriends() != null){
+
+            for (Map.Entry<String, User.Friend> friend : user.getFriends().entrySet()){
+                FirebaseDAO.getInstance().getUserByID(friend.getKey(), new DataCallback<User>() {
+                    @Override
+                    public void onDataReceive(final User user) {
+
+                        FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
+                            @Override
+                            public void onDataReceive(Profile profile) {
+
+                                Integer image = new Integer(R.mipmap.ic_account);
+                                adapterNotifications.addItem(user.getId(), (profile.getName() + " " + profile.getLast_name()), user.getEmail(), image);
+                                listViewFriends.setAdapter(adapterNotifications);
+
+                                // Event when one item is selected
+                                listViewFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                                        FirebaseDAO.getInstance().getUserByID(adapterNotifications.getUserIDs().get(position), new DataCallback<User>() {
+                                            @Override
+                                            public void onDataReceive(User userSelected) {
+                                                //To send user selected from fragment to activity
+                                                Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
+                                                intent.putExtra("type", "list_friends");
+                                                intent.putExtra("user_selected", userSelected);
+                                                getActivity().startActivity(intent);
+                                            }
+                                        });
+
+                                    }
+                                });
+
+                            }
+                        });
+
+                    }
+                });
+            }
+
+        }else{
+            ImageView imageViewWithoutFriends = (ImageView) getView().findViewById(R.id.image_without_friends);
+            TextView textViewWithoutFriends = (TextView) getView().findViewById(R.id.txt_without_friends);
+
+            imageViewWithoutFriends.setVisibility(View.VISIBLE);
+            textViewWithoutFriends.setVisibility(View.VISIBLE);
+        }*/
+
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
