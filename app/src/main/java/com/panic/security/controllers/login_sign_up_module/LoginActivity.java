@@ -38,15 +38,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< Updated upstream
-        loginAttempts = 0;
-<<<<<<< HEAD
-
-=======
-        initCouchbase();
->>>>>>> Stashed changes
-=======
->>>>>>> 1714c860bd7f3ace0135e0917d4727459efb055e
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
