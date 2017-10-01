@@ -450,6 +450,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 mText = input.getText().toString();
                 if( !TextUtils.isEmpty(mText) ){
                     reportCrime( crime, location);
+                    input.setError( null );
+                }else{
+                    input.setError( getResources().getString( R.string.required ) );
                 }
             }
         });
