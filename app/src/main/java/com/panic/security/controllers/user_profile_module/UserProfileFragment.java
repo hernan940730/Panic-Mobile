@@ -281,10 +281,14 @@ public class UserProfileFragment extends Fragment {
                                 public void onDataReceive(User.FriendRequestIn friendIn) {
                                     if(friendIn != null){
 
-                                        FirebaseDAO.getInstance().pushFriend(new User.Friend(user.getId(), mUserShown.getId(), 0L, false));
-                                        FirebaseDAO.getInstance().pushFriend(new User.Friend(mUserShown.getId(), user.getId(), 0L, false));
-                                        FirebaseDAO.getInstance().removeFriendRequestIn(new User.FriendRequestIn(user.getId(), mUserShown.getId(), 0L));
-                                        FirebaseDAO.getInstance().removeFriendRequestOut(new User.FriendRequestOut(mUserShown.getId(), user.getId(), 0L));
+                                        User.Friend newFriend = new User.Friend(mUserShown.getId(), 0L, false);
+                                        FirebaseDAO.getInstance().pushFriend(user,  newFriend);
+
+                                        User.Friend newFriend2 = new User.Friend(user.getId(), 0L, false);
+                                        FirebaseDAO.getInstance().pushFriend(mUserShown,  newFriend2);
+
+                                        FirebaseDAO.getInstance().removeFriendRequestIn(user, new User.FriendRequestIn(mUserShown.getId(), 0L));
+                                        FirebaseDAO.getInstance().removeFriendRequestOut(mUserShown, new User.FriendRequestOut(user.getId(), 0L));
 
                                         mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends);
                                         Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_accepted), Snackbar.LENGTH_LONG).show();
@@ -296,8 +300,11 @@ public class UserProfileFragment extends Fragment {
                                             public void onDataReceive(User.FriendRequestOut friendOut) {
                                                 if(friendOut == null){
 
-                                                    FirebaseDAO.getInstance().pushFriendRequestOut(new User.FriendRequestOut(user.getId(), mUserShown.getId(), 0L ));
-                                                    FirebaseDAO.getInstance().pushFriendRequestIn(new User.FriendRequestIn(mUserShown.getId(), user.getId(), 0L ));
+                                                    User.FriendRequestOut friendRequestOut = new User.FriendRequestOut(mUserShown.getId(), 0L);
+                                                    FirebaseDAO.getInstance().pushFriendRequestOut(user, friendRequestOut);
+                                                    User.FriendRequestIn friendRequestIn = new User.FriendRequestIn(user.getId(), 0L);
+                                                    FirebaseDAO.getInstance().pushFriendRequestIn(mUserShown ,friendRequestIn);
+
                                                     mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
                                                     Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_sent), Snackbar.LENGTH_LONG).show();
 

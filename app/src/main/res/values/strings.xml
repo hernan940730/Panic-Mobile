@@ -89,4 +89,10 @@
     <string name="reportDescriptionTitle">Describe what happened</string>
     <string name="accept">OK</string>
     <string name="cancel">Cancel</string>
+
+    <!-- Friends -->
+    <string name="title_request_friends">Request friends</string>
+    <string name="title_friends">Friends</string>
+    <string name="withoutFriends">Oops! You need to do some friends</string>
+
 </resources>
