@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -35,12 +36,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private ProgressBar progressbar;
 
-    private int loginAttempts;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loginAttempts = 0;
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -48,7 +46,14 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if( user != null ){
                     /* User signed in */
-                    showHome();
+                    if( user.isEmailVerified() ) {
+                        showHome();
+                    } else{
+                        String s = getResources().getString( R.string.email_not_verified );
+                        s = String.format( s, user.getEmail() );
+                        Toast.makeText( LoginActivity.this, s, Toast.LENGTH_LONG ).show();
+                        updateUI();
+                    }
                 }else{
                     /* Log In User */
                     updateUI();
@@ -65,12 +70,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mEmailEditText = ( EditText ) findViewById( R.id.email );
         mPasswordEditText = ( EditText ) findViewById( R.id.password );
-
-        if( loginAttempts < 4 ) {
-            findViewById(R.id.password_reset).setVisibility(View.INVISIBLE);
-        }else{
-            findViewById(R.id.password_reset).setVisibility(View.VISIBLE);
-        }
     }
 
     private void showHome() {
@@ -125,8 +124,6 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, getResources().getString( R.string.authentication_failed ),
                                     Toast.LENGTH_SHORT).show();
                             progressbar.setVisibility(View.INVISIBLE);
-                            loginAttempts += 1;
-                            updateUI();
                         }
 
                         // ...

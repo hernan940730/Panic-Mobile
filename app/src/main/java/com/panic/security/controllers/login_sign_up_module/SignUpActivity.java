@@ -85,7 +85,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void showHome() {
-        Intent intent = new Intent( this, MainActivity.class );
+        Intent intent = new Intent( this, LoginActivity.class );
         startActivity( intent );
         finishAffinity();
     }
@@ -102,7 +102,6 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         progressbar.setVisibility(View.VISIBLE);
-
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(mEmailEditText.getText().toString(), mPasswordEditText.getText().toString() )
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -113,6 +112,8 @@ public class SignUpActivity extends AppCompatActivity {
                             progressbar.setVisibility(View.INVISIBLE);
 
                             FirebaseUser user = mAuth.getCurrentUser();
+                            user.sendEmailVerification();
+                            Toast.makeText(SignUpActivity.this, getResources().getString( R.string.verify_email ), Toast.LENGTH_SHORT).show();
                             Profile profile = new Profile();
 
                             FirebaseDAO firebaseDAO = FirebaseDAO.getInstance();
