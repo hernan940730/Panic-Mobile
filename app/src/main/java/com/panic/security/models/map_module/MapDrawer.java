@@ -1,12 +1,15 @@
 package com.panic.security.models.map_module;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -21,6 +24,7 @@ import com.panic.security.R;
 import com.panic.security.entities.Crime;
 import com.panic.security.entities.Location;
 import com.panic.security.utils.FirebaseDAO;
+import com.panic.security.utils.StorageManager;
 import com.panic.security.utils.UserLocationUtils;
 import com.panic.security.utils.DataCallback;
 
@@ -80,12 +84,25 @@ public class MapDrawer {
 
     private void drawFriendsOnMap (Map<String, LatLng> friends) {
         for (Marker friendMarker : friendsMarkers) {
-            friendMarker.remove();
+            friendMarker.remove ();
         }
 
+        friendsMarkers.clear();
+
         for (Map.Entry<String, LatLng> entry : friends.entrySet()) {
+            String friendId = entry.getKey();
+            Bitmap imageBitmap = StorageManager.loadProfileImage(friendId, mainActivity);
+            BitmapDescriptor bitmapDescriptor = null;
+            if (imageBitmap != null) {
+                bitmapDescriptor = BitmapDescriptorFactory
+                        .fromBitmap(Bitmap.createScaledBitmap(imageBitmap, 150, 150, false));
+            }
+            if (bitmapDescriptor == null) {
+                StorageManager.saveProfileImage(friendId, mainActivity);
+            }
             MarkerOptions markerOptions = new MarkerOptions()
-                    .position(entry.getValue());
+                    .position(entry.getValue())
+                    .icon(bitmapDescriptor);
             friendsMarkers.add (mMap.addMarker(markerOptions));
         }
     }

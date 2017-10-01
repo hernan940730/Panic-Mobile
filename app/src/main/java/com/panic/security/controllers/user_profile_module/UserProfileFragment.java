@@ -1,5 +1,6 @@
 package com.panic.security.controllers.user_profile_module;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,6 +26,7 @@ import com.panic.security.entities.User;
 import com.panic.security.utils.DataCallback;
 import com.panic.security.utils.DataLoader;
 import com.panic.security.utils.FirebaseDAO;
+import com.panic.security.utils.ImageConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -158,11 +160,13 @@ public class UserProfileFragment extends Fragment {
             textUserProfileNumberReports.setText(String.valueOf(user.getReports().size()));
         }
 
-        FirebaseDAO.getInstance().getProfileImageInBytes(user.getId(), new DataCallback<byte []>() {
+        FirebaseDAO.getInstance().getProfileImageInBytes(user.getId(), new DataCallback<byte[]>() {
             @Override
-            public void onDataReceive (byte []data) {
-                if (data != null) {
-                    imageButtonProfilePicture.setImageBitmap(BitmapFactory.decodeByteArray (data, 0, data.length));
+            public void onDataReceive (byte[] bytes) {
+                if (bytes != null) {
+                    imageButtonProfilePicture.setImageBitmap(ImageConverter.getRoundedCornerBitmap(
+                            BitmapFactory.decodeByteArray (bytes, 0, bytes.length)
+                    ));
                 }
                 else {
                     imageButtonProfilePicture.setImageResource(R.mipmap.ic_default_user_profile);
