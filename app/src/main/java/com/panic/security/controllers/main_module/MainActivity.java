@@ -359,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (location != null) {
                         cameraPosition = new CameraPosition.Builder ().
                                 target (new LatLng (location.getLatitude (), location.getLongitude ())).
-                                zoom (12).
+                                zoom (17).
                                 build ();
                     }
                     moveCamera (cameraPosition, true);
