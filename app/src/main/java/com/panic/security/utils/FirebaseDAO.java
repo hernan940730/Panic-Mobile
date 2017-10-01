@@ -1,5 +1,7 @@
 package com.panic.security.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 
@@ -59,23 +61,25 @@ public class FirebaseDAO {
         final DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).child (ID);
 
         if (ID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-            User user = couchbaseDAO.getUser();
-            if (user != null) {
-                callback.onDataReceive (user);
-            }
-            else {
-                ref.addValueEventListener (new ValueEventListener() {
+            if(!couchbaseDAO.getIsUserListenerSet()) {
+                ref.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange (DataSnapshot dataSnapshot) {
-                        User entity = dataSnapshot.getValue (User.class);
-                        couchbaseDAO.pushUser (entity);
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User entity = dataSnapshot.getValue(User.class);
+                        couchbaseDAO.pushUser(entity);
                     }
 
                     @Override
-                    public void onCancelled (DatabaseError databaseError) {
+                    public void onCancelled(DatabaseError databaseError) {
 
                     }
                 });
+            }
+            else {
+                User user = couchbaseDAO.getUser();
+                if (user != null) {
+                    callback.onDataReceive(user);
+                }
             }
         }
 

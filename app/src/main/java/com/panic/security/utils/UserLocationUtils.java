@@ -50,6 +50,8 @@ public class UserLocationUtils {
     private final String JSON_VALUE = "json?";
     private final String SET_VALUE = "set?";
     private final String GET_VALUE = "get?";
+    private final String REMOVE_VALUE = "remove?";
+
     private final String LOCATION_VALUE = "location=";
     private final String TIME_STAMP_VALUE = "timestamp=";
     private final String TOKEN_VALUE = "token=";
@@ -146,6 +148,21 @@ public class UserLocationUtils {
 
     public void revokeSendLocationListener () {
         locationHandler.removeCallbacks (sendRunnable);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            return;
+        }
+        String userUid = user.getUid();
+        String url = PANIC_LOCATION_URL +
+                REMOVE_VALUE +
+                TOKEN_VALUE +
+                userUid;
+        new DownloadJSONTask (new DataCallback<JSONObject>() {
+            @Override
+            public void onDataReceive(JSONObject data) {
+
+            }
+        }).execute(url);
     }
 
     private class DownloadJSONTask extends AsyncTask<String, Void, JSONObject> {

@@ -29,6 +29,7 @@ import java.util.Map;
 public class CouchbaseDAO {
     private Manager manager;
     private Database database;
+    private boolean isUserListenerSet;
 
     private static CouchbaseDAO couchbaseDAO;
 
@@ -46,6 +47,7 @@ public class CouchbaseDAO {
             Toast.makeText (activity.getApplicationContext(), R.string.couchbase_error, Toast.LENGTH_SHORT)
                     .show();
         }
+        isUserListenerSet = false;
     }
 
     @Nullable
@@ -156,7 +158,7 @@ public class CouchbaseDAO {
         if(user == null) {
             return;
         }
-
+        isUserListenerSet = true;
         Map<String, Object> properties = new HashMap<>();
         properties.put(FirebaseReferences.User.ID_REFERENCE, user.getId());
         properties.put(FirebaseReferences.User.EMAIL_REFERENCE, user.getEmail());
@@ -232,5 +234,9 @@ public class CouchbaseDAO {
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean getIsUserListenerSet() {
+        return isUserListenerSet;
     }
 }
