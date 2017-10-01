@@ -7,10 +7,11 @@ import android.util.Pair;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.Gradient;
@@ -59,14 +60,14 @@ public class MapDrawer {
     private HeatmapTileProvider heatmapTileProvider;
     private TileOverlay overlayOptions;
 
-    private List<Circle> friendsCircles;
+    private List<Marker> friendsMarkers;
 
     public MapDrawer (Activity activity, GoogleMap mMap) {
         this.mainActivity = activity;
         this.mMap = mMap;
         this.weightedLatLngMap = new HashMap<>();
         this.weightedLatLngList = new ArrayList<>();
-        this.friendsCircles = new ArrayList<>();
+        this.friendsMarkers = new ArrayList<>();
 
         initCrimeWeights ();
         UserLocationUtils.getInstance().addReceiveLocationListener(new DataCallback<Map<String, LatLng>>() {
@@ -78,15 +79,14 @@ public class MapDrawer {
     }
 
     private void drawFriendsOnMap (Map<String, LatLng> friends) {
-        for (Circle friendCircle : friendsCircles) {
-            friendCircle.remove();
+        for (Marker friendMarker : friendsMarkers) {
+            friendMarker.remove();
         }
 
         for (Map.Entry<String, LatLng> entry : friends.entrySet()) {
-            CircleOptions circleOptions = new CircleOptions()
-                    .center(entry.getValue())
-                    .radius(5); // In meters
-            friendsCircles.add (mMap.addCircle (circleOptions));
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(entry.getValue());
+            friendsMarkers.add (mMap.addMarker(markerOptions));
         }
     }
 
