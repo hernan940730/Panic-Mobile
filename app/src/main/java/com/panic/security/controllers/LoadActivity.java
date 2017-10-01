@@ -4,15 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ProgressBar;
 
 import com.panic.security.R;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
-import com.panic.security.controllers.main_module.MainActivity;
 import com.panic.security.utils.CouchbaseDAO;
 import com.panic.security.utils.DataLoader;
 import com.panic.security.utils.DataLoaderListener;

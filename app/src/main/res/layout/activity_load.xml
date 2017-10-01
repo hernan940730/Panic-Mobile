@@ -17,11 +17,12 @@
         android:src="@mipmap/ic_panic" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
+        android:id="@+id/load_progress_bar"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerInParent="true"
+        android:indeterminateTint="@color/whiteColor"/>
 
 </RelativeLayout>
