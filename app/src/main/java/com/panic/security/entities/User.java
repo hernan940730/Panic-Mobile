@@ -111,13 +111,11 @@ public class User implements Serializable {
     public static class FriendRequestIn implements Serializable{
 
         private long date;
-        private String friend_id;
         private String user_id;
 
         public FriendRequestIn(){}
 
-        public FriendRequestIn(String user_id, String friend_id, long date) {
-            this.friend_id = friend_id;
+        public FriendRequestIn(String user_id, long date) {
             this.user_id = user_id;
             this.date = date;
         }
@@ -129,10 +127,6 @@ public class User implements Serializable {
         public void setUser_id(String user_id) {
             this.user_id = user_id;
         }
-
-        public String getFriend_id() { return friend_id; }
-
-        public void setFriend_id(String friend_id) { this.friend_id = friend_id; }
 
         public long getDate() {
             return date;
@@ -146,24 +140,18 @@ public class User implements Serializable {
     public static class FriendRequestOut implements Serializable{
 
         private String user_id;
-        private String friend_id;
         private long date;
 
         public FriendRequestOut () { }
 
-        public FriendRequestOut(String user_id, String friend_id, long date) {
+        public FriendRequestOut(String user_id, long date) {
             this.user_id = user_id;
-            this.friend_id = friend_id;
             this.date = date;
         }
 
         public String getUser_id() { return user_id; }
 
         public void setUser_id(String user_id) { this.user_id = user_id; }
-
-        public String getFriend_id() { return friend_id; }
-
-        public void setFriend_id(String friend_id) { this.friend_id = friend_id; }
 
         public long getDate() { return date; }
 
@@ -174,15 +162,13 @@ public class User implements Serializable {
     public static class Friend implements Serializable{
 
         private String user_id;
-        private String friend_id;
         private long date;
         private boolean is_location_shared;
 
         public Friend(){}
 
-        public Friend(String user_id, String friend_id, long date, boolean is_location_shared) {
+        public Friend(String user_id, long date, boolean is_location_shared) {
             this.user_id = user_id;
-            this.friend_id = friend_id;
             this.date = date;
             this.is_location_shared = is_location_shared;
         }
@@ -194,10 +180,6 @@ public class User implements Serializable {
         public void setUser_id(String user_id) {
             this.user_id = user_id;
         }
-
-        public String getFriend_id() { return friend_id; }
-
-        public void setFriend_id(String friend_id) { this.friend_id = friend_id; }
 
         public long getDate() {
             return date;

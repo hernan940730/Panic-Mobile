@@ -259,8 +259,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 userProfileFragment.setArguments(bundle);
                 fragmentManager.beginTransaction().replace(R.id.content_main, userProfileFragment).commit();
 
-            }else if(type.equals("anotherExchangeBetweenFragments")){
-
+            }else if(type.equals("list_friends")){
+                User userFound = (User)intent.getSerializableExtra("user_selected");
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("userFound", userFound);
+                UserProfileFragment userProfileFragment = new UserProfileFragment();
+                userProfileFragment.setArguments(bundle);
+                fragmentManager.beginTransaction().replace(R.id.content_main, userProfileFragment).commit();
             }
         }
     }
