@@ -93,6 +93,15 @@
     <string name="cancel">Cancel</string>
     <string name="email_not_verified">Email %s is not verified</string>
     <string name="verify_email">Verify your email.</string>
+    <string name="assault">Assault</string>
+    <string name="auto_theft">Auto theft</string>
+    <string name="burglary">Burglary</string>
+    <string name="shop_lifting">Shop lifting</string>
+    <string name="suspicious_activity">Suspicious activity</string>
+    <string name="homicide">Homicide</string>
+    <string name="vandalism">Vandalism</string>
+    <string name="drugs">Drugs</string>
+    <string name="other">Other</string>
 
     <!-- Friends -->
     <string name="title_friend_requests">Friend requests</string>
