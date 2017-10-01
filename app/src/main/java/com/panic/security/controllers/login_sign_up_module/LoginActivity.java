@@ -44,17 +44,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if( user != null ){
+                if( user != null && user.isEmailVerified() ){
                     /* User signed in */
-                    if( user.isEmailVerified() ) {
-                        showHome();
-                    } else{
-                        String s = getResources().getString( R.string.email_not_verified );
-                        s = String.format( s, user.getEmail() );
-                        Toast.makeText( LoginActivity.this, s, Toast.LENGTH_LONG ).show();
-                        updateUI();
-                    }
-                }else{
+                    showHome();
+                } else{
                     /* Log In User */
                     updateUI();
                 }
@@ -118,7 +111,13 @@ public class LoginActivity extends AppCompatActivity {
                             progressbar.setVisibility(View.INVISIBLE);
                             // Sign in success, update UI with the signed-in USER_REFERENCE's information
                             FirebaseUser user = mAuth.getCurrentUser();
-                            showHome();
+                            if( user.isEmailVerified() ){
+                                showHome();
+                            }else{
+                                String s = getResources().getString( R.string.email_not_verified );
+                                s = String.format( s, user.getEmail() );
+                                Toast.makeText( LoginActivity.this, s, Toast.LENGTH_LONG ).show();
+                            }
                         } else {
                             // If sign in fails, display a message to the USER_REFERENCE.
                             Toast.makeText(LoginActivity.this, getResources().getString( R.string.authentication_failed ),

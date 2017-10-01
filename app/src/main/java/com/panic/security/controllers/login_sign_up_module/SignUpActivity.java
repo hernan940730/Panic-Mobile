@@ -50,7 +50,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = mAuth.getCurrentUser();
-                if( user != null ){
+                if( user != null && user.isEmailVerified() ){
                     showHome();
                 }else{
                     updateUI();
@@ -134,7 +134,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     new HashMap<String, String>());
 
                             firebaseDAO.pushUser( user.getUid(), fireBaseUser );
-
+                            mAuth.signOut();
                             showHome();
                         } else {
                             // If sign in fails, display a message to the USER_REFERENCE.
