@@ -76,12 +76,13 @@
 
     <!-- Reset Password -->
     <string name="reset_password_text">Restablece tu contraseña</string>
-    <string name="emailSent">Se ha enviado un correo a</string>
+    <string name="emailSent">Se ha enviado un correo a </string>
     <string name="send_email">Enviar correo</string>
 
     <!-- Google maps -->
     <string name="title_activity_maps">Mapa</string>
     <string name="share_location">COMPARTIR MI UBICACIÓN</string>
+    <string name="stop_share_location">DEJAR DE COMPARTIR MI UBICACIÓN</string>
 
     <!-- Reports -->
     <string name="reportDescriptionTitle">Describe qué pasó</string>

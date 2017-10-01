@@ -344,7 +344,7 @@ public abstract class DBRegistersGenerator {
     public static void generateValues (final int VAL) {
         DatabaseReference ref = database.getReference(FirebaseReferences.USERS_REFERENCE);
         for (int i = 0; i < VAL; ++i) {
-           // generateRandomUser();
+           generateRandomUser();
         }
     }
 }
