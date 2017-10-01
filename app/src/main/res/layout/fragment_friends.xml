@@ -69,7 +69,7 @@
             android:gravity="center"
             android:visibility="gone"
             android:paddingTop="15dp"
-            android:text="@string/withoutFriends" />
+            android:text="@string/without_friends" />
 
     </LinearLayout>
 

@@ -231,7 +231,7 @@ public class UserProfileFragment extends Fragment {
                                         @Override
                                         public void onDataReceive(User.Friend friend) {
                                             if(friend != null){
-                                                mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends);
+                                                mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends_gold);
                                             }else{
                                                 mImageViewUserProfileAddFriend.setVisibility(View.VISIBLE);
                                                 mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_add_person);
@@ -275,7 +275,7 @@ public class UserProfileFragment extends Fragment {
 
                         if(friend != null){
 
-                            mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends);
+                            mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends_gold);
                             Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.you_are_friends), Snackbar.LENGTH_LONG).show();
 
                         }else{
@@ -294,7 +294,7 @@ public class UserProfileFragment extends Fragment {
                                         FirebaseDAO.getInstance().removeFriendRequestIn(user, new User.FriendRequestIn(mUserShown.getId(), 0L));
                                         FirebaseDAO.getInstance().removeFriendRequestOut(mUserShown, new User.FriendRequestOut(user.getId(), 0L));
 
-                                        mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends);
+                                        mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends_gold);
                                         Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_accepted), Snackbar.LENGTH_LONG).show();
 
                                     }else{

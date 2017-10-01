@@ -48,6 +48,7 @@ import com.panic.security.controllers.friends_module.FriendsFragment;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
 
 import com.panic.security.controllers.notifications_module.NotificationsFragment;
+import com.panic.security.controllers.reports_module.ReportsFragment;
 import com.panic.security.controllers.user_profile_module.UserProfileFragment;
 import com.panic.security.entities.Crime;
 import com.panic.security.entities.Profile;
@@ -230,10 +231,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.item_friends) {
             fragmentManager.beginTransaction().replace (R.id.content_main, new FriendsFragment()).commit();
         } else if (id == R.id.item_my_reports) {
-
-        } else if (id == R.id.item_notifications) {
+            fragmentManager.beginTransaction().replace (R.id.content_main, new ReportsFragment()).commit();
+        } /*else if (id == R.id.item_notifications) {
             fragmentManager.beginTransaction().replace (R.id.content_main, new NotificationsFragment()).commit();
-        } else if (id == R.id.item_about) {
+        } */else if (id == R.id.item_about) {
 
         } else if ( id == R.id.item_sign_out ){
             signOut();

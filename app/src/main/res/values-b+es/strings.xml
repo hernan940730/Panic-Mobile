@@ -89,10 +89,13 @@
     <string name="reportDescriptionTitle">Describe qué pasó</string>
     <string name="accept">Aceptar</string>
     <string name="cancel">Cancelar</string>
+    <string name="email_not_verified">El correo %s no ha sido verificado.</string>
+    <string name="verify_email">Verifique su correo.</string>
+    <string name="without_reports">Oops! You need to make some reports</string>
 
     <!-- Friends -->
     <string name="title_friend_requests">Solicitudes de amistad</string>
     <string name="title_friends">Amigos</string>
-    <string name="withoutFriends">Oops! Aun no tienes amigos</string>
+    <string name="without_friends">Oops! Aun no tienes amigos</string>
 
 </resources>
