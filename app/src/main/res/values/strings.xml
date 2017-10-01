@@ -77,7 +77,7 @@
 
     <!-- Reset Password -->
     <string name="reset_password_text">Reset your password</string>
-    <string name="emailSent">E-mail sent to</string>
+    <string name="emailSent">E-mail sent to </string>
     <string name="send_email">Send e-mail</string>
 
     <!-- Google maps -->

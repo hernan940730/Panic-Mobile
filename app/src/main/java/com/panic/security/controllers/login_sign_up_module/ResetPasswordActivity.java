@@ -26,6 +26,7 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
         mEmailEditText = ( EditText )findViewById( R.id.email );
 
         findViewById( R.id.password_reset_button ).setOnClickListener( this );
+        findViewById( R.id.close_button ).setOnClickListener( this );
     }
 
 
@@ -34,6 +35,9 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
         int i = view.getId();
         if( i == R.id.password_reset_button ){
             sendResetPasswordEmail();
+        }
+        if( i == R.id.close_button ){
+            finish();
         }
     }
 
@@ -45,6 +49,7 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
             mEmailEditText.setError(null);
             mAuth.sendPasswordResetEmail( email );
             Toast.makeText( ResetPasswordActivity.this, getResources().getString( R.string.emailSent ) + email, Toast.LENGTH_SHORT ).show();
+            finish();
         }
 
     }
