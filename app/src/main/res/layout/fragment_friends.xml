@@ -12,6 +12,7 @@
         android:background="@color/whiteColor">
 
         <TextView
+            android:id="@+id/txt_view_request"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -28,6 +29,7 @@
         </ListView>
 
         <TextView
+            android:id="@+id/txt_friends"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dip"

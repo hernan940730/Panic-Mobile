@@ -34,20 +34,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="12dp"
         android:layout_toStartOf="@+id/reject_request"
-        android:focusable="false"
-        android:scaleType="fitCenter"
-        android:src="@mipmap/ic_check" />
+        android:background="@drawable/image_view_btn_user_profile"
+        android:src="@mipmap/ic_check_green" />
     <ImageButton
         android:id="@+id/reject_request"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="12dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:focusable="true"
-        android:scaleType="fitCenter"
-        android:src="@mipmap/ic_close" />
+        android:background="@drawable/image_view_btn_user_profile"
+        android:src="@mipmap/ic_close_red" />
 
 </RelativeLayout>
