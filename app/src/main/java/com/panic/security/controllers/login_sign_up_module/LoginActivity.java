@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -45,7 +46,14 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if( user != null ){
                     /* User signed in */
-                    showHome();
+                    if( user.isEmailVerified() ) {
+                        showHome();
+                    } else{
+                        String s = getResources().getString( R.string.email_not_verified );
+                        s = String.format( s, user.getEmail() );
+                        Toast.makeText( LoginActivity.this, s, Toast.LENGTH_LONG ).show();
+                        updateUI();
+                    }
                 }else{
                     /* Log In User */
                     updateUI();

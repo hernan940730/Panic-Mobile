@@ -89,4 +89,6 @@
     <string name="reportDescriptionTitle">Describe what happened</string>
     <string name="accept">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="email_not_verified">Email %s is not verified</string>
+    <string name="verify_email">Verify your email.</string>
 </resources>
