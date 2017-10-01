@@ -7,6 +7,8 @@ import android.util.Pair;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.TileOverlay;
@@ -57,12 +59,35 @@ public class MapDrawer {
     private HeatmapTileProvider heatmapTileProvider;
     private TileOverlay overlayOptions;
 
+    private List<Circle> friendsCircles;
+
     public MapDrawer (Activity activity, GoogleMap mMap) {
         this.mainActivity = activity;
         this.mMap = mMap;
         this.weightedLatLngMap = new HashMap<>();
         this.weightedLatLngList = new ArrayList<>();
+        this.friendsCircles = new ArrayList<>();
+
         initCrimeWeights ();
+        UserLocationUtils.getInstance().addReceiveLocationListener(new DataCallback<Map<String, LatLng>>() {
+            @Override
+            public void onDataReceive(Map<String, LatLng> data) {
+                drawFriendsOnMap(data);
+            }
+        });
+    }
+
+    private void drawFriendsOnMap (Map<String, LatLng> friends) {
+        for (Circle friendCircle : friendsCircles) {
+            friendCircle.remove();
+        }
+
+        for (Map.Entry<String, LatLng> entry : friends.entrySet()) {
+            CircleOptions circleOptions = new CircleOptions()
+                    .center(entry.getValue())
+                    .radius(5); // In meters
+            friendsCircles.add (mMap.addCircle (circleOptions));
+        }
     }
 
     private void initCrimeWeights () {
@@ -79,7 +104,7 @@ public class MapDrawer {
     }
 
     public void setMapStyle ( ) {
-        UserLocationUtils.getUserTimeZoneJSON (mainActivity, new DataCallback<JSONObject>() {
+        UserLocationUtils.getInstance().getUserTimeZoneJSON (mainActivity, new DataCallback<JSONObject>() {
             @Override
             public void onDataReceive(JSONObject data) {
                 timeZoneJSON = data;
@@ -165,9 +190,9 @@ public class MapDrawer {
         }
 
         weightedLatLngMap.put(crime.getId(), new WeightedLatLng(
-                        new LatLng(location.getLatitude(), location.getLongitude()),
-                        weight
-                )
+                new LatLng(location.getLatitude(), location.getLongitude()),
+                weight
+            )
         );
 
     }
@@ -179,7 +204,7 @@ public class MapDrawer {
         else {
             return;
         }
-        if(heatmapTileProvider == null) {
+        if (heatmapTileProvider == null) {
             initHeatMap();
         }
         heatmapTileProvider.setWeightedData (weightedLatLngList);
@@ -193,7 +218,6 @@ public class MapDrawer {
     }
 
     private void initHeatMap() {
-
         heatmapTileProvider = new HeatmapTileProvider.Builder()
                 .weightedData(weightedLatLngList)
                 .gradient(

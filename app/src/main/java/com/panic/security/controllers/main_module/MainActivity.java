@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -37,7 +39,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
@@ -126,6 +127,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         crimes[8] =( ImageButton ) findViewById( R.id.other_button );
 
         clearCrimesButtons();
+
+        final Button shareLocationButton = (Button) findViewById(R.id.share_location_button);
+        shareLocationButton.setOnClickListener(new View.OnClickListener() {
+            boolean isSharing = false;
+            @Override
+            public void onClick(View view) {
+                if (isSharing) {
+                    UserLocationUtils.getInstance().revokeSendLocationListener();
+                    shareLocationButton.setText(R.string.share_location);
+                    shareLocationButton.setBackgroundResource (R.color.success_color);
+                }
+                else {
+                    UserLocationUtils.getInstance().addSendLocationListener(MainActivity.this);
+                    shareLocationButton.setText(R.string.stop_share_location);
+                    shareLocationButton.setBackgroundResource (R.color.failure_color);
+                }
+                isSharing = !isSharing;
+            }
+        });
 
     }
 
@@ -244,8 +264,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void signOut() {
         CouchbaseDAO.getInstance().deleteData();
+        UserLocationUtils.getInstance().revokeSendLocationListener();
+        UserLocationUtils.getInstance().revokeReceiveLocationListener();
         mAuth.signOut();
         showLogin();
+
     }
 
     private void getLocationPermission () {
@@ -316,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             moveCamera(curCameraPosition, false);
         }
         else {
-            UserLocationUtils.getUserLastKnownLocation (this, new DataCallback<Location>() {
+            UserLocationUtils.getInstance().getUserLastKnownLocation (this, new DataCallback<Location>() {
                 @Override
                 public void onDataReceive (Location location) {
                     CameraPosition cameraPosition = null;
