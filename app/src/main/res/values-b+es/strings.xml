@@ -40,11 +40,12 @@
     <string name="user_profile_phone_number">Celular:</string>
     <string name="user_profile_gender">Genero:</string>
     <string name="user_profile_birthday">Fecha de Nacimiento:</string>
-    <string name="user_profile_number_reports">Numero de reportes:</string>
+    <string name="user_profile_number_reports">Número de reportes:</string>
 
     <!-- Snackbar messages -->
     <string name="you_are_friends">Ustedes ya son amigos</string>
     <string name="friend_request_sent">Solicitud de amistad enviada</string>
+    <string name="friend_request_rejected">Solicitud de amistad rechazada</string>
     <string name="friend_request_accepted">Solicitud de amistad aceptada</string>
     <string name="request_pending_acceptance">Solicitud pendiente de aceptación</string>
 
@@ -60,7 +61,7 @@
     <string name="sign_up_link">Todavía no tienes cuenta? Crea una</string>
     <string name="required">Requerido.</string>
     <string name="forgot_password">¿Olvidaste tu contraseña?</string>
-    <string name="authentication_failed">No se puede iniciar sesion</string>
+    <string name="authentication_failed">No se puede iniciar sesión</string>
 
     <!-- SignUp-->
     <string name="sign_up_text">Crea una nueva cuenta en Panic!</string>

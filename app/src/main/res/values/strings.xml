@@ -47,6 +47,7 @@
     <string name="you_are_friends">You are already friends</string>
     <string name="friend_request_sent">Friend request sent</string>
     <string name="friend_request_accepted">Friend request accepted</string>
+    <string name="friend_request_rejected">Friend request rejected</string>
     <string name="request_pending_acceptance">Request pending acceptance</string>
 
     <!-- Gender -->
