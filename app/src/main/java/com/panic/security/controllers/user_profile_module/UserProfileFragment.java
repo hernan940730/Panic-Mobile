@@ -201,9 +201,8 @@ public class UserProfileFragment extends Fragment {
 
     public void setAddFriendIcon(final String currentUserID, final User friendUser){
 
-        if( friendUser.getId().equals(mAuth.getCurrentUser().getUid()) ){
+        if( currentUserID.equals(friendUser.getId()) ){
             mImageViewUserProfileAddFriend.setVisibility(View.GONE);
-
         }else{
 
             //Change icon of friend request if friend sent request
