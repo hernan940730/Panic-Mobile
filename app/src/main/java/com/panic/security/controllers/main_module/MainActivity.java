@@ -27,6 +27,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -46,7 +47,6 @@ import com.panic.security.R;
 import com.panic.security.controllers.friends_module.FriendsFragment;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
 
-import com.panic.security.controllers.notifications_module.NotificationsFragment;
 import com.panic.security.controllers.reports_module.ReportsFragment;
 import com.panic.security.controllers.user_profile_module.UserProfileFragment;
 import com.panic.security.entities.Crime;
@@ -318,6 +318,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         mMap.setMyLocationEnabled (true);
+
+        View locationButton = ((View) this.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+
+        rlp.setMargins(
+                0,
+                getResources().getDimensionPixelSize(R.dimen.y_location_margin),
+                0,
+                0
+        );
 
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override

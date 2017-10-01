@@ -1,5 +1,6 @@
 package com.panic.security.utils;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import com.panic.security.entities.Report;
 import com.panic.security.entities.StolenObject;
 import com.panic.security.entities.User;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -526,6 +528,7 @@ public class FirebaseDAO {
     }
 
     public void getProfileImageInBytes (String userID, final DataCallback<byte[]> callback) {
+
         StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
         ref.getBytes (ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -539,6 +542,25 @@ public class FirebaseDAO {
             }
         });
 
+    }
+
+    public void getProfileImageInBitmap (final String userID, final Activity activity, final DataCallback<Bitmap> callback) {
+        final Bitmap bitmap = StorageManager.loadProfileImage (userID, activity);
+        callback.onDataReceive (bitmap);
+        getProfileImageInBytes(userID, new DataCallback<byte[]>() {
+            @Override
+            public void onDataReceive(byte[] data) {
+                if (data == null) {
+                    StorageManager.deleteProfileImage(userID, activity);
+                    return;
+                }
+                Bitmap bitmap2 = BitmapFactory.decodeByteArray (data, 0, data.length);
+                if (!bitmap2.sameAs(bitmap)) {
+                    StorageManager.saveProfileImage(userID, data, activity);
+                }
+                callback.onDataReceive(bitmap2);
+            }
+        });
     }
 
     public String pushUser (String ID, User entity) {

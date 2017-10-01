@@ -6,6 +6,7 @@ import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Handler;
 import android.widget.ImageView;
 
 import com.panic.security.R;
@@ -36,7 +37,8 @@ public class StorageManager {
         });
     }
 
-    public static void saveProfileImage(String uid, byte[] bytes, Activity activity) {
+    public static void saveProfileImage(final String uid, final byte[] bytes, final Activity activity) {
+
         ContextWrapper cw = new ContextWrapper(activity.getApplicationContext());
         File directory = cw.getDir (profileImageDir, Context.MODE_PRIVATE);
 
@@ -61,6 +63,7 @@ public class StorageManager {
                 e.printStackTrace();
             }
         }
+
     }
 
     public static Bitmap loadProfileImage (String uid, Activity activity) {
@@ -82,5 +85,14 @@ public class StorageManager {
 
     public static Bitmap loadProfileImageMarker (String uid, Activity activity) {
         return ImageConverter.getMarkerBitmap (loadProfileImage (uid, activity));
+    }
+
+    public static void deleteProfileImage (String uid, Activity activity) {
+        ContextWrapper cw = new ContextWrapper(activity.getApplicationContext());
+        File directory = cw.getDir (profileImageDir, Context.MODE_PRIVATE);
+
+        File mypath = new File (directory, uid);
+        mypath.delete();
+
     }
 }

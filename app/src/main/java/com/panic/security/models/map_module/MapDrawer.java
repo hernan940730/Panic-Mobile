@@ -2,8 +2,10 @@ package com.panic.security.models.map_module;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -20,6 +22,7 @@ import com.google.maps.android.heatmaps.WeightedLatLng;
 import com.panic.security.R;
 import com.panic.security.utils.DataLoader;
 import com.panic.security.utils.DataLoaderListener;
+import com.panic.security.utils.ImageConverter;
 import com.panic.security.utils.StorageManager;
 import com.panic.security.utils.UserLocationUtils;
 import com.panic.security.utils.DataCallback;
@@ -87,12 +90,21 @@ public class MapDrawer implements DataLoaderListener {
 
         for (Map.Entry<String, LatLng> entry : friends.entrySet()) {
             String friendId = entry.getKey();
-            Bitmap imageBitmap = StorageManager.loadProfileImageMarker(friendId, mainActivity);
+            Bitmap imageBitmap = StorageManager.loadProfileImage(friendId, mainActivity);
             BitmapDescriptor bitmapDescriptor = null;
-            if (imageBitmap != null) {
-                bitmapDescriptor = BitmapDescriptorFactory
-                        .fromBitmap(Bitmap.createScaledBitmap(imageBitmap, 150, 150, false));
+            if (imageBitmap == null) {
+                imageBitmap = BitmapFactory
+                        .decodeResource(mainActivity.getResources(), R.mipmap.ic_account);
             }
+            bitmapDescriptor = BitmapDescriptorFactory
+                    .fromBitmap(
+                            ImageConverter
+                            .getMarkerBitmap(
+                                    Bitmap.createScaledBitmap(
+                                            imageBitmap, 150, 150, false
+                                    )
+                            )
+                    );
             if (bitmapDescriptor == null) {
                 StorageManager.saveProfileImage(friendId, mainActivity);
             }
@@ -172,7 +184,6 @@ public class MapDrawer implements DataLoaderListener {
             overlayOptions.remove();
         }
         initHeatMap();
-        //heatmapTileProvider.setWeightedData (weightedLatLngList);
     }
 
     private void initHeatMap() {
