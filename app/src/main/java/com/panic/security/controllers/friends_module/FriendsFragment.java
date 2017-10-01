@@ -1,6 +1,8 @@
 package com.panic.security.controllers.friends_module;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -30,6 +32,7 @@ import com.panic.security.entities.User;
 import com.panic.security.utils.DataCallback;
 import com.panic.security.utils.DataLoader;
 import com.panic.security.utils.FirebaseDAO;
+import com.panic.security.utils.ImageConverter;
 import com.panic.security.utils.ListAdapter;
 
 import java.util.ArrayList;
@@ -98,27 +101,20 @@ public class FriendsFragment extends Fragment {
 
                         FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
                             @Override
-                            public void onDataReceive(Profile profile) {
+                            public void onDataReceive(final Profile profile) {
 
-                                Integer image = new Integer(R.mipmap.ic_account);
-                                adapter.addItem(user, (profile.getName() + " " + profile.getLast_name()), image);
-                                listViewFriends.setAdapter(adapter);
-
-                                // Event when one item is selected
-                                listViewFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                FirebaseDAO.getInstance().getProfileImageInBytes(user.getId(), new DataCallback<byte[]>() {
                                     @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                                        FirebaseDAO.getInstance().getUserByID(adapter.getUsers().get(position).getId(), new DataCallback<User>() {
-                                            @Override
-                                            public void onDataReceive(User userSelected) {
-                                                //To send user selected from fragment to activity
-                                                Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
-                                                intent.putExtra("type", "list_friends");
-                                                intent.putExtra("user_selected", userSelected);
-                                                getActivity().startActivity(intent);
-                                            }
-                                        });
+                                    public void onDataReceive (byte[] bytes) {
+                                        if (bytes != null) {
+                                            adapter.addItem(user, (profile.getName() + " " + profile.getLast_name()),
+                                                    ImageConverter.getRoundedCornerBitmap(BitmapFactory.decodeByteArray (bytes, 0, bytes.length)));
+                                            listViewFriends.setAdapter(adapter);
+                                        } else {
+                                            adapter.addItem(user, (profile.getName() + " " + profile.getLast_name()),
+                                                    BitmapFactory.decodeResource(getResources(), R.mipmap.ic_account));
+                                            listViewFriends.setAdapter(adapter);
+                                        }
 
                                     }
                                 });
@@ -129,6 +125,25 @@ public class FriendsFragment extends Fragment {
                     }
                 });
             }
+
+            // Event when one item is selected
+            listViewFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    FirebaseDAO.getInstance().getUserByID(adapter.getUsers().get(position).getId(), new DataCallback<User>() {
+                        @Override
+                        public void onDataReceive(User userSelected) {
+                            //To send user selected from fragment to activity
+                            Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
+                            intent.putExtra("type", "list_friends");
+                            intent.putExtra("user_selected", userSelected);
+                            getActivity().startActivity(intent);
+                        }
+                    });
+
+                }
+            });
 
         }else{
             listViewFriends.setVisibility(View.GONE);
@@ -157,72 +172,22 @@ public class FriendsFragment extends Fragment {
 
                         FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
                             @Override
-                            public void onDataReceive(Profile profile) {
+                            public void onDataReceive(final Profile profile) {
 
-                                Integer image = new Integer(R.mipmap.ic_accept_request);
-                                adapterNotifications.addItem(user , (profile.getName() + " " + profile.getLast_name()), image, true);
-                                listViewRequest.setAdapter(adapterNotifications);
-
-                                // Event when one button is selected
-                                listViewRequest.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                FirebaseDAO.getInstance().getProfileImageInBytes(user.getId(), new DataCallback<byte[]>() {
                                     @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                                        User petitioner = adapterNotifications.getUsers().get(position);
-                                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                        int viewId = view.getId();
-
-                                        switch (viewId) {
-                                            case R.id.accept_request:
-
-                                                User.Friend newFriend = new User.Friend(petitioner.getId(), 0L, false);
-                                                FirebaseDAO.getInstance().pushFriend(currentUser,  newFriend);
-
-                                                User.Friend newFriend2 = new User.Friend(currentUser.getId(), 0L, false);
-                                                FirebaseDAO.getInstance().pushFriend(petitioner,  newFriend2);
-
-                                                FirebaseDAO.getInstance().removeFriendRequestIn(currentUser, new User.FriendRequestIn(petitioner.getId(), 0L));
-                                                FirebaseDAO.getInstance().removeFriendRequestOut(petitioner, new User.FriendRequestOut(currentUser.getId(), 0L));
-
-                                                Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_accepted), Snackbar.LENGTH_LONG).show();
-                                                fragmentManager.beginTransaction().replace (R.id.content_main, new FriendsFragment()).commit();
-                                                break;
-                                            case R.id.reject_request:
-
-                                                FirebaseDAO.getInstance().removeFriendRequestIn(currentUser, new User.FriendRequestIn(petitioner.getId(), 0L));
-                                                FirebaseDAO.getInstance().removeFriendRequestOut(petitioner, new User.FriendRequestOut(currentUser.getId(), 0L));
-
-                                                Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_rejected), Snackbar.LENGTH_LONG).show();
-                                                fragmentManager.beginTransaction().replace (R.id.content_main, new FriendsFragment()).commit();
-                                                break;
-                                            default:
-                                                //it is not called never
-                                                break;
+                                    public void onDataReceive (byte[] bytes) {
+                                        if (bytes != null) {
+                                            adapterNotifications.addItem(user, (profile.getName() + " " + profile.getLast_name()),
+                                                    ImageConverter.getRoundedCornerBitmap(BitmapFactory.decodeByteArray (bytes, 0, bytes.length)), true);
+                                            listViewRequest.setAdapter(adapterNotifications);
+                                        } else {
+                                            Bitmap defaultFriendImage = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_accept_request);
+                                            adapterNotifications.addItem(user, (profile.getName() + " " + profile.getLast_name()), defaultFriendImage);
+                                            listViewRequest.setAdapter(adapterNotifications);
                                         }
                                     }
                                 });
-
-
-                                /*
-                                // Event when one item is selected
-                                listViewRequest.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                                        FirebaseDAO.getInstance().getUserByID(adapterNotifications.getUserIDs().get(position), new DataCallback<User>() {
-                                            @Override
-                                            public void onDataReceive(User userSelected) {
-                                                //To send user selected from fragment to activity
-                                                Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
-                                                intent.putExtra("type", "list_friends");
-                                                intent.putExtra("user_selected", userSelected);
-                                                getActivity().startActivity(intent);
-                                            }
-                                        });
-
-                                    }
-                                });
-                                */
 
                             }
                         });
@@ -230,6 +195,45 @@ public class FriendsFragment extends Fragment {
                     }
                 });
             }
+
+            // Event when one button is selected
+            listViewRequest.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    User petitioner = adapterNotifications.getUsers().get(position);
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    int viewId = view.getId();
+
+                    switch (viewId) {
+                        case R.id.accept_request:
+
+                            User.Friend newFriend = new User.Friend(petitioner.getId(), 0L, false);
+                            FirebaseDAO.getInstance().pushFriend(currentUser,  newFriend);
+
+                            User.Friend newFriend2 = new User.Friend(currentUser.getId(), 0L, false);
+                            FirebaseDAO.getInstance().pushFriend(petitioner,  newFriend2);
+
+                            FirebaseDAO.getInstance().removeFriendRequestIn(currentUser, new User.FriendRequestIn(petitioner.getId(), 0L));
+                            FirebaseDAO.getInstance().removeFriendRequestOut(petitioner, new User.FriendRequestOut(currentUser.getId(), 0L));
+
+                            Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_accepted), Snackbar.LENGTH_LONG).show();
+                            fragmentManager.beginTransaction().replace (R.id.content_main, new FriendsFragment()).commit();
+                            break;
+                        case R.id.reject_request:
+
+                            FirebaseDAO.getInstance().removeFriendRequestIn(currentUser, new User.FriendRequestIn(petitioner.getId(), 0L));
+                            FirebaseDAO.getInstance().removeFriendRequestOut(petitioner, new User.FriendRequestOut(currentUser.getId(), 0L));
+
+                            Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_rejected), Snackbar.LENGTH_LONG).show();
+                            fragmentManager.beginTransaction().replace (R.id.content_main, new FriendsFragment()).commit();
+                            break;
+                        default:
+                            //it is not called never
+                            break;
+                    }
+                }
+            });
 
         }else{
             textViewRequest.setVisibility(View.GONE);

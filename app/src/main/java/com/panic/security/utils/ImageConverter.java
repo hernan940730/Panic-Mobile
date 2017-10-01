@@ -16,6 +16,9 @@ import android.graphics.RectF;
 
 public class ImageConverter {
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
+        final int minSize = Math.min(bitmap.getWidth(), bitmap.getHeight());
+        bitmap = Bitmap.createBitmap(bitmap, 0, 0, minSize, minSize);
+
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
