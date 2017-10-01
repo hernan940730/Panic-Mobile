@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Panic Security</string>
+    <string name="app_name_short">Panic!</string>
 
     <!-- Error messages-->
     <string name="server_error">Fallo al conectar al servidor!</string>
@@ -97,5 +98,6 @@
     <string name="title_friend_requests">Solicitudes de amistad</string>
     <string name="title_friends">Amigos</string>
     <string name="without_friends">Oops! Aun no tienes amigos</string>
+    <string name="report_done">Reporte realizado con éxito</string>
 
 </resources>
