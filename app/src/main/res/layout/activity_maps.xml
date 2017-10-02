@@ -108,8 +108,8 @@
         android:background="@drawable/round_button"
         android:textSize="20sp"
         android:src="@drawable/ic_dialog_close_dark"
-        android:translationY="20dp"
-        android:translationX="290dp"
+        android:translationY="70dp"
+        android:translationX="@dimen/crimes_second_row_x"
         android:visibility="gone"/>
 
 </fragment>
