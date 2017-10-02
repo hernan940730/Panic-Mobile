@@ -92,7 +92,7 @@
     <string name="cancel">Cancelar</string>
     <string name="email_not_verified">El correo %s no ha sido verificado.</string>
     <string name="verify_email">Verifique su correo.</string>
-    <string name="without_reports">Oops! You need to make some reports</string>
+    <string name="without_reports">Oops! Tu necesitas hacer algunos reportes</string>
 
     <!-- Friends -->
     <string name="title_friend_requests">Solicitudes de amistad</string>

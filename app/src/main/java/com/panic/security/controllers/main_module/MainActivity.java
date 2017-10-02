@@ -329,19 +329,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mMap.setMyLocationEnabled (true);
 
-        View locationButton = ((View) this.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
-        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
-
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-
-        rlp.setMargins(
-                0,
-                getResources().getDimensionPixelSize(R.dimen.y_location_margin),
-                0,
-                0
-        );
-
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override
             public void onCameraMove() {
