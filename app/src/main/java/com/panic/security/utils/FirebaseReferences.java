@@ -76,12 +76,7 @@ public abstract class FirebaseReferences {
         public static final String IS_LOCATION_SHARED = "is_location_shared";
     }
 
-    public static abstract class FriendRequestOut {
-        public static final String USER_ID = "user_id";
-        public static final String DATE = "date";
-    }
-
-    public static abstract class FriendRequestIn {
+    public static abstract class FriendRequest {
         public static final String USER_ID = "user_id";
         public static final String DATE = "date";
     }

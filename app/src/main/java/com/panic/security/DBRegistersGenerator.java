@@ -3,6 +3,8 @@ package com.panic.security;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.panic.security.entities.Crime;
+import com.panic.security.entities.Friend;
+import com.panic.security.entities.FriendRequest;
 import com.panic.security.entities.Location;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.Report;
@@ -11,9 +13,8 @@ import com.panic.security.entities.User;
 import com.panic.security.utils.FirebaseReferences;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -150,132 +151,167 @@ public abstract class DBRegistersGenerator {
             "Cycle", "Cellphone", "Car"
     };
 
+    private static String countries[] = {"colombia", "united_states", "france", "italy", "japan", "mexico", "england" };
 
     private static double latFrom = 4.5;
     private static double latTo = 4.75;
     private static double longFrom = -74.2;
     private static double longTo = -74;
 
+    private static final int CURRENT_YEAR = 2017;
+    private static final int CURRENT_MONTH = 8;
+    private static final int[] DAYS_IN_MONTH = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
     private static ArrayList<String> userIds = new ArrayList<>();
 
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-    public static DatabaseReference generateRandomStolenObject (String reportId) {
-        DatabaseReference ref = database.getReference(FirebaseReferences.STOLEN_OBJECTS_REFERENCE);
-        DatabaseReference childRef = ref.push();
-
-        StolenObject stolenObject = new StolenObject();
-
-        stolenObject.setDescription ("It was white and beauty, it had many gorgeous things.");
-        stolenObject.setId (childRef.getKey());
-        stolenObject.setName (stolenObjects[r.nextInt(stolenObjects.length)]);
-        stolenObject.setReport_id(reportId);
-
-        childRef.setValue (stolenObject);
-
-        return childRef;
+    private static int getRandomYear (int from, int to) {
+        if (to < from) {
+            return 0;
+        }
+        return from + r.nextInt(to - from + 1);
     }
 
-    public static DatabaseReference generateRandomCrime (String reportId) {
-        DatabaseReference ref = database.getReference(FirebaseReferences.CRIMES_REFERENCE);
-        DatabaseReference childRef = ref.push();
-
-        DatabaseReference location = generateRandomLocation(childRef.getKey());
-
-        Crime crime = new Crime();
-
-        crime.setReport_id (reportId);
-        crime.setId (childRef.getKey());
-        crime.setDate (0);
-        crime.setLocation_id(location.getKey());
-        crime.setType(crimeList[r.nextInt(crimeList.length)]);
-
-        childRef.setValue (crime);
-
-        return childRef;
+    private static int getRandomMonth (int year) {
+        if (year == CURRENT_YEAR) {
+            return r.nextInt (CURRENT_MONTH);
+        }
+        return r.nextInt (12);
     }
 
-    public static DatabaseReference generateRandomLocation (String crimeId) {
-        DatabaseReference ref = database.getReference(FirebaseReferences.LOCATIONS_REFERENCE);
-        DatabaseReference childRef = ref.push();
-
-        Location location = new Location();
-
-        location.setId (childRef.getKey());
-        location.setCrime_id (crimeId);
-        location.setLatitude (r.nextDouble() * (latTo - latFrom) + latFrom);
-        location.setLongitude(r.nextDouble() * (longTo - longFrom) + longFrom);
-
-        childRef.setValue(location);
-
-        return childRef;
+    private static int getRandomDate (int month) {
+        return r.nextInt(DAYS_IN_MONTH[month] + 1);
     }
 
-    public static DatabaseReference generateRandomProfile (String userId) {
-        DatabaseReference ref = database.getReference(FirebaseReferences.PROFILES_REFERENCE);
-        DatabaseReference childRef = ref.push();
-
-        Profile profile = new Profile();
-
-        profile.setBirthday(0);
-        profile.setLast_name(lastnamesList[r.nextInt(lastnamesList.length)]);
-        profile.setGender(gender[r.nextInt(gender.length)]);
-        profile.setCountry("colombia");
-        profile.setId(childRef.getKey());
-        profile.setName(namesList[r.nextInt(namesList.length)]);
-        profile.setUser_id(userId);
-
-        childRef.setValue (profile);
-
-        return childRef;
+    private static long getRandomDateInMillis () {
+        Calendar c = Calendar.getInstance();
+        int year = getRandomYear(2015, CURRENT_YEAR);
+        int month = getRandomMonth(year);
+        int date = getRandomDate(month);
+        int hour = r.nextInt(24);
+        int minute = r.nextInt(60);
+        c.set(year, month, date, hour, minute);
+        return c.getTimeInMillis();
     }
 
-    public static DatabaseReference generateRandomReport () {
-        DatabaseReference ref = database.getReference(FirebaseReferences.REPORTS_REFERENCE);
-        DatabaseReference childRef = ref.push();
-        DatabaseReference crimeRef = generateRandomCrime(childRef.getKey());
+    private static long getRandomBirthdayInMillis () {
+        Calendar c = Calendar.getInstance();
+        int year = getRandomYear(1960, 2000);
+        int month = getRandomMonth(year);
+        int date = getRandomDate(month);
+        int hour = r.nextInt(24);
+        int minute = r.nextInt(60);
+        c.set(year, month, date, hour, minute);
+        return c.getTimeInMillis();
+    }
 
-        Map<String, String> stolenMap = new HashMap<>();
+    private static long getCurrentDateInMillis () {
+        Calendar c = Calendar.getInstance();
+        return c.getTimeInMillis();
+    }
+
+    public static StolenObject generateRandomStolenObject (String reportId) {
+        DatabaseReference ref = database.getReference(FirebaseReferences.STOLEN_OBJECTS_REFERENCE).push();
+
+        StolenObject stolenObject = new StolenObject(
+                ref.getKey(),
+                reportId,
+                stolenObjects[r.nextInt(stolenObjects.length)],
+                "It was white and beauty, it had many gorgeous things."
+        );
+
+        ref.setValue (stolenObject);
+
+        return stolenObject;
+    }
+
+    public static Crime generateRandomCrime (String reportId) {
+        DatabaseReference ref = database.getReference(FirebaseReferences.CRIMES_REFERENCE).push();
+
+        Location location = generateRandomLocation(ref.getKey());
+
+        Crime crime = new Crime(
+                ref.getKey(),
+                reportId,
+                location.getId(),
+                crimeList[r.nextInt(crimeList.length)],
+                getRandomDateInMillis()
+        );
+
+        ref.setValue (crime);
+
+        return crime;
+    }
+
+    public static Location generateRandomLocation (String crimeId) {
+        DatabaseReference ref = database.getReference(FirebaseReferences.LOCATIONS_REFERENCE).push();
+
+        Location location = new Location(
+                ref.getKey(),
+                crimeId,
+                r.nextDouble() * (latTo - latFrom) + latFrom,
+                r.nextDouble() * (longTo - longFrom) + longFrom
+        );
+
+        ref.setValue(location);
+
+        return location;
+    }
+
+    public static Profile generateRandomProfile (String userId) {
+        DatabaseReference ref = database.getReference(FirebaseReferences.PROFILES_REFERENCE).push();
+
+        Profile profile = new Profile(
+                ref.getKey(),
+                userId,
+                getRandomBirthdayInMillis(),
+                gender[r.nextInt(gender.length)],
+                lastnamesList[r.nextInt(lastnamesList.length)],
+                namesList[r.nextInt(namesList.length)],
+                countries[r.nextInt(countries.length)]
+        );
+
+        ref.setValue (profile);
+
+        return profile;
+    }
+
+    public static void joinReportWithStolenObject(String reportId, String stolenObjectId) {
+        DatabaseReference ref = database.getReference(FirebaseReferences.REPORT_STOLEN_OBJECTS_REFERENCE).child (reportId);
+        ref.child(stolenObjectId).setValue(stolenObjectId);
+    }
+
+    public static Report generateRandomReport (String userId) {
+        DatabaseReference ref = database.getReference(FirebaseReferences.REPORTS_REFERENCE).push();
+        Crime crimeRef = generateRandomCrime(ref.getKey());
+
+        Report report = new Report(
+                ref.getKey(),
+                userId,
+                crimeRef.getId(),
+                getCurrentDateInMillis(),
+                "I was in the street and I don't know what more I can say, " +
+                        "just that it was a very tragic moment in my life and I'm very sorry for this."
+        );
+
         final int SIZE = r.nextInt(4);
         for (int i = 0; i < SIZE; ++i) {
-            DatabaseReference stolenObjectRef = generateRandomStolenObject (childRef.getKey());
-            stolenMap.put(stolenObjectRef.getKey(), stolenObjectRef.getKey());
+            StolenObject stolenObjectRef = generateRandomStolenObject (ref.getKey());
+            joinReportWithStolenObject(report.getId(), stolenObjectRef.getId());
         }
 
-        Report report = new Report();
+        ref.setValue(report);
 
-        report.setDescription("I was in the street and I don't know what more I can say, " +
-                "just that it was a very tragic moment in my life and I'm very sorry for this.");
-        report.setId(childRef.getKey());
-        report.setCrime_id(crimeRef.getKey());
-        report.setDate(0);
-        report.setStolen_objects(stolenMap);
-
-        childRef.setValue(report);
-
-        return childRef;
+        return report;
     }
 
-    public static DatabaseReference generateRandomUser () {
-        DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE);
-        DatabaseReference childRef = ref.push ();
-        DatabaseReference profileRef = generateRandomProfile(childRef.getKey());
-
-        User user = new User();
-
-        user.setEmail(childRef.getKey().substring(
-                Math.min(10, childRef.getKey().length())
-        ) + "@gmail.com");
-        user.setProfile_id(profileRef.getKey());
-        user.setId(childRef.getKey());
-        user.setPhone_number("+57012345678" + r.nextInt(10));
-        user.setIs_active_account(true);
-
-        childRef.setValue (user);
-
+    private static void joinUserWithFriends (String userId) {
         HashSet<String> friendsOutHash = new HashSet<>();
 
-        DatabaseReference friendsOut = childRef.child(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE);
+        DatabaseReference friendsOutRef = database.getReference (FirebaseReferences.USER_FRIEND_REQUESTS_OUT_REFERENCE);
+        DatabaseReference friendsInRef = database.getReference (FirebaseReferences.USER_FRIEND_REQUESTS_IN_REFERENCE);
+        DatabaseReference friendsRef = database.getReference (FirebaseReferences.USER_FRIENDS_REFERENCE);
 
         int friendsOutNum = 0;
         if (!userIds.isEmpty()) {
@@ -283,52 +319,80 @@ public abstract class DBRegistersGenerator {
         }
 
         for (int i = 0; i < friendsOutNum; ++i) {
-            String userID = userIds.get (r.nextInt (userIds.size()));
-            friendsOutHash.add (userID);
+            String friendOutID = userIds.get (r.nextInt (userIds.size()));
+            friendsOutHash.add (friendOutID);
         }
 
-        for (String userId : friendsOutHash) {
-            User.FriendRequestOut requestOut = new User.FriendRequestOut();
-            User.FriendRequestIn requestIn = new User.FriendRequestIn();
-
-            requestOut.setUser_id(userId);
-            requestOut.setDate(0);
-
-            friendsOut.child(userId).setValue(requestOut);
-
-            requestIn.setUser_id(userId);
-            requestIn.setDate(0);
-
-            DatabaseReference friend = ref.child(userId).child(FirebaseReferences.User.FRIEND_REQUESTS_IN_REFERENCE).child(
-                    childRef.getKey()
+        for (String friendId : friendsOutHash) {
+            FriendRequest requestOut = new FriendRequest(
+                    friendId,
+                    getCurrentDateInMillis()
             );
-            friend.setValue(requestIn);
+            FriendRequest requestIn = new FriendRequest(
+                    friendId,
+                    getCurrentDateInMillis()
+            );
+
+            friendsOutRef.child(userId).child(friendId).setValue(requestOut);
+            friendsInRef.child(friendId).child(userId).setValue(requestIn);
         }
 
         friendsOutNum *= 2;
         for (int i = 0; i < friendsOutNum; ++i) {
-            String userId = userIds.get(r.nextInt(userIds.size()));
-            if (!friendsOutHash.contains(userId)) {
-                User.Friend friend = new User.Friend();
+            String friendId = userIds.get(r.nextInt(userIds.size()));
+            if (!friendsOutHash.contains(friendId)) {
 
-                friend.setLocationShared(false);
-                friend.setUser_id(userId);
-                friend.setDate(0);
+                Friend friend = new Friend(
+                        friendId,
+                        getCurrentDateInMillis(),
+                        false
+                );
 
-                childRef.child(FirebaseReferences.User.FRIENDS_REFERENCE).child(userId).setValue(friend);
+                Friend friend2 = new Friend(
+                        userId,
+                        getCurrentDateInMillis(),
+                        false
+                );
+
+                friendsRef.child(userId).child(friendId).setValue(friend);
+                friendsRef.child(friendId).child(userId).setValue(friend2);
             }
         }
+    }
+
+    private static void joinUserWithReport (String userId, String reportId) {
+        DatabaseReference ref = database.getReference (FirebaseReferences.USER_REPORTS_REFERENCE);
+        ref.child(userId).child(reportId).setValue(reportId);
+    }
+
+    public static User generateRandomUser () {
+        DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).push();
+        Profile profileRef = generateRandomProfile(ref.getKey());
+
+        User user = new User(
+                ref.getKey(),
+                profileRef.getName() + "_" + profileRef.getLast_name() +
+                        ref.getKey().substring(ref.getKey().length() - 4) +
+                        "@gmail.com",
+                true,
+                "+57012345678" + r.nextInt(10),
+                profileRef.getId()
+        );
+
+        ref.setValue (user);
+
+        joinUserWithFriends(user.getId());
 
         int reports = r.nextInt(11);
 
         for (int i = 0; i < reports; ++i) {
-            DatabaseReference reportRef = generateRandomReport();
-            childRef.child(FirebaseReferences.User.REPORTS_REFERENCE).child(reportRef.getKey()).setValue(reportRef.getKey());
+            Report report = generateRandomReport(user.getId());
+            joinUserWithReport(user.getId(), report.getId());
         }
 
-        userIds.add(childRef.getKey());
+        userIds.add(ref.getKey());
 
-        return childRef;
+        return user;
     }
 
     public static void deleteValues () {
@@ -338,7 +402,11 @@ public abstract class DBRegistersGenerator {
         database.getReference(FirebaseReferences.CRIMES_REFERENCE).removeValue();
         database.getReference(FirebaseReferences.REPORTS_REFERENCE).removeValue();
         database.getReference(FirebaseReferences.STOLEN_OBJECTS_REFERENCE).removeValue();
-
+        database.getReference(FirebaseReferences.USER_FRIENDS_REFERENCE).removeValue();
+        database.getReference(FirebaseReferences.USER_FRIEND_REQUESTS_IN_REFERENCE).removeValue();
+        database.getReference(FirebaseReferences.USER_FRIEND_REQUESTS_OUT_REFERENCE).removeValue();
+        database.getReference(FirebaseReferences.USER_REPORTS_REFERENCE).removeValue();
+        database.getReference(FirebaseReferences.REPORT_STOLEN_OBJECTS_REFERENCE).removeValue();
     }
 
     public static void generateValues (final int VAL) {

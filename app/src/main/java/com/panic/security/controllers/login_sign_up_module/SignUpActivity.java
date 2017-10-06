@@ -19,6 +19,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.panic.security.R;
 import com.panic.security.controllers.main_module.MainActivity;
+import com.panic.security.entities.Friend;
+import com.panic.security.entities.FriendRequest;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
 import com.panic.security.utils.FirebaseDAO;
@@ -125,13 +127,9 @@ public class SignUpActivity extends AppCompatActivity {
                             User fireBaseUser = new User (
                                     user.getUid(),
                                     user.getEmail(),
-                                    new HashMap<String, User.FriendRequestIn>(),
-                                    new HashMap<String, User.FriendRequestOut>(),
-                                    new HashMap<String, User.Friend>(),
                                     true,
                                     mPhoneNumberEditText.getText().toString(),
-                                    profileID,
-                                    new HashMap<String, String>());
+                                    profileID);
 
                             firebaseDAO.pushUser( user.getUid(), fireBaseUser );
                             mAuth.signOut();

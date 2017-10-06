@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.panic.security.DBRegistersGenerator;
 import com.panic.security.R;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
 import com.panic.security.utils.CouchbaseDAO;
@@ -30,6 +31,10 @@ public class LoadActivity extends AppCompatActivity implements DataLoaderListene
 
         DataLoader.getInstance().addOnCompleteLoadListener(this);
 
+        //DBRegistersGenerator.generateValues(20);
+        //DBRegistersGenerator.deleteValues();
+        //onLoadCompleted();
+        
         if(hasActiveInternetConnection()){
             DataLoader.getInstance().loadData();
         }else{

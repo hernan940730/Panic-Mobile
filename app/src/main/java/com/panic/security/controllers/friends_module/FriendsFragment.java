@@ -16,17 +16,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.panic.security.R;
 import com.panic.security.controllers.main_module.MainActivity;
+import com.panic.security.entities.Friend;
+import com.panic.security.entities.FriendRequest;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
 import com.panic.security.utils.DataCallback;
@@ -35,8 +35,6 @@ import com.panic.security.utils.FirebaseDAO;
 import com.panic.security.utils.ImageConverter;
 import com.panic.security.utils.ListAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,22 +55,29 @@ public class FriendsFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mProgressBar = (ProgressBar) view.findViewById(R.id.friends_progress_bar);
 
-        FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
+        // Bar search
+        addSearchBar();
+
+        FirebaseDAO.getInstance().getUserFriends(FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                new DataCallback<Map<String, Friend>>() {
+                    @Override
+                    public void onDataReceive(Map<String, Friend> data) {
+                        showFriends (data);
+                    }
+                }
+        );
+
+        FirebaseDAO.getInstance().getUserFriendRequestsIn(new DataCallback<Map<String, FriendRequest>>() {
             @Override
-            public void onDataReceive(User user) {
-
-                // Bar search
-                addSearchBar();
+            public void onDataReceive(Map<String, FriendRequest> data) {
                 // Show friends
-                showNotifications(user);
-                showFriends(user);
-
+                showNotifications(data);
             }
         });
 
     }
 
-    public void showFriends(User currentUser){
+    public void showFriends(Map<String, Friend> friends){
 
         ImageView imageViewWithoutFriends = (ImageView) getView().findViewById(R.id.image_without_friends);
         TextView textViewWithoutFriends = (TextView) getView().findViewById(R.id.txt_without_friends);
@@ -85,9 +90,9 @@ public class FriendsFragment extends Fragment {
         listViewFriends.setVisibility(View.VISIBLE);
         final ListAdapter adapter = new ListAdapter(getActivity());
 
-        if(currentUser.getFriends() != null){
+        if(friends != null){
 
-            for (Map.Entry<String, User.Friend> friend : currentUser.getFriends().entrySet()){
+            for (Map.Entry<String, Friend> friend : friends.entrySet()){
                 FirebaseDAO.getInstance().getUserByID(friend.getKey(), new DataCallback<User>() {
                     @Override
                     public void onDataReceive(final User user) {
@@ -146,19 +151,19 @@ public class FriendsFragment extends Fragment {
 
     }
 
-    public void showNotifications(final User currentUser){
+    public void showNotifications(final Map<String, FriendRequest> friendRequestsIn){
 
         // List
         final TextView textViewRequest = (TextView) getView().findViewById(R.id.txt_view_request);
         final ListView listViewRequest = (ListView) getView().findViewById(R.id.list_view_request);
         final ListAdapter adapterNotifications = new ListAdapter(getActivity());
 
-        if(currentUser.getFriend_requests_in() != null){
+        if(friendRequestsIn != null){
 
             textViewRequest.setVisibility(View.VISIBLE);
             listViewRequest.setVisibility(View.VISIBLE);
 
-            for (Map.Entry<String, User.FriendRequestIn> friendRequestIn : currentUser.getFriend_requests_in().entrySet()){
+            for (Map.Entry<String, FriendRequest> friendRequestIn : friendRequestsIn.entrySet()){
                 FirebaseDAO.getInstance().getUserByID(friendRequestIn.getKey(), new DataCallback<User>() {
                     @Override
                     public void onDataReceive(final User user) {
@@ -200,23 +205,14 @@ public class FriendsFragment extends Fragment {
 
                     switch (viewId) {
                         case R.id.accept_request:
-
-                            User.Friend newFriend = new User.Friend(petitioner.getId(), 0L, false);
-                            FirebaseDAO.getInstance().pushFriend(currentUser,  newFriend);
-
-                            User.Friend newFriend2 = new User.Friend(currentUser.getId(), 0L, false);
-                            FirebaseDAO.getInstance().pushFriend(petitioner,  newFriend2);
-
-                            FirebaseDAO.getInstance().removeFriendRequestIn(currentUser, new User.FriendRequestIn(petitioner.getId(), 0L));
-                            FirebaseDAO.getInstance().removeFriendRequestOut(petitioner, new User.FriendRequestOut(currentUser.getId(), 0L));
+                            FirebaseDAO.getInstance().pushFriend(petitioner.getId());
+                            FirebaseDAO.getInstance().removeFriendRequest(petitioner.getId());
 
                             Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_accepted), Snackbar.LENGTH_LONG).show();
                             fragmentManager.beginTransaction().replace (R.id.content_main, new FriendsFragment()).commit();
                             break;
                         case R.id.reject_request:
-
-                            FirebaseDAO.getInstance().removeFriendRequestIn(currentUser, new User.FriendRequestIn(petitioner.getId(), 0L));
-                            FirebaseDAO.getInstance().removeFriendRequestOut(petitioner, new User.FriendRequestOut(currentUser.getId(), 0L));
+                            FirebaseDAO.getInstance().removeFriendRequest(petitioner.getId());
 
                             Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_rejected), Snackbar.LENGTH_LONG).show();
                             fragmentManager.beginTransaction().replace (R.id.content_main, new FriendsFragment()).commit();
