@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.panic.security.controllers.main_module.MainActivity;
 import com.panic.security.entities.Crime;
 import com.panic.security.entities.Friend;
 import com.panic.security.entities.FriendRequest;
@@ -64,12 +65,12 @@ public class FirebaseDAO {
         final DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).child (ID);
 
         if (ID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-            if(!couchbaseDAO.getIsUserListenerSet()) {
+            if (!couchbaseDAO.getIsUserListenerSet()) {
                 ref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User entity = dataSnapshot.getValue(User.class);
-                        couchbaseDAO.pushUser(entity);
+                        couchbaseDAO.pushUser (entity);
                     }
 
                     @Override
@@ -78,10 +79,12 @@ public class FirebaseDAO {
                     }
                 });
             }
-            else {
+
+            if (!DataLoader.getInstance().hasActiveInternetConnection()){
                 User user = couchbaseDAO.getUser();
                 if (user != null) {
                     callback.onDataReceive(user);
+                    return;
                 }
             }
         }
@@ -98,7 +101,51 @@ public class FirebaseDAO {
                 callback.onDataReceive (null);
             }
         });
+    }
 
+    public void getProfileByID (String ID, final DataCallback<Profile> callback) {
+
+        final DatabaseReference ref = database.getReference(FirebaseReferences.PROFILES_REFERENCE).child(ID);
+
+        if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals (ID)) {
+
+            if (!couchbaseDAO.getIsProfileListenerSet()) {
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Profile entity = dataSnapshot.getValue (Profile.class);
+                        couchbaseDAO.pushProfile (entity);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            if (!DataLoader.getInstance().hasActiveInternetConnection()) {
+                Profile profile = couchbaseDAO.getProfile();
+                if (profile != null) {
+                    callback.onDataReceive(profile);
+                    return;
+                }
+            }
+
+        }
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Profile entity = dataSnapshot.getValue (Profile.class);
+                callback.onDataReceive (entity);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onDataReceive (null);
+            }
+        });
     }
 
     public void getCrimeByID (String ID, final DataCallback<Crime> callback) {
@@ -123,48 +170,6 @@ public class FirebaseDAO {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Location entity = dataSnapshot.getValue (Location.class);
-                callback.onDataReceive (entity);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                callback.onDataReceive (null);
-            }
-        });
-    }
-
-    public void getProfileByID (String ID, final DataCallback<Profile> callback) {
-        final DatabaseReference ref = database.getReference(FirebaseReferences.PROFILES_REFERENCE).child(ID);
-
-        User user = couchbaseDAO.getUser();
-
-        if (user != null) {
-            if (user.getProfile_id ().equals (ID)) {
-                Profile profile = couchbaseDAO.getProfile();
-                if (profile != null) {
-                    callback.onDataReceive(profile);
-                }
-                else {
-                    ref.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Profile entity = dataSnapshot.getValue (Profile.class);
-                            couchbaseDAO.pushProfile (entity);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-        }
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Profile entity = dataSnapshot.getValue (Profile.class);
                 callback.onDataReceive (entity);
             }
 

@@ -90,15 +90,15 @@ public class CouchbaseDAO {
             return null;
         }
 
-        Profile profile = new Profile();
-
-        profile.setId((String) properties.get(FirebaseReferences.Profile.ID_REFERENCE));
-        profile.setUser_id((String) properties.get(FirebaseReferences.Profile.USER_ID_REFERENCE));
-        profile.setBirthday (getLongValue(properties.get(FirebaseReferences.Profile.BIRTHDAY_REFERENCE)));
-        profile.setCountry ((String) properties.get(FirebaseReferences.Profile.COUNTRY_REFERENCE));
-        profile.setGender ((String) properties.get(FirebaseReferences.Profile.GENDER_REFERENCE));
-        profile.setLast_name ((String) properties.get(FirebaseReferences.Profile.LAST_NAME_REFERENCE));
-        profile.setName ((String) properties.get(FirebaseReferences.Profile.NAME_REFERENCE));
+        Profile profile = new Profile (
+                (String) properties.get(FirebaseReferences.Profile.ID_REFERENCE),
+                (String) properties.get(FirebaseReferences.Profile.USER_ID_REFERENCE),
+                getLongValue(properties.get(FirebaseReferences.Profile.BIRTHDAY_REFERENCE)),
+                (String) properties.get(FirebaseReferences.Profile.GENDER_REFERENCE),
+                (String) properties.get(FirebaseReferences.Profile.LAST_NAME_REFERENCE),
+                (String) properties.get(FirebaseReferences.Profile.NAME_REFERENCE),
+                (String) properties.get(FirebaseReferences.Profile.COUNTRY_REFERENCE)
+        );
 
         return profile;
     }
@@ -240,5 +240,9 @@ public class CouchbaseDAO {
 
     public boolean getIsUserListenerSet() {
         return isUserListenerSet;
+    }
+
+    public boolean getIsProfileListenerSet() {
+        return isProfileListenerSet;
     }
 }

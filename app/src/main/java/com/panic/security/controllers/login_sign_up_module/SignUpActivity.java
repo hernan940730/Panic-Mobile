@@ -105,6 +105,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         progressbar.setVisibility(View.VISIBLE);
         // [START create_user_with_email]
+
         mAuth.createUserWithEmailAndPassword(mEmailEditText.getText().toString(), mPasswordEditText.getText().toString() )
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -116,12 +117,17 @@ public class SignUpActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             user.sendEmailVerification();
                             Toast.makeText(SignUpActivity.this, getResources().getString( R.string.verify_email ), Toast.LENGTH_SHORT).show();
-                            Profile profile = new Profile();
+                            Profile profile = new Profile(
+                                    null,
+                                    null,
+                                    0,
+                                    null,
+                                    mLastName.getText().toString(),
+                                    mName.getText().toString(),
+                                    null
+                            );
 
                             FirebaseDAO firebaseDAO = FirebaseDAO.getInstance();
-
-                            profile.setName( mName.getText().toString() );
-                            profile.setLast_name( mLastName.getText().toString() );
                             String profileID = firebaseDAO.pushProfile( user.getUid(), profile );
 
                             User fireBaseUser = new User (

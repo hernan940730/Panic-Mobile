@@ -8,9 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.panic.security.DBRegistersGenerator;
 import com.panic.security.R;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
+import com.panic.security.controllers.main_module.MainActivity;
 import com.panic.security.utils.CouchbaseDAO;
 import com.panic.security.utils.DataLoader;
 import com.panic.security.utils.DataLoaderListener;
@@ -27,15 +27,10 @@ public class LoadActivity extends AppCompatActivity implements DataLoaderListene
     @Override
     public void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        loaderCouchbase();
+        loadCouchbase();
 
-        DataLoader.getInstance().addOnCompleteLoadListener(this);
-
-        //DBRegistersGenerator.generateValues(20);
-        //DBRegistersGenerator.deleteValues();
-        //onLoadCompleted();
-        
-        if(hasActiveInternetConnection()){
+        DataLoader.getInstance(this).addOnCompleteLoadListener(this);
+        if(DataLoader.getInstance().hasActiveInternetConnection ()){
             DataLoader.getInstance().loadData();
         }else{
             onLoadCompleted();
@@ -49,16 +44,8 @@ public class LoadActivity extends AppCompatActivity implements DataLoaderListene
         finish();
     }
 
-    private void loaderCouchbase() {
+    private void loadCouchbase() {
         CouchbaseDAO.getInstance (this);
-    }
-
-    public boolean hasActiveInternetConnection() {
-        ConnectivityManager cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = ( activeNetwork != null && activeNetwork.isConnectedOrConnecting() );
-        return isConnected;
     }
 
 }
