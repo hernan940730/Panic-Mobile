@@ -13,19 +13,19 @@ public abstract class FirebaseReferences {
     /**
      * Collections references
      */
-    public static final String CRIMES_REFERENCE = "crimes_1";
-    public static final String LOCATIONS_REFERENCE = "locations_1";
-    public static final String PROFILES_REFERENCE = "profiles_1";
-    public static final String REPORTS_REFERENCE = "reports_1";
-    public static final String STOLEN_OBJECTS_REFERENCE = "stolen_objects_1";
-    public static final String USERS_REFERENCE = "users_1";
-    public static final String PROFILE_PICTURES_FOLDER_REFERENCE = "profile_pictures_1";
+    public static final String CRIMES_REFERENCE = "crimes";
+    public static final String LOCATIONS_REFERENCE = "locations";
+    public static final String PROFILES_REFERENCE = "profiles";
+    public static final String REPORTS_REFERENCE = "reports";
+    public static final String STOLEN_OBJECTS_REFERENCE = "stolen_objects";
+    public static final String USERS_REFERENCE = "users";
+    public static final String PROFILE_PICTURES_FOLDER_REFERENCE = "profile_pictures";
 
-    public static final String USER_FRIENDS_REFERENCE = "user_friends_1";
-    public static final String USER_FRIEND_REQUESTS_IN_REFERENCE = "user_friend_requests_in_1";
-    public static final String USER_FRIEND_REQUESTS_OUT_REFERENCE = "user_friend_requests_out_1";
-    public static final String USER_REPORTS_REFERENCE = "user_reports_1";
-    public static final String REPORT_STOLEN_OBJECTS_REFERENCE = "report_stolen_objects_1";
+    public static final String USER_FRIENDS_REFERENCE = "user_friends";
+    public static final String USER_FRIEND_REQUESTS_IN_REFERENCE = "user_friend_requests_in";
+    public static final String USER_FRIEND_REQUESTS_OUT_REFERENCE = "user_friend_requests_out";
+    public static final String USER_REPORTS_REFERENCE = "user_reports";
+    public static final String REPORT_STOLEN_OBJECTS_REFERENCE = "report_stolen_objects";
 
     /**
      * Welcome message reference
