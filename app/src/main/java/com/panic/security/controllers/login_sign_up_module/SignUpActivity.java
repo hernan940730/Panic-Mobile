@@ -106,8 +106,12 @@ public class SignUpActivity extends AppCompatActivity {
         progressbar.setVisibility(View.VISIBLE);
         // [START create_user_with_email]
 
+        final String name = mName.getText().toString();
+        final String lastName = mLastName.getText().toString();
+        final String phoneNumber = mPhoneNumberEditText.getText().toString();
+
         mAuth.createUserWithEmailAndPassword(mEmailEditText.getText().toString(), mPasswordEditText.getText().toString() )
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -122,8 +126,8 @@ public class SignUpActivity extends AppCompatActivity {
                                     null,
                                     0,
                                     null,
-                                    mLastName.getText().toString(),
-                                    mName.getText().toString(),
+                                    lastName,
+                                    name,
                                     null
                             );
 
@@ -134,7 +138,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     user.getUid(),
                                     user.getEmail(),
                                     true,
-                                    mPhoneNumberEditText.getText().toString(),
+                                    phoneNumber,
                                     profileID);
 
                             firebaseDAO.pushUser( user.getUid(), fireBaseUser );
