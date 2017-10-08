@@ -49,7 +49,7 @@
             android:name=".controllers.login_sign_up_module.ResetPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".controllers.LoadActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
