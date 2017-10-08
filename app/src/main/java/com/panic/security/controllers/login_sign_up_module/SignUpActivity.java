@@ -19,6 +19,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.panic.security.R;
 import com.panic.security.controllers.main_module.MainActivity;
+import com.panic.security.entities.Friend;
+import com.panic.security.entities.FriendRequest;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
 import com.panic.security.utils.FirebaseDAO;
@@ -103,8 +105,13 @@ public class SignUpActivity extends AppCompatActivity {
 
         progressbar.setVisibility(View.VISIBLE);
         // [START create_user_with_email]
+
+        final String name = mName.getText().toString();
+        final String lastName = mLastName.getText().toString();
+        final String phoneNumber = mPhoneNumberEditText.getText().toString();
+
         mAuth.createUserWithEmailAndPassword(mEmailEditText.getText().toString(), mPasswordEditText.getText().toString() )
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -114,24 +121,25 @@ public class SignUpActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             user.sendEmailVerification();
                             Toast.makeText(SignUpActivity.this, getResources().getString( R.string.verify_email ), Toast.LENGTH_SHORT).show();
-                            Profile profile = new Profile();
+                            Profile profile = new Profile(
+                                    null,
+                                    null,
+                                    0,
+                                    null,
+                                    lastName,
+                                    name,
+                                    null
+                            );
 
                             FirebaseDAO firebaseDAO = FirebaseDAO.getInstance();
-
-                            profile.setName( mName.getText().toString() );
-                            profile.setLast_name( mLastName.getText().toString() );
                             String profileID = firebaseDAO.pushProfile( user.getUid(), profile );
 
                             User fireBaseUser = new User (
                                     user.getUid(),
                                     user.getEmail(),
-                                    new HashMap<String, User.FriendRequestIn>(),
-                                    new HashMap<String, User.FriendRequestOut>(),
-                                    new HashMap<String, User.Friend>(),
                                     true,
-                                    mPhoneNumberEditText.getText().toString(),
-                                    profileID,
-                                    new HashMap<String, String>());
+                                    phoneNumber,
+                                    profileID);
 
                             firebaseDAO.pushUser( user.getUid(), fireBaseUser );
                             mAuth.signOut();

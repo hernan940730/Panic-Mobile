@@ -31,6 +31,7 @@ import com.panic.security.utils.FirebaseDAO;
 import com.panic.security.utils.ImageConverter;
 import com.panic.security.utils.ListAdapter;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ReportsFragment extends Fragment {
@@ -58,8 +59,13 @@ public class ReportsFragment extends Fragment {
         FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
             @Override
             public void onDataReceive(User user) {
-
-                showReports(user);
+                FirebaseDAO.getInstance().getUserReports(mAuth.getCurrentUser().getUid(),
+                        new DataCallback<Map<String, String>>() {
+                    @Override
+                    public void onDataReceive(Map<String, String> data) {
+                        showReports(data);
+                    }
+                });
 
             }
         });
@@ -74,7 +80,7 @@ public class ReportsFragment extends Fragment {
         return view;
     }
 
-    public void showReports(final User currentUser){
+    public void showReports(final Map<String, String> reports){
 
         ImageView imageViewWithoutReports = (ImageView) getView().findViewById(R.id.image_without_reports);
         TextView textViewWithoutReports = (TextView) getView().findViewById(R.id.txt_without_reports);
@@ -87,9 +93,9 @@ public class ReportsFragment extends Fragment {
         listViewReports.setVisibility(View.VISIBLE);
         final ListAdapter adapterReports = new ListAdapter(getActivity());
 
-        if(currentUser.getReports() != null){
+        if(reports != null){
 
-            for (Map.Entry<String, String> report : currentUser.getReports().entrySet()){
+            for (Map.Entry<String, String> report : reports.entrySet()){
                 FirebaseDAO.getInstance().getReportByID(report.getKey(), new DataCallback<Report>() {
                     @Override
                     public void onDataReceive(final Report report) {
@@ -151,7 +157,7 @@ public class ReportsFragment extends Fragment {
                 }
             });
             */
-        }else{
+        } else {
             listViewReports.setVisibility(View.GONE);
             imageViewWithoutReports.setVisibility(View.VISIBLE);
             textViewWithoutReports.setVisibility(View.VISIBLE);

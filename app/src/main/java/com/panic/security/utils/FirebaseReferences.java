@@ -13,13 +13,20 @@ public abstract class FirebaseReferences {
     /**
      * Collections references
      */
-    public static final String CRIMES_REFERENCE = "crimes";
-    public static final String LOCATIONS_REFERENCE = "locations";
-    public static final String PROFILES_REFERENCE = "profiles";
-    public static final String REPORTS_REFERENCE = "reports";
-    public static final String STOLEN_OBJECTS_REFERENCE = "stolen_objects";
-    public static final String USERS_REFERENCE = "users";
-    public static final String PROFILE_PICTURES_FOLDER_REFERENCE = "profile_pictures";
+    public static final String CRIMES_REFERENCE = "crimes_1";
+    public static final String LOCATIONS_REFERENCE = "locations_1";
+    public static final String PROFILES_REFERENCE = "profiles_1";
+    public static final String REPORTS_REFERENCE = "reports_1";
+    public static final String STOLEN_OBJECTS_REFERENCE = "stolen_objects_1";
+    public static final String USERS_REFERENCE = "users_1";
+    public static final String PROFILE_PICTURES_FOLDER_REFERENCE = "profile_pictures_1";
+
+    public static final String USER_FRIENDS_REFERENCE = "user_friends_1";
+    public static final String USER_FRIEND_REQUESTS_IN_REFERENCE = "user_friend_requests_in_1";
+    public static final String USER_FRIEND_REQUESTS_OUT_REFERENCE = "user_friend_requests_out_1";
+    public static final String USER_REPORTS_REFERENCE = "user_reports_1";
+    public static final String REPORT_STOLEN_OBJECTS_REFERENCE = "report_stolen_objects_1";
+
     /**
      * Welcome message reference
      */
@@ -35,10 +42,10 @@ public abstract class FirebaseReferences {
 
     public static abstract class Report {
         public static final String ID_REFERENCE = "id";
+        public static final String USER_ID = "user_id";
         public static final String CRIME_ID_REFERENCE = "crime_id";
         public static final String DATE_REFERENCE = "date";
         public static final String DESCRIPTION_REFERENCE = "description";
-        public static final String STOLEN_OBJECTS_REFERENCE = "stolen_objects";
     }
 
     public static abstract class Location {
@@ -61,26 +68,17 @@ public abstract class FirebaseReferences {
         public static final String EMAIL_REFERENCE = "email";
         public static final String PHONE_NUMBER_REFERENCE = "phone_number";
         public static final String IS_ACTIVE_REFERENCE = "is_active_account";
-        public static final String FRIENDS_REFERENCE = "friends";
-        public static final String FRIEND_REQUESTS_OUT_REFERENCE = "friend_requests_out";
-        public static final String FRIEND_REQUESTS_IN_REFERENCE = "friend_requests_in";
-        public static final String REPORTS_REFERENCE = "reports";
+    }
 
-        public static abstract class Friend {
-            public static final String USER_ID = "user_id";
-            public static final String DATE = "date";
-            public static final String IS_LOCATION_SHARED = "is_location_shared";
-        }
+    public static abstract class Friend {
+        public static final String USER_ID = "user_id";
+        public static final String DATE = "date";
+        public static final String IS_LOCATION_SHARED = "is_location_shared";
+    }
 
-        public static abstract class FriendRequestOut {
-            public static final String USER_ID = "user_id";
-            public static final String DATE = "date";
-        }
-
-        public static abstract class FriendRequestIn {
-            public static final String USER_ID = "user_id";
-            public static final String DATE = "date";
-        }
+    public static abstract class FriendRequest {
+        public static final String USER_ID = "user_id";
+        public static final String DATE = "date";
     }
 
     public static abstract class Profile {

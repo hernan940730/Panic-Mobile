@@ -522,38 +522,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Report report = new Report();
         report.setDescription(mText);
 
-        pushReport( report, crime, location );
-    }
-
-    public String pushReport (Report report, Crime crime, com.panic.security.entities.Location location) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-        DatabaseReference reportRef = database.getReference (FirebaseReferences.REPORTS_REFERENCE).push ();
-        DatabaseReference crimeRef = database.getReference (FirebaseReferences.CRIMES_REFERENCE).push ();
-        DatabaseReference locationRef = database.getReference (FirebaseReferences.LOCATIONS_REFERENCE).push ();
-
-        location.setCrime_id(crimeRef.getKey());
-        location.setId(locationRef.getKey());
-
-        crime.setId(crimeRef.getKey());
-        crime.setReport_id(reportRef.getKey());
-        crime.setLocation_id(locationRef.getKey());
-
-        report.setId(reportRef.getKey());
-        report.setCrime_id(crimeRef.getKey());
-
-        locationRef.setValue(location);
-        crimeRef.setValue(crime);
-        reportRef.setValue(report);
-        reportRef.child(FirebaseReferences.Report.DATE_REFERENCE).setValue(ServerValue.TIMESTAMP);
-
-        database.getReference (FirebaseReferences.USERS_REFERENCE)
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(FirebaseReferences.User.REPORTS_REFERENCE)
-                .child(report.getId())
-                .setValue(report.getId());
-
-        return reportRef.getKey ();
+        FirebaseDAO.getInstance().pushReport(report, crime, location);
     }
 
     @Override

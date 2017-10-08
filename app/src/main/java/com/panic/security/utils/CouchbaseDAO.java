@@ -74,13 +74,10 @@ public class CouchbaseDAO {
         User user = new User (
                 (String) properties.get(FirebaseReferences.User.ID_REFERENCE),
                 (String) properties.get(FirebaseReferences.User.EMAIL_REFERENCE),
-                (HashMap<String, User.FriendRequestIn>) properties.get(FirebaseReferences.User.FRIEND_REQUESTS_IN_REFERENCE),
-                (HashMap<String, User.FriendRequestOut>) properties.get(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE),
-                (HashMap<String, User.Friend>) properties.get(FirebaseReferences.User.FRIENDS_REFERENCE),
                 (boolean) properties.get(FirebaseReferences.User.IS_ACTIVE_REFERENCE),
                 (String) properties.get(FirebaseReferences.User.PHONE_NUMBER_REFERENCE),
-                (String) properties.get(FirebaseReferences.User.PROFILE_ID_REFERENCE),
-                (HashMap<String, String>) properties.get(FirebaseReferences.User.REPORTS_REFERENCE));
+                (String) properties.get(FirebaseReferences.User.PROFILE_ID_REFERENCE)
+        );
         return user;
     }
 
@@ -93,15 +90,15 @@ public class CouchbaseDAO {
             return null;
         }
 
-        Profile profile = new Profile();
-
-        profile.setId((String) properties.get(FirebaseReferences.Profile.ID_REFERENCE));
-        profile.setUser_id((String) properties.get(FirebaseReferences.Profile.USER_ID_REFERENCE));
-        profile.setBirthday (getLongValue(properties.get(FirebaseReferences.Profile.BIRTHDAY_REFERENCE)));
-        profile.setCountry ((String) properties.get(FirebaseReferences.Profile.COUNTRY_REFERENCE));
-        profile.setGender ((String) properties.get(FirebaseReferences.Profile.GENDER_REFERENCE));
-        profile.setLast_name ((String) properties.get(FirebaseReferences.Profile.LAST_NAME_REFERENCE));
-        profile.setName ((String) properties.get(FirebaseReferences.Profile.NAME_REFERENCE));
+        Profile profile = new Profile (
+                (String) properties.get(FirebaseReferences.Profile.ID_REFERENCE),
+                (String) properties.get(FirebaseReferences.Profile.USER_ID_REFERENCE),
+                getLongValue(properties.get(FirebaseReferences.Profile.BIRTHDAY_REFERENCE)),
+                (String) properties.get(FirebaseReferences.Profile.GENDER_REFERENCE),
+                (String) properties.get(FirebaseReferences.Profile.LAST_NAME_REFERENCE),
+                (String) properties.get(FirebaseReferences.Profile.NAME_REFERENCE),
+                (String) properties.get(FirebaseReferences.Profile.COUNTRY_REFERENCE)
+        );
 
         return profile;
     }
@@ -165,13 +162,9 @@ public class CouchbaseDAO {
         Map<String, Object> properties = new HashMap<>();
         properties.put(FirebaseReferences.User.ID_REFERENCE, user.getId());
         properties.put(FirebaseReferences.User.EMAIL_REFERENCE, user.getEmail());
-        properties.put(FirebaseReferences.User.FRIEND_REQUESTS_IN_REFERENCE, user.getFriend_requests_in());
-        properties.put(FirebaseReferences.User.FRIEND_REQUESTS_OUT_REFERENCE, user.getFriend_requests_out());
-        properties.put(FirebaseReferences.User.FRIENDS_REFERENCE, user.getFriends());
         properties.put(FirebaseReferences.User.IS_ACTIVE_REFERENCE, user.getIs_active_account());
         properties.put(FirebaseReferences.User.PHONE_NUMBER_REFERENCE, user.getPhone_number());
         properties.put(FirebaseReferences.User.PROFILE_ID_REFERENCE, user.getProfile_id());
-        properties.put(FirebaseReferences.User.REPORTS_REFERENCE, user.getReports());
 
         try {
             document.putProperties (properties);
@@ -247,5 +240,9 @@ public class CouchbaseDAO {
 
     public boolean getIsUserListenerSet() {
         return isUserListenerSet;
+    }
+
+    public boolean getIsProfileListenerSet() {
+        return isProfileListenerSet;
     }
 }

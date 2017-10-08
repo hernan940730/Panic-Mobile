@@ -1,5 +1,10 @@
 package com.panic.security.utils;
 
+import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Handler;
 import android.util.Pair;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -22,6 +27,8 @@ public class DataLoader {
 
     private String TAG = "DataLoader";
 
+    private Activity activity;
+
     private static DataLoader dataLoader;
 
     private List<DataLoaderListener> onCompleteListeners;
@@ -35,19 +42,26 @@ public class DataLoader {
 
     private int totalLoadData = 2;
 
+    private final long LOAD_TIME = 5000;
+
     public static synchronized DataLoader getInstance() {
+        return dataLoader;
+    }
+
+    public static synchronized DataLoader getInstance(Activity activity) {
         if(dataLoader == null){
-            dataLoader = new DataLoader();
+            dataLoader = new DataLoader(activity);
         }
         return dataLoader;
     }
 
-    private DataLoader(){
+    private DataLoader (Activity activity){
         this.onCompleteListeners = new ArrayList<>();
         this.onCrimeChangedListeners = new ArrayList<>();
         this.emails = new ArrayList<>();
         this.crimeLocationList = new ArrayList<>();
         this.countLoadData = new HashSet<>();
+        this.activity = activity;
     }
 
     public List<String> getEmails() {
@@ -62,6 +76,14 @@ public class DataLoader {
 
         loadEmails();
         loadMapZones();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                reportListeners(onCompleteListeners);
+                removeListeners(onCompleteListeners);
+            }
+        }, LOAD_TIME);
     }
 
     public void loadEmails () {
@@ -140,6 +162,13 @@ public class DataLoader {
 
     public void removeListeners(List<DataLoaderListener> listeners) {
         listeners.clear();
+    }
+
+    public boolean hasActiveInternetConnection ( ) {
+        ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
     }
 
 }
