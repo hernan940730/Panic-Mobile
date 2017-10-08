@@ -181,7 +181,7 @@ public class FriendsFragment extends Fragment {
                                             listViewRequest.setAdapter(adapterNotifications);
                                         } else {
                                             Bitmap defaultFriendImage = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_accept_request);
-                                            adapterNotifications.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(), defaultFriendImage);
+                                            adapterNotifications.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(), defaultFriendImage, true);
                                             listViewRequest.setAdapter(adapterNotifications);
                                         }
                                     }
