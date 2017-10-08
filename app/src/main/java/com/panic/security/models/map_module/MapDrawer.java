@@ -71,7 +71,7 @@ public class MapDrawer implements DataLoaderListener {
         this.weightedLatLngList = new ArrayList<>();
         this.friendsMarkers = new ArrayList<>();
         this.weightedLatLngList = DataLoader.getInstance().getCrimeLocationList();
-        this.weightedLatLngList.add(new WeightedLatLng(new LatLng(0, 0)));
+
         DataLoader.getInstance().addOnCrimeChangedListener(this);
         UserLocationUtils.getInstance().addReceiveLocationListener(new DataCallback<Map<String, LatLng>>() {
             @Override
@@ -187,6 +187,9 @@ public class MapDrawer implements DataLoaderListener {
     }
 
     private void initHeatMap() {
+        if (weightedLatLngList == null || weightedLatLngList.size() == 0) {
+            return;
+        }
         heatmapTileProvider = new HeatmapTileProvider.Builder()
                 .weightedData(weightedLatLngList)
                 .gradient(

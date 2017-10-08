@@ -158,10 +158,10 @@ public class UserProfileFragment extends Fragment {
             textUserProfilePhoneNumber.setText(user.getPhone_number());
         }
 
-        FirebaseDAO.getInstance().getUserReports(new DataCallback<Map<String, String>>() {
+        FirebaseDAO.getInstance().getUserReports(user.getId(), new DataCallback<Map<String, String>>() {
             @Override
             public void onDataReceive(Map<String, String> data) {
-                if(data != null){
+                if (data != null){
                     textUserProfileNumberReports.setText(String.valueOf(data.size()));
                 }
             }

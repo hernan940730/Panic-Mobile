@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -491,11 +492,10 @@ public class FirebaseDAO {
 
     }
 
-    public void getUserReports (final DataCallback<Map<String, String>> callback) {
-        final String currUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    public void getUserReports (final String userId, final DataCallback<Map<String, String>> callback) {
         final DatabaseReference ref = database.getReference()
                 .child(FirebaseReferences.USER_REPORTS_REFERENCE)
-                .child(currUserId);
+                .child(userId);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

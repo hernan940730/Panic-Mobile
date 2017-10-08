@@ -59,7 +59,8 @@ public class ReportsFragment extends Fragment {
         FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
             @Override
             public void onDataReceive(User user) {
-                FirebaseDAO.getInstance().getUserReports(new DataCallback<Map<String, String>>() {
+                FirebaseDAO.getInstance().getUserReports(mAuth.getCurrentUser().getUid(),
+                        new DataCallback<Map<String, String>>() {
                     @Override
                     public void onDataReceive(Map<String, String> data) {
                         showReports(data);
