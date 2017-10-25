@@ -108,9 +108,7 @@ public class FirebaseDAO {
 
         final DatabaseReference ref = database.getReference(FirebaseReferences.PROFILES_REFERENCE).child(ID);
 
-        User user = CouchbaseDAO.getInstance().getUser();
-
-        if (user != null && user.getProfile_id().equals (ID)) {
+        if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals (ID)) {
 
             if (!couchbaseDAO.getIsProfileListenerSet()) {
                 ref.addValueEventListener(new ValueEventListener() {
