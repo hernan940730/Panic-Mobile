@@ -8,7 +8,6 @@
     <string name="couchbase_error">Error opening Couchbase Database</string>
     <string name="crime_type_not_found_error">Fail to found crime type</string>
 
-
     <!-- Crime types -->
     <string name="assault_crime">Assault</string>
     <string name="auto_theft_crime">Auto-theft</string>
@@ -95,11 +94,25 @@
     <string name="email_not_verified">Email %s is not verified</string>
     <string name="verify_email">Verify your email.</string>
     <string name="without_reports">Oops! You need to make some reports</string>
+    <string name="report_done">Report Done</string>
+    <string name="date">Date of crime</string>
+
+    <string-array name="crimes_array">
+        <item>Assault</item>
+        <item>Auto-theft</item>
+        <item>Burglary</item>
+        <item>Drugs</item>
+        <item>Homicide</item>
+        <item>Shop-lifting</item>
+        <item>Suspicious Activity</item>
+        <item>Vandalism</item>
+        <item>Other</item>
+    </string-array>
 
     <!-- Friends -->
     <string name="title_friend_requests">Friend requests</string>
     <string name="title_friends">Friends</string>
     <string name="without_friends">Oops! You need to make some friends</string>
-    <string name="report_done">Report Done</string>
+    <string name="create_report">Create a new report</string>
 
 </resources>
