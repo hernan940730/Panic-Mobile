@@ -100,23 +100,8 @@ public class FriendsFragment extends Fragment {
                         FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
                             @Override
                             public void onDataReceive(final Profile profile) {
-
-                                FirebaseDAO.getInstance().getProfileImageInBytes(user.getId(), new DataCallback<byte[]>() {
-                                    @Override
-                                    public void onDataReceive (byte[] bytes) {
-                                        if (bytes != null) {
-                                            adapter.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(),
-                                                    ImageConverter.getRoundedCornerBitmap(BitmapFactory.decodeByteArray (bytes, 0, bytes.length)));
-                                            listViewFriends.setAdapter(adapter);
-                                        } else {
-                                            adapter.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(),
-                                                    BitmapFactory.decodeResource(getResources(), R.mipmap.ic_account));
-                                            listViewFriends.setAdapter(adapter);
-                                        }
-
-                                    }
-                                });
-
+                                adapter.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail());
+                                listViewFriends.setAdapter(adapter);
                             }
                         });
 
@@ -158,7 +143,7 @@ public class FriendsFragment extends Fragment {
         final ListView listViewRequest = (ListView) getView().findViewById(R.id.list_view_request);
         final ListAdapter adapterNotifications = new ListAdapter(getActivity());
 
-        if(friendRequestsIn != null){
+        if (friendRequestsIn != null) {
 
             textViewRequest.setVisibility(View.VISIBLE);
             listViewRequest.setVisibility(View.VISIBLE);
@@ -167,29 +152,13 @@ public class FriendsFragment extends Fragment {
                 FirebaseDAO.getInstance().getUserByID(friendRequestIn.getKey(), new DataCallback<User>() {
                     @Override
                     public void onDataReceive(final User user) {
-
                         FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
                             @Override
                             public void onDataReceive(final Profile profile) {
-
-                                FirebaseDAO.getInstance().getProfileImageInBytes(user.getId(), new DataCallback<byte[]>() {
-                                    @Override
-                                    public void onDataReceive (byte[] bytes) {
-                                        if (bytes != null) {
-                                            adapterNotifications.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(),
-                                                    ImageConverter.getRoundedCornerBitmap(BitmapFactory.decodeByteArray (bytes, 0, bytes.length)), true);
-                                            listViewRequest.setAdapter(adapterNotifications);
-                                        } else {
-                                            Bitmap defaultFriendImage = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_accept_request);
-                                            adapterNotifications.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(), defaultFriendImage, true);
-                                            listViewRequest.setAdapter(adapterNotifications);
-                                        }
-                                    }
-                                });
-
+                                adapterNotifications.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(), true);
+                                listViewRequest.setAdapter(adapterNotifications);
                             }
                         });
-
                     }
                 });
             }
@@ -224,7 +193,7 @@ public class FriendsFragment extends Fragment {
                 }
             });
 
-        }else{
+        } else {
             textViewRequest.setVisibility(View.GONE);
             listViewRequest.setVisibility(View.GONE);
         }

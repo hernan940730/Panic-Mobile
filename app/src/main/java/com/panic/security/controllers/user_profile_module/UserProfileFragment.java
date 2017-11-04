@@ -1,6 +1,5 @@
 package com.panic.security.controllers.user_profile_module;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -27,7 +26,6 @@ import com.panic.security.entities.User;
 import com.panic.security.utils.DataCallback;
 import com.panic.security.utils.DataLoader;
 import com.panic.security.utils.FirebaseDAO;
-import com.panic.security.utils.ImageConverter;
 
 import java.util.List;
 import java.util.Map;
@@ -167,22 +165,20 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
+        imageButtonProfilePicture.setPadding(2, 2, 2, 2);
+        FirebaseDAO.getInstance().putRoundProfileImageInView(user.getId(), getActivity(), imageButtonProfilePicture);
 
-
-        FirebaseDAO.getInstance().getProfileImageInBitmap(user.getId(), getActivity(), new DataCallback<Bitmap>() {
-            @Override
-            public void onDataReceive(Bitmap data) {
-                if (data != null) {
-                    imageButtonProfilePicture.setPadding(2, 2, 2, 2);
-                    imageButtonProfilePicture.setImageBitmap(
-                            ImageConverter.getRoundedCornerBitmap (data)
-                    );
-                }
-                else {
-                    imageButtonProfilePicture.setImageResource(R.mipmap.ic_default_user_profile);
-                }
-            }
-        });
+        /*
+        if (data != null) {
+            imageButtonProfilePicture.setPadding(2, 2, 2, 2);
+            imageButtonProfilePicture.setImageBitmap(
+                    ImageConverter.getRoundedCornerBitmap (data)
+            );
+        }
+        else {
+            imageButtonProfilePicture.setImageResource(R.mipmap.ic_default_user_profile);
+        }
+        */
 
         FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
             @Override

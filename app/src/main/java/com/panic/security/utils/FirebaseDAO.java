@@ -3,10 +3,20 @@ package com.panic.security.utils;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.util.Pair;
+import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.panic.security.R;
 import com.panic.security.controllers.main_module.MainActivity;
 import com.panic.security.entities.Crime;
 import com.panic.security.entities.Friend;
@@ -588,7 +599,31 @@ public class FirebaseDAO {
         });
     }
 
-    public void getProfileImageInBytes (String userID, final DataCallback<byte[]> callback) {
+    public void putProfileImageInView(String userID, Activity activity, ImageView view) {
+        StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
+
+        BitmapDescriptor bd = null;
+
+        GlideApp.with(activity)
+                .load(ref)
+                .override(100)
+                .centerCrop()
+                .placeholder(R.drawable.ic_default_profile_image)
+                .into(view);
+    }
+
+    public void putRoundProfileImageInView(String userID, Activity activity, ImageView view) {
+        StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
+
+        GlideApp.with(activity)
+                .load(ref)
+                .override(300)
+                .circleCrop()
+                .placeholder(R.drawable.ic_default_profile_image)
+                .into(view);
+    }
+
+    public void getProfileImageInBytes(String userID, final DataCallback<byte[]> callback) {
 
         StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
         ref.getBytes (ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -605,24 +640,6 @@ public class FirebaseDAO {
 
     }
 
-    public void getProfileImageInBitmap (final String userID, final Activity activity, final DataCallback<Bitmap> callback) {
-        final Bitmap bitmap = StorageManager.loadProfileImage (userID, activity);
-        callback.onDataReceive (bitmap);
-        getProfileImageInBytes(userID, new DataCallback<byte[]>() {
-            @Override
-            public void onDataReceive(byte[] data) {
-                if (data == null) {
-                    StorageManager.deleteProfileImage(userID, activity);
-                    return;
-                }
-                Bitmap bitmap2 = BitmapFactory.decodeByteArray (data, 0, data.length);
-                if (!bitmap2.sameAs(bitmap)) {
-                    StorageManager.saveProfileImage(userID, data, activity);
-                }
-                callback.onDataReceive(bitmap2);
-            }
-        });
-    }
 
     public String pushUser (String ID, User entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).child (ID);
