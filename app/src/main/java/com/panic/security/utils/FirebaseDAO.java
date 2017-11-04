@@ -434,14 +434,14 @@ public class FirebaseDAO {
                         GenericTypeIndicator<Map<String, User>> t = new GenericTypeIndicator<Map<String, User>>() {};
                         Map<String, User> map = dataSnapshot.getValue(t);
 
-                        for (Map.Entry<String, User> entry : map.entrySet()) {
-                            User user = entry.getValue();
-                            callback.onDataReceive (user);
-                        }
-                        if (map.isEmpty()) {
+                        if(map == null){
                             callback.onDataReceive (null);
+                        }else{
+                            for (Map.Entry<String, User> entry : map.entrySet()) {
+                                User user = entry.getValue();
+                                callback.onDataReceive (user);
+                            }
                         }
-
                     }
 
                     @Override
