@@ -1,7 +1,5 @@
 package com.panic.security.controllers.reports_module;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,10 +16,6 @@ import com.panic.security.utils.DataCallback;
 import com.panic.security.utils.FirebaseDAO;
 
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 public class ReportCreateFragment extends Fragment {
 
@@ -31,6 +24,8 @@ public class ReportCreateFragment extends Fragment {
     private final Calendar c = Calendar.getInstance();
 
     private FirebaseAuth mAuth;
+
+    private Spinner crimesSpinner;
 
     private static Integer[] iconsDatabase = {
             R.mipmap.ic_assault,
@@ -61,7 +56,6 @@ public class ReportCreateFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
-
     }
 
 
@@ -69,20 +63,33 @@ public class ReportCreateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        container.findViewById( R.id.commit_crime_button ).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                commitCrime();
+            }
+        });
+
         int year = c.get( Calendar.YEAR );
         int month = c.get( Calendar.MONTH );
         int day = c.get( Calendar.DAY_OF_MONTH );
 
         final View view = inflater.inflate(R.layout.fragment_report_create, container, false);
 
-        Spinner crimesSpinner = view.findViewById( R.id.crimes_spinner );
-        ArrayAdapter<Map<String, ?>> adapter = ArrayAdapter.createFromResource();
+        crimesSpinner = view.findViewById( R.id.crimes_spinner );
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource( view.getContext(), R.array.crimes_array, android.R.layout.simple_spinner_item );
         adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
         crimesSpinner.setAdapter( adapter );
         //Button date = ( Button )view.findViewById( R.id.crime_date );
 
         //date.setText( String.valueOf( day ) + "/" + String.valueOf( month ) + "/" + String.valueOf( year ) );
         return view;
+    }
+
+    private void commitCrime() {
+        String crime = crimesSpinner.getSelectedItem().toString();
+
     }
 
 }

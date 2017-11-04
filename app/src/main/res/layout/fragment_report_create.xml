@@ -4,7 +4,7 @@
     android:fillViewport="true"
     android:background="@color/whiteColor">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -13,9 +13,9 @@
 
         <TextView
             android:id="@+id/report_title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_centerHorizontal="true"
             android:background="@drawable/background_with_gray_line"
             android:textSize="16dp"
             android:text="@string/create_report" />
@@ -23,15 +23,9 @@
         <Spinner
             android:id="@+id/crimes_spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        </Spinner>
-
-        <ListView
-            android:id="@+id/list_view_friends"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dip"
-            android:background="@color/whiteColor"/>
+            android:layout_below="@+id/report_title">
+        </Spinner>
 
         <ProgressBar
             android:id="@+id/friends_progress_bar"
@@ -41,30 +35,13 @@
             android:gravity="center"
             android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/image_without_friends"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:visibility="gone"
-            android:scaleType="fitXY"
-            android:layout_gravity="center_horizontal"
-            android:src="@mipmap/ic_without_friends"
-            android:layout_marginTop="51dp" />
-
-        <TextView
-            android:id="@+id/txt_without_friends"
-            android:layout_width="fill_parent"
+        <Button
+            android:id="@+id/commit_crime_button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:visibility="gone"
-            android:paddingTop="15dp"
-            android:text="@string/without_friends" />
+            android:layout_alignParentBottom="true"
+            android:text="@string/create_report"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </ScrollView>
-
-
-
-
-
