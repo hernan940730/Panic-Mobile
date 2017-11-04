@@ -1,15 +1,11 @@
 package com.panic.security.utils;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -59,6 +55,7 @@ public class ListAdapter extends ArrayAdapter<String>{
         return txtDescription;
     }
 
+    @Override
     public View getView(final int position, View view, final ViewGroup parent){
 
         LayoutInflater inflater = context.getLayoutInflater();
@@ -68,7 +65,15 @@ public class ListAdapter extends ArrayAdapter<String>{
         txtTitle = (TextView) rowView.findViewById(R.id.main_text_in_row);
         txtDescription = (TextView) rowView.findViewById(R.id.second_text_in_row);
 
-        imageView.setImageBitmap(images.get(position));
+        Bitmap bitmap = images.get(position);
+
+        if (bitmap == null) {
+            FirebaseDAO.getInstance().putProfileImageInView(users.get(position).getId(), context, imageView);
+        }
+        else {
+            imageView.setImageBitmap(bitmap);
+        }
+
         txtTitle.setText(itemsNames.get(position));
         txtDescription.setText(itemsDescription.get(position));
 
@@ -103,16 +108,16 @@ public class ListAdapter extends ArrayAdapter<String>{
         return itemsNames.size();
     }
 
-    public void addItem(User user, String name, String description, Bitmap image) {
+    public void addItem(User user, String email, String description) {
         users.add(user);
-        images.add(image);
+        images.add(null);
         itemsDescription.add(description);
-        itemsNames.add(name);
+        itemsNames.add(email);
     }
 
-    public void addItem(User user, String name, String description, Bitmap image, boolean buttons) {
+    public void addItem(User user, String name, String description, boolean buttons) {
         users.add(user);
-        images.add(image);
+        images.add(null);
         itemsNames.add(name);
         itemsDescription.add(description);
         withButtons = buttons;
