@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Handler;
 import android.util.Pair;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -42,8 +41,6 @@ public class DataLoader {
 
     private int totalLoadData = 2;
 
-    private final long LOAD_TIME = 5000;
-
     public static synchronized DataLoader getInstance() {
         return dataLoader;
     }
@@ -76,14 +73,6 @@ public class DataLoader {
 
         loadEmails();
         loadMapZones();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                reportListeners(onCompleteListeners);
-                removeListeners(onCompleteListeners);
-            }
-        }, LOAD_TIME);
     }
 
     public void loadEmails () {

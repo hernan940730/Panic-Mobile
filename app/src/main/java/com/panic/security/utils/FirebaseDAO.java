@@ -108,9 +108,7 @@ public class FirebaseDAO {
 
         final DatabaseReference ref = database.getReference(FirebaseReferences.PROFILES_REFERENCE).child(ID);
 
-        User user = CouchbaseDAO.getInstance().getUser();
-
-        if (user != null && user.getProfile_id().equals (ID)) {
+        if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals (ID)) {
 
             if (!couchbaseDAO.getIsProfileListenerSet()) {
                 ref.addValueEventListener(new ValueEventListener() {
@@ -436,14 +434,14 @@ public class FirebaseDAO {
                         GenericTypeIndicator<Map<String, User>> t = new GenericTypeIndicator<Map<String, User>>() {};
                         Map<String, User> map = dataSnapshot.getValue(t);
 
-                        for (Map.Entry<String, User> entry : map.entrySet()) {
-                            User user = entry.getValue();
-                            callback.onDataReceive (user);
-                        }
-                        if (map.isEmpty()) {
+                        if(map == null){
                             callback.onDataReceive (null);
+                        }else{
+                            for (Map.Entry<String, User> entry : map.entrySet()) {
+                                User user = entry.getValue();
+                                callback.onDataReceive (user);
+                            }
                         }
-
                     }
 
                     @Override

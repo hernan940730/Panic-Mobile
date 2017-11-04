@@ -23,6 +23,7 @@
     <string name="navigation_drawer_open">Abrir menu de navegación</string>
     <string name="navigation_drawer_close">Cerrar menu de navegación</string>
     <string name="search">Buscar</string>
+    <string name="invalid_user">Correo de usuario inexistente</string>
 
     <!-- Menu items -->
     <string name="home">Inicio</string>

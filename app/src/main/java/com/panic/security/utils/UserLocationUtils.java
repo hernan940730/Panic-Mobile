@@ -46,7 +46,7 @@ public class UserLocationUtils {
     private JSONObject userTimeZone;
     private final String GOOGLE_TIMEZONE_KEY = "key=AIzaSyDcuzG1jmEhUF3CQsw4nb4BTfarXjfSKUw";
     private final String GOOGLE_TIME_ZONE_URL = "https://maps.googleapis.com/maps/api/timezone/";
-    private final String PANIC_LOCATION_URL = "http://192.168.0.22:5000/location/";
+    private final String PANIC_LOCATION_URL = "https://panic-security.herokuapp.com/location/";
     private final String JSON_VALUE = "json?";
     private final String SET_VALUE = "set?";
     private final String GET_VALUE = "get?";
