@@ -124,4 +124,8 @@
     <string name="share_location_with_friend">Share location</string>
     <string name="remove_friend">Remove friend</string>
 
+    <!-- Dialog Friend -->
+    <string name="share_location_with_friend">Share location</string>
+    <string name="remove_friend">Remove friend</string>
+
 </resources>

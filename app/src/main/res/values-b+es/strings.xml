@@ -119,4 +119,8 @@
     <string name="share_location_with_friend">Compartir localización</string>
     <string name="remove_friend">Eliminar amigo</string>
 
+    <!-- Dialog Friend -->
+    <string name="share_location_with_friend">Compartir localización</string>
+    <string name="remove_friend">Eliminar amigo</string>
+
 </resources>
