@@ -76,14 +76,14 @@ public class UserProfileFragment extends Fragment {
             mUserShown = userFound;
             setHasOptionsMenu(true); // Call onCreateOptionsMenu to search bar
             showUserData(mUserShown);
-            actionManageFriends(mUserShown);
+            actionManageFriends();
         } else {
             FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
                 @Override
                 public void onDataReceive(User user) {
                     mUserShown = user;
                     showUserData(mUserShown);
-                    actionManageFriends(mUserShown);
+                    actionManageFriends();
                 }
             });
         }
@@ -248,13 +248,15 @@ public class UserProfileFragment extends Fragment {
 
     }
 
-    public void actionManageFriends(final User user) {
+    public void actionManageFriends() {
+
+        final String userId = FirebaseAuth.getInstance().getUid();
 
         mBtnManageFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                FirebaseDAO.getInstance().areFriends(user.getId(), mUserShown.getId(), new DataCallback<Friend>() {
+                FirebaseDAO.getInstance().areFriends(userId, mUserShown.getId(), new DataCallback<Friend>() {
                     @Override
                     public void onDataReceive(Friend friend) {
 
@@ -262,7 +264,7 @@ public class UserProfileFragment extends Fragment {
                             showDialog(getContext(), friend);
                         }else{
 
-                            FirebaseDAO.getInstance().areFriendRequestIn(user.getId(), mUserShown.getId(), new DataCallback<FriendRequest>() {
+                            FirebaseDAO.getInstance().areFriendRequestIn(userId, mUserShown.getId(), new DataCallback<FriendRequest>() {
                                 @Override
                                 public void onDataReceive(FriendRequest friendIn) {
                                     if(friendIn != null){
@@ -274,7 +276,7 @@ public class UserProfileFragment extends Fragment {
 
                                     }else{
 
-                                        FirebaseDAO.getInstance().areFriendRequestOut(user.getId(), mUserShown.getId(), new DataCallback<FriendRequest>() {
+                                        FirebaseDAO.getInstance().areFriendRequestOut(userId, mUserShown.getId(), new DataCallback<FriendRequest>() {
                                             @Override
                                             public void onDataReceive(FriendRequest friendOut) {
                                                 if(friendOut == null){

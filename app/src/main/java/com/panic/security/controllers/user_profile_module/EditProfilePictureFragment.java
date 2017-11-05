@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.panic.security.R;
 import com.panic.security.utils.FirebaseDAO;
 import com.panic.security.utils.GlideApp;
@@ -45,7 +46,6 @@ public class EditProfilePictureFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setHasOptionsMenu(true);
 
         profileImageView = getView().findViewById(R.id.profile_picture_image);
 
@@ -59,6 +59,10 @@ public class EditProfilePictureFragment extends Fragment {
 
         if (getArguments().containsKey(USER_BUNDLE)) {
             userId = getArguments().getString(USER_BUNDLE);
+            if (userId.equals(FirebaseAuth.getInstance().getUid())) {
+                setHasOptionsMenu(true);
+            }
+
             showUserImage(userId);
         }
     }
