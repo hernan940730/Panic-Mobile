@@ -96,6 +96,10 @@
     <string name="without_reports">Oops! You need to make some reports</string>
     <string name="report_done">Report Done</string>
     <string name="date">Date of crime</string>
+    <string name="create_report">Create a new report</string>
+    <string name="report_type">Report Type</string>
+    <string name="report_date_title">Crime Date</string>
+    <string name="crime_description">Describe what happened</string>
 
     <string-array name="crimes_array">
         <item>Assault</item>
@@ -113,6 +117,5 @@
     <string name="title_friend_requests">Friend requests</string>
     <string name="title_friends">Friends</string>
     <string name="without_friends">Oops! You need to make some friends</string>
-    <string name="create_report">Create a new report</string>
 
 </resources>

@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -396,92 +397,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onClick(View view) {
+        // Pass marker longitud and latitude
+        Bundle args = new Bundle();
+        args.putDouble( "marker_lat", marker.getPosition().latitude );
+        args.putDouble( "marker_lon", marker.getPosition().longitude );
+        ReportCreateFragment reportCreateFragment = new ReportCreateFragment();
+        reportCreateFragment.setArguments( args );
         // Show Reports Fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace (R.id.content_main, new ReportCreateFragment()).commit();
-    }
-
-    private void showDescriptionUI (){
-
-        final Calendar c = Calendar.getInstance();
-        int year = c.get( Calendar.YEAR );
-        int month = c.get( Calendar.MONTH );
-        int day = c.get( Calendar.DAY_OF_MONTH );
-
-        // Create Dialog for description input
-        AlertDialog.Builder builder = new AlertDialog.Builder( this, R.style.AlertDialogStyle);
-
-        TextView title = new TextView( this );
-        //title.setText( mCrimeName );
-        title.setTextColor( getResources().getColor( R.color.colorPrimary ) );
-        title.setTextSize( 20 );
-        title.setGravity( Gravity.CENTER );
-        builder.setCustomTitle( title );
-
-        //input.setInputType( InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES );
-        LayoutInflater inflater = this.getLayoutInflater();
-        View dialogView = inflater.inflate( R.layout.report_dialog, null);
-        builder.setView( dialogView );
-
-        final EditText input = dialogView.findViewById( R.id.crime_detail );
-        final TextView crimeDate = dialogView.findViewById( R.id.crime_date);
-        crimeDate.setText( String.valueOf( day ) + "/" + String.valueOf( month ) + "/" + String.valueOf( year ) );
-        crimeDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int year = c.get( Calendar.YEAR );
-                int month = c.get( Calendar.MONTH );
-                int day = c.get( Calendar.DAY_OF_MONTH );
-
-                final DatePickerDialog datePickerDialog = new DatePickerDialog( MainActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        Calendar c = Calendar.getInstance();
-                        c.set(year, month, day);
-                        crimeDate.setText( String.valueOf( day ) + "/" + String.valueOf( month ) + "/" + String.valueOf( year ) );
-                    }
-                }, year, month, day);
-
-                datePickerDialog.getDatePicker().setMaxDate( c.getTimeInMillis() );
-                datePickerDialog.show();
-            }
-        });
-
-        builder.setPositiveButton(getResources().getString( R.string.accept ), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mText = input.getText().toString();
-                if( !TextUtils.isEmpty(mText) ) {
-                    //reportCrime(crime, location, c.getTimeInMillis() );
-                    marker.remove();
-                    Toast.makeText( MainActivity.this, R.string.report_done, Toast.LENGTH_LONG ).show();
-                    hideCrimesButtons();
-                }
-            }
-        });
-        builder.setNegativeButton(getResources().getString( R.string.cancel ), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        builder.show();
-    }
-
-    private void reportCrime( String crimeToReport, LatLng marker, long timeInMillis) {
-
-        com.panic.security.entities.Location location = new com.panic.security.entities.Location();
-        location.setLatitude( marker.latitude );
-        location.setLongitude( marker.longitude );
-
-        Crime crime = new Crime();
-        crime.setType( crimeToReport );
-        crime.setDate( timeInMillis );
-
-        Report report = new Report();
-        report.setDescription(mText);
-
-        FirebaseDAO.getInstance().pushReport(report, crime, location);
+        marker.remove();
+        hideCrimesButtons();
+        fragmentManager.beginTransaction().replace (R.id.content_main, reportCreateFragment ).addToBackStack( null ).commit();
     }
 
     @Override
