@@ -1,51 +1,33 @@
 package com.panic.security.controllers.main_module;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
-import android.text.TextUtils;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,9 +41,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.panic.security.R;
 import com.panic.security.controllers.friends_module.FriendsFragment;
@@ -70,23 +49,17 @@ import com.panic.security.controllers.login_sign_up_module.LoginActivity;
 import com.panic.security.controllers.reports_module.ReportCreateFragment;
 import com.panic.security.controllers.reports_module.ReportsFragment;
 import com.panic.security.controllers.user_profile_module.UserProfileFragment;
-import com.panic.security.entities.Crime;
 import com.panic.security.entities.Friend;
 import com.panic.security.entities.Profile;
-import com.panic.security.entities.Report;
 import com.panic.security.entities.User;
 import com.panic.security.utils.CouchbaseDAO;
 import com.panic.security.utils.DataCallback;
 import com.panic.security.utils.DataLoader;
 import com.panic.security.utils.FirebaseDAO;
-import com.panic.security.utils.FirebaseReferences;
 import com.panic.security.utils.ListAdapter;
 import com.panic.security.utils.UserLocationUtils;
 import com.panic.security.models.map_module.MapDrawer;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -136,10 +109,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        friendsIDs = new HashSet<>();
+        mAuth = FirebaseAuth.getInstance();
+
         getLocationPermission();
         handlerPassDataBetweenFragments();
-
-        mAuth = FirebaseAuth.getInstance();
 
         updateUI();
     }
@@ -168,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View view) {
                 if (isSharing) {
                     UserLocationUtils.getInstance().revokeSendLocationListener();
+                    FirebaseDAO.getInstance().revokeSendLocation();
                     shareLocationButton.setText(R.string.share_location);
                     shareLocationButton.setBackgroundResource (R.color.success_color);
                     isSharing = !isSharing;
@@ -247,13 +223,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                friendsIDs.size();
-
+                FirebaseDAO.getInstance().sendLocation(friendsIDs);
                 UserLocationUtils.getInstance().addSendLocationListener(MainActivity.this);
                 shareLocationButton.setText(R.string.stop_share_location);
                 shareLocationButton.setBackgroundResource (R.color.failure_color);
                 isSharing = !isSharing;
+
                 dialog.dismiss();
             }
         });
@@ -512,12 +487,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getSupportFragmentManager();
         marker.remove();
         hideCrimesButtons();
-        fragmentManager.beginTransaction().replace (R.id.content_main, reportCreateFragment ).addToBackStack( null ).commit();
+        fragmentManager
+                .beginTransaction()
+                .replace (R.id.content_main, reportCreateFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     public void addSearchBar(){
 
-            mSearchView = (MaterialSearchView) findViewById(R.id.search_view);
+            mSearchView = findViewById(R.id.search_view);
             mSearchView.setVoiceSearch(false);
             mSearchView.setCursorDrawable(R.drawable.custom_cursor_search);
 
@@ -586,6 +565,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onDestroy() {
+        FirebaseDAO.getInstance().revokeSendLocation();
         UserLocationUtils.getInstance().revokeSendLocationListener();
         super.onDestroy();
     }

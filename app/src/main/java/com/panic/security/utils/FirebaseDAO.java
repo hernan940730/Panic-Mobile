@@ -930,22 +930,45 @@ public class FirebaseDAO {
         refFriend.removeValue();
     }
 
-    public void shareLocation(Set<String> friends) {
-        DatabaseReference ref = database.getReference()
+    public void sendLocation(Set<String> friends) {
+        DatabaseReference refSharing = database.getReference()
                 .child(FirebaseReferences.USER_FRIENDS_SHARING_REFERENCE);
+        DatabaseReference refShared = database.getReference()
+                .child(FirebaseReferences.USER_FRIENDS_SHARED_REFERENCE);
         final String userId = FirebaseAuth.getInstance().getUid();
         for (String friendId : friends) {
-            ref.child(friendId).child(userId).setValue(userId);
+            refSharing.child(friendId).child(userId).setValue(userId);
+            refShared.child(userId).child(friendId).setValue(friendId);
         }
     }
 
-    public void stopShareLocation(Set<String> friends) {
-        DatabaseReference ref = database.getReference()
-                .child(FirebaseReferences.USER_FRIENDS_SHARING_REFERENCE);
+    public void revokeSendLocation() {
         final String userId = FirebaseAuth.getInstance().getUid();
-        for (String friendId : friends) {
-            ref.child(friendId).child(userId).removeValue();
-        }
+        final DatabaseReference refSharing = database.getReference()
+                .child(FirebaseReferences.USER_FRIENDS_SHARING_REFERENCE);
+        final DatabaseReference refShared = database.getReference()
+                .child(FirebaseReferences.USER_FRIENDS_SHARED_REFERENCE)
+                .child(userId);
+
+        refShared.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final Map<String, String> friendIds = dataSnapshot
+                        .getValue(new GenericTypeIndicator<HashMap<String, String>>(){});
+
+                if (friendIds != null) {
+                    for (Map.Entry<String, String> friendId : friendIds.entrySet()) {
+                        refSharing.child(friendId.getValue()).child(userId).removeValue();
+                    }
+                }
+                refShared.removeValue();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

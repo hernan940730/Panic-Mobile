@@ -28,6 +28,7 @@ public abstract class FirebaseReferences {
     public static final String REPORT_STOLEN_OBJECTS_REFERENCE = "report_stolen_objects";
 
     public static final String USER_FRIENDS_SHARING_REFERENCE = "user_friends_sharing";
+    public static final String USER_FRIENDS_SHARED_REFERENCE = "user_friends_shared";
 
     /**
      * Welcome message reference
