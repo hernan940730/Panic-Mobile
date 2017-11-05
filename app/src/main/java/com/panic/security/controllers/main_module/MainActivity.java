@@ -399,8 +399,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onClick(View view) {
         // Pass marker longitud and latitude
         Bundle args = new Bundle();
-        args.putDouble( "marker_lat", marker.getPosition().latitude );
-        args.putDouble( "marker_lon", marker.getPosition().longitude );
+        args.putDouble( "marker_lat", location.latitude );
+        args.putDouble( "marker_lon", location.longitude );
         ReportCreateFragment reportCreateFragment = new ReportCreateFragment();
         reportCreateFragment.setArguments( args );
         // Show Reports Fragment

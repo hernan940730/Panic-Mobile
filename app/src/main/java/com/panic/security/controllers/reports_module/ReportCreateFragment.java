@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,37 +33,21 @@ public class ReportCreateFragment extends Fragment {
     private EditText mDescriptiontext;
     private double latitude, longitude;
 
-    private static Integer[] iconsDatabase = {
-            R.mipmap.ic_assault,
-            R.mipmap.ic_auto_theft,
-            R.mipmap.ic_burglary,
-            R.mipmap.ic_drugs,
-            R.mipmap.ic_homicide,
-            R.mipmap.ic_shoplifting,
-            R.mipmap.ic_suspicious_activity,
-            R.mipmap.ic_vandalism,
-            R.mipmap.ic_other
-    };
-
-    private static Integer[] crimesDatabase = {
-            R.string.assault_crime,
-            R.string.auto_theft_crime,
-            R.string.burglary_crime,
-            R.string.drugs_crime,
-            R.string.homicide_crime,
-            R.string.shop_lifting_crime,
-            R.string.suspicious_activity_crime,
-            R.string.vandalism_crime,
-            R.string.other_crime
+    private static String CRIMES_LIST[] = {
+            "assault_crime",
+            "auto_theft_crime",
+            "burglary_crime",
+            "shop_lifting_crime",
+            "suspicious_activity_crime",
+            "homicide_crime",
+            "vandalism_crime",
+            "drugs_crime",
+            "other_crime"
     };
 
     @Override
     public void onCreate( Bundle savedInstaceState ) {
         super.onCreate(savedInstaceState);
-        if( savedInstaceState != null ){
-            latitude = savedInstaceState.getDouble( "marker_lat" );
-            longitude = savedInstaceState.getDouble( "marker_lon" );
-        }
     }
 
     @Override
@@ -79,6 +64,10 @@ public class ReportCreateFragment extends Fragment {
         int year = c.get( Calendar.YEAR );
         int month = c.get( Calendar.MONTH );
         int day = c.get( Calendar.DAY_OF_MONTH );
+
+        Bundle bundle = getArguments();
+        latitude = bundle.getDouble( "marker_lat" );
+        longitude = bundle.getDouble( "marker_lon" );
 
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_report_create, container, false);
@@ -129,15 +118,35 @@ public class ReportCreateFragment extends Fragment {
             }
         });
 
-        //Button date = ( Button )view.findViewById( R.id.crime_date );
-
-        //date.setText( String.valueOf( day ) + "/" + String.valueOf( month ) + "/" + String.valueOf( year ) );
         return view;
     }
 
     private void commitCrime( String input, long timeInMillis ) {
-        String crimeType = crimesSpinner.getSelectedItem().toString();
+        String selectedCrime = crimesSpinner.getSelectedItem().toString();
         com.panic.security.entities.Location location = new com.panic.security.entities.Location();
+        String crimeType = "";
+
+        if( selectedCrime.equals( crimesSpinner.getItemAtPosition( 0 ) ) ){
+            crimeType = CRIMES_LIST[0];
+        }else if( selectedCrime.equals( crimesSpinner.getItemAtPosition( 1 ) ) ){
+            crimeType = CRIMES_LIST[1];
+        }else if( selectedCrime.equals( crimesSpinner.getItemAtPosition( 2 ) ) ){
+            crimeType = CRIMES_LIST[2];
+        }else if( selectedCrime.equals( crimesSpinner.getItemAtPosition( 3 ) ) ){
+            crimeType = CRIMES_LIST[3];
+        }else if( selectedCrime.equals( crimesSpinner.getItemAtPosition( 4 ) ) ){
+            crimeType = CRIMES_LIST[4];
+        }else if( selectedCrime.equals( crimesSpinner.getItemAtPosition( 5 ) ) ){
+            crimeType = CRIMES_LIST[5];
+        }else if( selectedCrime.equals( crimesSpinner.getItemAtPosition( 6 ) ) ){
+            crimeType = CRIMES_LIST[6];
+        }else if( selectedCrime.equals( crimesSpinner.getItemAtPosition( 7 ) ) ){
+            crimeType = CRIMES_LIST[7];
+        }else if( selectedCrime.equals( crimesSpinner.getItemAtPosition( 8 ) ) ){
+            crimeType = CRIMES_LIST[8];
+        }else if( selectedCrime.equals( crimesSpinner.getItemAtPosition( 9 ) ) ){
+            crimeType = CRIMES_LIST[9];
+        }
 
         location.setLatitude( latitude );
         location.setLongitude( longitude );
@@ -150,6 +159,6 @@ public class ReportCreateFragment extends Fragment {
         report.setDescription( input );
 
         FirebaseDAO.getInstance().pushReport(report, crime, location);
-        getActivity().getFragmentManager().popBackStack();
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 }

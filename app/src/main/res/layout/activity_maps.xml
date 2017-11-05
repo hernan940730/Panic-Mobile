@@ -8,25 +8,29 @@
     mMap:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.panic.security.controllers.main_module.MainActivity">
 
-    <ImageButton
-        android:id="@+id/other_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
-        android:translationX="@dimen/add_crime_x"
-        android:translationY="@dimen/add_crime_y"
-        android:src="@mipmap/ic_other" />
-
-    <Button
-        android:id="@+id/share_location_button"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:text="@string/share_location"
-        android:padding="10dp"
-        android:background="@color/success_color"
-        android:textColor="@color/whiteColor"
-        android:paddingBottom="10dp"
-        />
+        android:layout_height="match_parent">
+        <ImageButton
+            android:id="@+id/other_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_button"
+            android:translationX="@dimen/add_crime_x"
+            android:translationY="@dimen/add_crime_y"
+            android:src="@mipmap/ic_other" />
 
+        <Button
+            android:id="@+id/share_location_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:text="@string/share_location"
+            android:padding="10dp"
+            android:background="@color/success_color"
+            android:textColor="@color/whiteColor"
+            android:paddingBottom="10dp"
+            />
+
+    </LinearLayout>
 </fragment>
