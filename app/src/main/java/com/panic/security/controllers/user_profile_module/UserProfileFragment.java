@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,40 +35,58 @@ public class UserProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     // ImageToAddFriend
-    ImageView mBtnManageFriends;
+    private ImageView mBtnManageFriends;
     // user_id of User that is displayed
-    User mUserShown;
+    private User mUserShown;
 
-    ProgressBar mProgressBar;
+    private ImageButton imageButtonProfilePicture;
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mBtnManageFriends = (ImageView) getView().findViewById(R.id.user_profile_add_friend);
+        mBtnManageFriends = getView().findViewById(R.id.user_profile_add_friend);
 
         mAuth = FirebaseAuth.getInstance();
-        mProgressBar = (ProgressBar) view.findViewById(R.id.user_profile_progress_bar);
 
-        FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
+        imageButtonProfilePicture = getView().findViewById(R.id.default_user_profile);
+
+        imageButtonProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataReceive(User user) {
+            public void onClick(View v) {
+                if (mUserShown != null) {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
-                Bundle bundle = getArguments();
-                if(bundle != null){
-                    User userFound = (User)getArguments().getSerializable("userFound");
-                    mUserShown = userFound;
-                    setHasOptionsMenu(true); // Call onCreateOptionsMenu to search bar
-                }else{
-                    mUserShown = user;
+                    Fragment editProfileFragment = new EditProfilePictureFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(EditProfilePictureFragment.USER_BUNDLE, mUserShown.getId());
+                    editProfileFragment.setArguments(bundle);
+                    fragmentManager
+                            .beginTransaction()
+                            .replace(R.id.content_main, editProfileFragment)
+                            .addToBackStack(null)
+                            .commit();
                 }
-                showUserData(mUserShown);
-
-                //actionEdit(view);
-                actionManageFriends(user);
-
             }
         });
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            User userFound = (User)getArguments().getSerializable("userFound");
+            mUserShown = userFound;
+            setHasOptionsMenu(true); // Call onCreateOptionsMenu to search bar
+            showUserData(mUserShown);
+            actionManageFriends(mUserShown);
+        } else {
+            FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
+                @Override
+                public void onDataReceive(User user) {
+                    mUserShown = user;
+                    showUserData(mUserShown);
+                    actionManageFriends(mUserShown);
+                }
+            });
+        }
     }
 
     public void showUserData(User user){
@@ -78,7 +97,6 @@ public class UserProfileFragment extends Fragment {
         final TextView textUserProfileEmail = (TextView) getView().findViewById(R.id.user_profile_email);
         final TextView textUserProfilePhoneNumber = (TextView) getView().findViewById(R.id.user_profile_phone_number);
         final TextView textUserProfileNumberReports = (TextView) getView().findViewById(R.id.user_profile_number_reports);
-        final ImageButton imageButtonProfilePicture = (ImageButton) getView().findViewById(R.id.default_user_profile);
 
         //TODO Allow change short description to the user
         textUserProfileShortDesc.setText(getResources().getString(R.string.user_profile_short_desc));
