@@ -11,4 +11,8 @@
     <dimen name="add_crime_y">450dp</dimen>
     <dimen name="y_location_margin">390dp</dimen>
     <dimen name="x_location_margin">100dp</dimen>
+    
+    <!-- edit photo fragment -->
+    
+    <dimen name="profile_image_padding">100dp</dimen>
 </resources>

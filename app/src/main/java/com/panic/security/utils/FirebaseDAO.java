@@ -13,14 +13,17 @@ import android.widget.ImageView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -32,7 +35,9 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.panic.security.R;
 import com.panic.security.controllers.main_module.MainActivity;
 import com.panic.security.entities.Crime;
@@ -601,34 +606,49 @@ public class FirebaseDAO {
         });
     }
 
-    public void putProfileImageInView(String userID, Activity activity, ImageView view) {
-        StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
-
-        GlideApp.with(activity)
-                .load(ref)
-                .override(100)
-                .centerCrop()
-                .placeholder(R.drawable.ic_default_profile_image)
-                .into(view);
+    public void putProfileImageInView(String userID, final Activity activity, final ImageView view) {
+        final StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
+        ref.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+            @Override
+            public void onSuccess(StorageMetadata storageMetadata) {
+                GlideApp.with(activity)
+                        .load(ref)
+                        .override(100)
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_default_profile_image)
+                        .signature(new ObjectKey(storageMetadata.getUpdatedTimeMillis()))
+                        .into(view);
+            }
+        });
     }
 
-    public void putRoundProfileImageInView(String userID, Activity activity, ImageView view) {
-        StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
-
-        GlideApp.with(activity)
-                .load(ref)
-                .override(300)
-                .circleCrop()
-                .placeholder(R.drawable.ic_default_profile_image)
-                .into(view);
+    public void putRoundProfileImageInView(String userID, final Activity activity, final ImageView view) {
+        final StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
+        ref.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+            @Override
+            public void onSuccess(StorageMetadata storageMetadata) {
+                GlideApp.with(activity)
+                        .load(ref)
+                        .override(300)
+                        .circleCrop()
+                        .placeholder(R.drawable.ic_default_profile_image)
+                        .signature(new ObjectKey(storageMetadata.getUpdatedTimeMillis()))
+                        .into(view);
+            }
+        });
     }
 
-    public void putFullProfileImageInView(String userID, Activity activity, ImageView view) {
-        StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
-
-        GlideApp.with(activity)
-                .load(ref)
-                .into(view);
+    public void putFullProfileImageInView(String userID, final Activity activity, final ImageView view) {
+        final StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
+        ref.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+            @Override
+            public void onSuccess(StorageMetadata storageMetadata) {
+                GlideApp.with(activity)
+                        .load(ref)
+                        .signature(new ObjectKey(storageMetadata.getUpdatedTimeMillis()))
+                        .into(view);
+            }
+        });
     }
 
     public void getProfileImageInBytes(String userID, final DataCallback<byte[]> callback) {
@@ -644,7 +664,6 @@ public class FirebaseDAO {
                 callback.onDataReceive (null);
             }
         });
-
     }
 
     public void pushProfileImage(String userId, Uri uri) {
