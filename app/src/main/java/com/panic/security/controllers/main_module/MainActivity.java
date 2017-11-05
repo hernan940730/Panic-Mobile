@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -24,6 +25,9 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 
 import android.view.View;
@@ -57,6 +61,7 @@ import com.panic.security.R;
 import com.panic.security.controllers.friends_module.FriendsFragment;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
 
+import com.panic.security.controllers.reports_module.ReportCreateFragment;
 import com.panic.security.controllers.reports_module.ReportsFragment;
 import com.panic.security.controllers.user_profile_module.UserProfileFragment;
 import com.panic.security.entities.Crime;
@@ -95,15 +100,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean isMarker = false;
     private boolean reportMade = false;
     private String mText = "";
-    private String crime = "";
-    private String mCrimeName;
 
     // Authentication with FireBase
     private FirebaseAuth mAuth;
     private GoogleMap mMap;
     private CameraPosition curCameraPosition;
     private MapDrawer mapDrawer;
-    private ImageButton crimes [];
+    private ImageButton crimes;
     private ImageButton closeButton;
     private Animation animFadeIn ;
     private LatLng location;
@@ -138,21 +141,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapFragment.getMapAsync(this);
         configMenu();
         animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
-        crimes = new ImageButton[CRIMES_LIST.length];
-        crimes[0] =( ImageButton ) findViewById( R.id.assault_button );
-        crimes[1] =( ImageButton ) findViewById( R.id.auto_theft_button);
-        crimes[2] =( ImageButton ) findViewById( R.id.burglary_button );
-        crimes[3] =( ImageButton ) findViewById( R.id.shop_lifting_button );
-        crimes[4] =( ImageButton ) findViewById( R.id.suspicious_button );
-        crimes[5] =( ImageButton ) findViewById( R.id.homicide_button );
-        crimes[6] =( ImageButton ) findViewById( R.id.vandalism_button );
-        crimes[7] =( ImageButton ) findViewById( R.id.drugs_button );
-        crimes[8] =( ImageButton ) findViewById( R.id.other_button );
+        //addSearchBar();
+        crimes =( ImageButton ) findViewById( R.id.other_button );
 
         setUpCrimesButtons();
-
-        closeButton = (ImageButton)findViewById( R.id.close_button );
-        closeButton.setOnClickListener( this );
 
         final Button shareLocationButton = (Button) findViewById(R.id.share_location_button);
         shareLocationButton.setOnClickListener(new View.OnClickListener() {
@@ -392,25 +384,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showCrimesButtons() {
-        for(int i = 0; i < CRIMES_LIST.length; i++ ){
-            crimes[i].setVisibility( View.VISIBLE );
-        }
-        closeButton.setVisibility( View.VISIBLE );
+            crimes.setVisibility( View.VISIBLE );
     }
 
     private void setUpCrimesButtons() {
-
-        for(int i = 0; i < CRIMES_LIST.length; i++ ){
-            crimes[i].setVisibility( View.GONE );
-            crimes[i].setOnClickListener( this );
-        }
+        crimes.setVisibility( View.GONE );
+        crimes.setOnClickListener( this );
     }
 
     private void hideCrimesButtons() {
-        for(int i = 0; i < CRIMES_LIST.length; i++ ){
-            crimes[i].setVisibility( View.INVISIBLE );
-        }
-        closeButton.setVisibility( View.INVISIBLE );
+        crimes.setVisibility( View.INVISIBLE );
     }
 
     private void moveCamera(CameraPosition cameraPosition, boolean animateCamera) {
@@ -427,114 +410,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onClick(View view) {
-        int i = view.getId();
-        crime = "";
-        switch ( i ){
-            case R.id.assault_button:
-                crime = CRIMES_LIST[0];
-                mCrimeName = getResources().getString( R.string.assault_crime );
-                break;
-            case R.id.auto_theft_button:
-                crime = CRIMES_LIST[1];
-                mCrimeName = getResources().getString( R.string.auto_theft_crime);
-                break;
-            case R.id.burglary_button:
-                crime = CRIMES_LIST[2];
-                mCrimeName = getResources().getString( R.string.burglary_crime );
-                break;
-            case R.id.shop_lifting_button:
-                crime = CRIMES_LIST[3];
-                mCrimeName = getResources().getString( R.string.shop_lifting_crime );
-                break;
-            case R.id.suspicious_button:
-                crime = CRIMES_LIST[4];
-                mCrimeName = getResources().getString( R.string.suspicious_activity_crime );
-                break;
-            case R.id.homicide_button:
-                crime = CRIMES_LIST[5];
-                mCrimeName = getResources().getString( R.string.homicide_crime );
-                break;
-            case R.id.vandalism_button:
-                crime = CRIMES_LIST[6];
-                mCrimeName = getResources().getString( R.string.vandalism_crime );
-                break;
-            case R.id.drugs_button:
-                crime = CRIMES_LIST[7];
-                mCrimeName = getResources().getString( R.string.drugs_crime );
-                break;
-            case R.id.other_button:
-                crime = CRIMES_LIST[8];
-                mCrimeName = getResources().getString( R.string.other_crime );
-                break;
-            case R.id.close_button:
-                marker.remove();
-                isMarker = false;
-                hideCrimesButtons();
-                break;
-        }
-        // Show Calendar
-        if( isMarker ){
-            final Calendar c = Calendar.getInstance();
-            int year = c.get( Calendar.YEAR );
-            int month = c.get( Calendar.MONTH );
-            int day = c.get( Calendar.DAY_OF_MONTH );
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                    Calendar c = Calendar.getInstance();
-                    c.set(year, month, day);
-                    showDescriptionUI(c.getTimeInMillis());
-                }
-            }, year, month, day);
-            datePickerDialog.getDatePicker().setMaxDate( c.getTimeInMillis() );
-            datePickerDialog.show();
-        }
-    }
-
-    private void showDescriptionUI (final long timeInMillis){
-
-        // Create Dialog for description input
-        AlertDialog.Builder builder = new AlertDialog.Builder( this, R.style.AlertDialogStyle);
-        builder.setTitle( mCrimeName + " - " + getResources().getString( R.string.reportDescriptionTitle ) );
-        final EditText input = new EditText( this );
-        input.setInputType( InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES );
-        builder.setView( input );
-
-        builder.setPositiveButton(getResources().getString( R.string.accept ), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mText = input.getText().toString();
-                if( !TextUtils.isEmpty(mText) ) {
-                    reportCrime(crime, location, timeInMillis);
-                    marker.remove();
-                    Toast.makeText( MainActivity.this, R.string.report_done, Toast.LENGTH_LONG ).show();
-                    hideCrimesButtons();
-                }
-            }
-        });
-        builder.setNegativeButton(getResources().getString( R.string.cancel ), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        builder.show();
-    }
-
-    private void reportCrime( String crimeToReport, LatLng marker, long timeInMillis) {
-
-        com.panic.security.entities.Location location = new com.panic.security.entities.Location();
-        location.setLatitude( marker.latitude );
-        location.setLongitude( marker.longitude );
-
-        Crime crime = new Crime();
-        crime.setType( crimeToReport );
-        crime.setDate( timeInMillis );
-
-        Report report = new Report();
-        report.setDescription(mText);
-
-        FirebaseDAO.getInstance().pushReport(report, crime, location);
+        // Pass marker longitud and latitude
+        Bundle args = new Bundle();
+        args.putDouble( "marker_lat", location.latitude );
+        args.putDouble( "marker_lon", location.longitude );
+        ReportCreateFragment reportCreateFragment = new ReportCreateFragment();
+        reportCreateFragment.setArguments( args );
+        // Show Reports Fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        marker.remove();
+        hideCrimesButtons();
+        fragmentManager.beginTransaction().replace (R.id.content_main, reportCreateFragment ).addToBackStack( null ).commit();
     }
 
     public void addSearchBar(){

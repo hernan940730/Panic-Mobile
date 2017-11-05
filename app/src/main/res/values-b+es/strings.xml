@@ -95,12 +95,25 @@
     <string name="email_not_verified">El correo %s no ha sido verificado.</string>
     <string name="verify_email">Verifique su correo.</string>
     <string name="without_reports">Oops! Tu necesitas hacer algunos reportes</string>
+    <string name="report_done">Reporte realizado con éxito</string>
+    <string name="date">Fecha del crimen</string>
+
+    <string-array name="crimes_array">
+        <item>Asalto</item>
+        <item>Robo a auto</item>
+        <item>Robo a casa</item>
+        <item>Robo a tienda</item>
+        <item>Actividad sospechosa</item>
+        <item>Homicidio</item>
+        <item>Vandalismo</item>
+        <item>Expendio de drogas</item>
+        <item>Otro</item>
+    </string-array>
 
     <!-- Friends -->
     <string name="title_friend_requests">Solicitudes de amistad</string>
     <string name="title_friends">Amigos</string>
     <string name="without_friends">Oops! Aun no tienes amigos</string>
-    <string name="report_done">Reporte realizado con éxito</string>
 
     <!-- Dialog Friend -->
     <string name="share_location_with_friend">Compartir localización</string>
