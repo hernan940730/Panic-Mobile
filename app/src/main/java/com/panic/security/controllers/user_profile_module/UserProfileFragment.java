@@ -93,10 +93,10 @@ public class UserProfileFragment extends Fragment {
         // Icon of friendship
         setAddFriendIcon(mAuth.getCurrentUser().getUid(), user);
 
-        final TextView textUserProfileShortDesc = (TextView) getView().findViewById(R.id.user_profile_short_desc);
-        final TextView textUserProfileEmail = (TextView) getView().findViewById(R.id.user_profile_email);
-        final TextView textUserProfilePhoneNumber = (TextView) getView().findViewById(R.id.user_profile_phone_number);
-        final TextView textUserProfileNumberReports = (TextView) getView().findViewById(R.id.user_profile_number_reports);
+        final TextView textUserProfileShortDesc = getView().findViewById(R.id.user_profile_short_desc);
+        final TextView textUserProfileEmail = getView().findViewById(R.id.user_profile_email);
+        final TextView textUserProfilePhoneNumber = getView().findViewById(R.id.user_profile_phone_number);
+        final TextView textUserProfileNumberReports = getView().findViewById(R.id.user_profile_number_reports);
 
         //TODO Allow change short description to the user
         textUserProfileShortDesc.setText(getResources().getString(R.string.user_profile_short_desc));
