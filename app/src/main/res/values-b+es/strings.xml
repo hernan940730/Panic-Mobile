@@ -44,6 +44,14 @@
     <string name="user_profile_birthday">Fecha de Nacimiento:</string>
     <string name="user_profile_number_reports">Número de reportes:</string>
 
+    <!-- Reports information -->
+    <string name="report_info_date">Fecha:</string>
+    <string name="report_info_type">Tipo:</string>
+    <string name="report_info_description">Descripción:</string>
+    <string name="report_info_latitude">Latitud:</string>
+    <string name="report_info_longitude">Longitud:</string>
+    <string name="report_info_go_location">Ir a la ubicación</string>
+
     <!-- Snackbar messages -->
     <string name="you_are_friends">Ustedes ya son amigos</string>
     <string name="friend_request_sent">Solicitud de amistad enviada</string>
@@ -85,18 +93,23 @@
 
     <!-- Google maps -->
     <string name="title_activity_maps">Mapa</string>
+    <string name="title_activity_load">LoadActivity</string>
     <string name="share_location">COMPARTIR MI UBICACIÓN</string>
     <string name="stop_share_location">DEJAR DE COMPARTIR MI UBICACIÓN</string>
 
     <!-- Reports -->
-    <string name="reportDescriptionTitle">Describe qué pasó</string>
     <string name="accept">Aceptar</string>
     <string name="cancel">Cancelar</string>
     <string name="email_not_verified">El correo %s no ha sido verificado.</string>
     <string name="verify_email">Verifique su correo.</string>
-    <string name="without_reports">Oops! Tu necesitas hacer algunos reportes</string>
+    <string name="without_reports">Oops! Necesitas hacer algunos reportes</string>
     <string name="report_done">Reporte realizado con éxito</string>
     <string name="date">Fecha del crimen</string>
+    <string name="create_report">Crear un nuevo reporte</string>
+    <string name="report_type">Tipo</string>
+    <string name="report_date_title">Fecha</string>
+    <string name="report_description_title">Descripción</string>
+    <string name="crime_description">Describe que sucedio</string>
 
     <string-array name="crimes_array">
         <item>Asalto</item>

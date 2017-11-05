@@ -52,7 +52,6 @@ public class EditProfilePictureFragment extends Fragment {
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                getActivity().getSupportFragmentManager().popBackStack();
                 return true;
             }
         });

@@ -103,7 +103,7 @@ public class FriendsFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    FirebaseDAO.getInstance().getUserByID(adapter.getUsers().get(position).getId(), new DataCallback<User>() {
+                    FirebaseDAO.getInstance().getUserByID(adapter.getUserByPosition(position).getId(), new DataCallback<User>() {
                         @Override
                         public void onDataReceive(User userSelected) {
                             //To send user selected from fragment to activity
@@ -157,7 +157,7 @@ public class FriendsFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    User petitioner = adapterNotifications.getUsers().get(position);
+                    User petitioner = adapterNotifications.getUserByPosition(position);
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     int viewId = view.getId();
 
