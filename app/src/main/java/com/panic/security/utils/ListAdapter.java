@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.panic.security.R;
+import com.panic.security.entities.Crime;
+import com.panic.security.entities.Report;
 import com.panic.security.entities.User;
 
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class ListAdapter extends ArrayAdapter<String>{
 
     private Activity context;
     private List<User> users;
+    private List<Crime> crimes;
+    private List<Report> reports;
     private List<Bitmap> images;
     private List<String> itemsNames;
     private List<String> itemsDescription;
@@ -40,6 +44,8 @@ public class ListAdapter extends ArrayAdapter<String>{
     public ListAdapter(Activity context){
         super(context, R.layout.row_list_view);
         this.context = context;
+        crimes = new ArrayList<>();
+        reports = new ArrayList<>();
         users = new ArrayList<>();
         images = new ArrayList<>();
         itemsNames = new ArrayList<>();
@@ -47,8 +53,16 @@ public class ListAdapter extends ArrayAdapter<String>{
         withButtons = false;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public User getUserByPosition(int i) {
+        return users.get(i);
+    }
+
+    public Crime getCrimeByPosition(int i) {
+        return crimes.get(i);
+    }
+
+    public Report geReportsByPosition(int i) {
+        return reports.get(i);
     }
 
     public TextView getTxtDescription() {
@@ -61,9 +75,9 @@ public class ListAdapter extends ArrayAdapter<String>{
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.row_list_view, null, true);
 
-        imageView = (ImageView) rowView.findViewById(R.id.image_in_row);
-        txtTitle = (TextView) rowView.findViewById(R.id.main_text_in_row);
-        txtDescription = (TextView) rowView.findViewById(R.id.second_text_in_row);
+        imageView = rowView.findViewById(R.id.image_in_row);
+        txtTitle = rowView.findViewById(R.id.main_text_in_row);
+        txtDescription = rowView.findViewById(R.id.second_text_in_row);
 
         Bitmap bitmap = images.get(position);
 
@@ -77,8 +91,8 @@ public class ListAdapter extends ArrayAdapter<String>{
         txtTitle.setText(itemsNames.get(position));
         txtDescription.setText(itemsDescription.get(position));
 
-        acceptRequest = (ImageButton) rowView.findViewById(R.id.accept_request);
-        rejectRequest = (ImageButton) rowView.findViewById(R.id.reject_request);
+        acceptRequest = rowView.findViewById(R.id.accept_request);
+        rejectRequest = rowView.findViewById(R.id.reject_request);
 
         if(!withButtons){
             acceptRequest.setVisibility(View.GONE);
@@ -123,10 +137,12 @@ public class ListAdapter extends ArrayAdapter<String>{
         withButtons = buttons;
     }
 
-    public void addItem(String name, String description, Bitmap image) {
+    public void addItem(Crime crime, String name, Report report, Bitmap image) {
+        crimes.add(crime);
+        reports.add(report);
         images.add(image);
         itemsNames.add(name);
-        itemsDescription.add(description);
+        itemsDescription.add(report.getDescription());
     }
 
 }

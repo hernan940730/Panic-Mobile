@@ -47,6 +47,14 @@
     <string name="user_profile_birthday">Birthday:</string>
     <string name="user_profile_number_reports">Number of reports:</string>
 
+    <!-- Reports information -->
+    <string name="report_info_date">Date:</string>
+    <string name="report_info_type">Type:</string>
+    <string name="report_info_description">Description:</string>
+    <string name="report_info_latitude">Latitude:</string>
+    <string name="report_info_longitude">Longitude:</string>
+    <string name="report_info_go_location">Go to location</string>
+
     <!-- Snackbar messages -->
     <string name="you_are_friends">You are already friends</string>
     <string name="friend_request_sent">Friend request sent</string>
@@ -93,7 +101,6 @@
     <string name="stop_share_location">STOP SHARING MY LOCATION</string>
 
     <!-- Reports -->
-    <string name="reportDescriptionTitle">Describe what happened</string>
     <string name="accept">OK</string>
     <string name="cancel">Cancel</string>
     <string name="email_not_verified">Email %s is not verified</string>
@@ -102,8 +109,9 @@
     <string name="report_done">Report Done</string>
     <string name="date">Date of crime</string>
     <string name="create_report">Create a new report</string>
-    <string name="report_type">Report Type</string>
-    <string name="report_date_title">Crime Date</string>
+    <string name="report_type">Type</string>
+    <string name="report_date_title">Date</string>
+    <string name="report_description_title">Description</string>
     <string name="crime_description">Describe what happened</string>
 
     <string-array name="crimes_array">

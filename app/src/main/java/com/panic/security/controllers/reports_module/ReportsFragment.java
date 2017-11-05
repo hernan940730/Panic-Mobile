@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.panic.security.R;
 import com.panic.security.controllers.friends_module.FriendsFragment;
 import com.panic.security.controllers.main_module.MainActivity;
+import com.panic.security.controllers.user_profile_module.EditProfilePictureFragment;
 import com.panic.security.entities.Crime;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.Report;
@@ -82,14 +83,14 @@ public class ReportsFragment extends Fragment {
 
     public void showReports(final Map<String, String> reports){
 
-        ImageView imageViewWithoutReports = (ImageView) getView().findViewById(R.id.image_without_reports);
-        TextView textViewWithoutReports = (TextView) getView().findViewById(R.id.txt_without_reports);
+        ImageView imageViewWithoutReports = getView().findViewById(R.id.image_without_reports);
+        TextView textViewWithoutReports = getView().findViewById(R.id.txt_without_reports);
 
         imageViewWithoutReports.setVisibility(View.GONE);
         textViewWithoutReports.setVisibility(View.GONE);
 
         // List
-        final ListView listViewReports = (ListView) getView().findViewById(R.id.list_view_reports);
+        final ListView listViewReports = getView().findViewById(R.id.list_view_reports);
         listViewReports.setVisibility(View.VISIBLE);
         final ListAdapter adapterReports = new ListAdapter(getActivity());
 
@@ -105,32 +106,32 @@ public class ReportsFragment extends Fragment {
                             public void onDataReceive(Crime crime) {
                                 String type = crime.getType();
                                 if(type.equals(CRIMES_LIST[0])){
-                                    adapterReports.addItem(CrimesConverter.converter(getActivity(),crime.getType()),
-                                            report.getDescription(), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_assault));
+                                    adapterReports.addItem(crime, CrimesConverter.converter(getActivity(),crime.getType()),
+                                            report, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_assault));
                                 }else if(type.equals(CRIMES_LIST[1])){
-                                    adapterReports.addItem(CrimesConverter.converter(getActivity(),crime.getType()),
-                                            report.getDescription(), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_auto_theft));
+                                    adapterReports.addItem(crime, CrimesConverter.converter(getActivity(),crime.getType()),
+                                            report, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_auto_theft));
                                 }else if(type.equals(CRIMES_LIST[2])){
-                                    adapterReports.addItem(CrimesConverter.converter(getActivity(),crime.getType()),
-                                            report.getDescription(), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_burglary));
+                                    adapterReports.addItem(crime, CrimesConverter.converter(getActivity(),crime.getType()),
+                                            report, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_burglary));
                                 }else if(type.equals(CRIMES_LIST[3])){
-                                    adapterReports.addItem(CrimesConverter.converter(getActivity(),crime.getType()),
-                                            report.getDescription(), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_shoplifting));
+                                    adapterReports.addItem(crime, CrimesConverter.converter(getActivity(),crime.getType()),
+                                            report, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_shoplifting));
                                 }else if(type.equals(CRIMES_LIST[4])){
-                                    adapterReports.addItem(CrimesConverter.converter(getActivity(),crime.getType()),
-                                            report.getDescription(), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_suspicious_activity));
+                                    adapterReports.addItem(crime, CrimesConverter.converter(getActivity(),crime.getType()),
+                                            report, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_suspicious_activity));
                                 }else if(type.equals(CRIMES_LIST[5])){
-                                    adapterReports.addItem(CrimesConverter.converter(getActivity(),crime.getType()),
-                                            report.getDescription(), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_homicide));
+                                    adapterReports.addItem(crime, CrimesConverter.converter(getActivity(),crime.getType()),
+                                            report, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_homicide));
                                 }else if(type.equals(CRIMES_LIST[6])){
-                                    adapterReports.addItem(CrimesConverter.converter(getActivity(),crime.getType()),
-                                            report.getDescription(), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_vandalism));
+                                    adapterReports.addItem(crime, CrimesConverter.converter(getActivity(),crime.getType()),
+                                            report, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_vandalism));
                                 }else if(type.equals(CRIMES_LIST[7])){
-                                    adapterReports.addItem(CrimesConverter.converter(getActivity(),crime.getType()),
-                                            report.getDescription(), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_drugs));
+                                    adapterReports.addItem(crime, CrimesConverter.converter(getActivity(),crime.getType()),
+                                            report, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_drugs));
                                 }else if(type.equals(CRIMES_LIST[8])){
-                                    adapterReports.addItem(CrimesConverter.converter(getActivity(),crime.getType()),
-                                            report.getDescription(), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_other));
+                                    adapterReports.addItem(crime, CrimesConverter.converter(getActivity(),crime.getType()),
+                                            report, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_other));
                                 }
 
                                 listViewReports.setAdapter(adapterReports);
@@ -142,21 +143,29 @@ public class ReportsFragment extends Fragment {
                 });
 
             }
+
             // Event when one item is selected
-            /*
             listViewReports.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    ListAdapter listAdapter = (ListAdapter) listViewReports.getItemAtPosition(position);
-                    adapterReports.getTxtDescription().setMaxLines(100);
-                    adapterReports.getTxtDescription().setEllipsize(null);
-                    listViewReports.setAdapter(adapterReports);
+
+                    Crime currentCrime = adapterReports.getCrimeByPosition(position);
+                    Report currentReport = adapterReports.geReportsByPosition(position);
 
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace (R.id.content_main, new ReportsFragment()).commit();
+                    Fragment reportsInformationFragment = new ReportsInformationFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(ReportsInformationFragment.CRIME_BUNDLE, currentCrime);
+                    bundle.putSerializable(ReportsInformationFragment.REPORT_BUNDLE, currentReport);
+                    reportsInformationFragment.setArguments(bundle);
+                    fragmentManager
+                            .beginTransaction()
+                            .replace(R.id.content_main, reportsInformationFragment)
+                            .addToBackStack(null)
+                            .commit();
                 }
             });
-            */
+
         } else {
             listViewReports.setVisibility(View.GONE);
             imageViewWithoutReports.setVisibility(View.VISIBLE);

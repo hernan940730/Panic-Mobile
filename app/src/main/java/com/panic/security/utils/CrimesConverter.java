@@ -3,6 +3,7 @@ package com.panic.security.utils;
 import android.app.Activity;
 
 import com.panic.security.R;
+import com.panic.security.controllers.reports_module.ReportsFragment;
 
 /**
  * Created by maikb on 1/10/2017.
