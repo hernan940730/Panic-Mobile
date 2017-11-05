@@ -16,35 +16,48 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/background_with_gray_line"
             android:textSize="20dp"
             android:text="@string/create_report" />
-
-        <TextView
-            android:id="@+id/report_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_with_gray_line"
-            android:text="@string/report_type"
-            android:layout_below="@id/report_title" />
-
-        <Spinner
-            android:id="@+id/crimes_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/report_type"
-            android:layout_marginTop="25dp" />
 
         <TextView
             android:id="@+id/report_date_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/crimes_spinner"
-            android:layout_marginTop="25dp"
-            android:background="@drawable/background_with_gray_line"
+            android:layout_marginTop="15dp"
+            android:layout_below="@id/report_title"
             android:text="@string/report_date_title" />
+
+        <TextView
+            android:id="@+id/report_crime_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/report_date_title"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="5dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="HERE GOES A DATE" />
+
+        <TextView
+            android:id="@+id/report_type"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/report_type"
+            android:layout_marginTop="15dp"
+            android:layout_below="@id/report_crime_date"/>
+
+        <Spinner
+            android:id="@+id/crimes_spinner"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/report_type"
+            android:layout_marginTop="5dp"
+            android:textSize="40sp"
+            android:textColor="@color/black"/>
 
         <ProgressBar
             android:id="@+id/friends_progress_bar"
@@ -55,23 +68,28 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/report_crime_date"
-            android:layout_width="wrap_content"
+            android:id="@+id/report_description"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/report_date_title"
-            android:layout_marginTop="25dp"
-            android:text="HERE GOES A DATE" />
+            android:layout_width="match_parent"
+            android:text="@string/report_description_title"
+            android:layout_marginTop="15dp"
+            android:layout_below="@id/crimes_spinner"/>
 
         <EditText
             android:id="@+id/crime_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/report_crime_date"
-            android:layout_marginTop="25dp"
-            android:background="@android:color/transparent"
+            android:layout_below="@+id/report_description"
+            android:layout_marginTop="5dp"
+            android:ellipsize="start"
+            android:gravity="center_horizontal"
+            android:background="@color/gray_line"
+            android:padding="10dp"
             android:hint="@string/crime_description"
+            android:imeActionId="@+id/commit_crime_button"
+            android:imeOptions="actionNext"
+            android:maxLines="10"
             android:inputType="text|textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine" />
 
         <Button
@@ -79,7 +97,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="@string/create_report" />
+            android:text="@string/create_report"
+            android:gravity="center"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/whiteColor"/>
 
     </RelativeLayout>
 
