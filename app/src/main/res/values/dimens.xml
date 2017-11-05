@@ -7,8 +7,8 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="close_button">50dp</dimen>
-    <dimen name="crimes_first_row_x">55dp</dimen>
-    <dimen name="crimes_second_row_x">12dp</dimen>
+    <dimen name="add_crime_x">300dp</dimen>
+    <dimen name="add_crime_y">450dp</dimen>
     <dimen name="y_location_margin">390dp</dimen>
     <dimen name="x_location_margin">100dp</dimen>
 </resources>

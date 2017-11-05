@@ -8,108 +8,31 @@
     mMap:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.panic.security.controllers.main_module.MainActivity">
 
-    <ImageButton
-        android:id="@+id/assault_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
-        android:translationX="@dimen/crimes_first_row_x"
-        android:translationY="175dp"
-        android:src="@mipmap/ic_assault" />
-
-    <ImageButton
-        android:id="@+id/auto_theft_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
-        android:translationX="@dimen/crimes_first_row_x"
-        android:translationY="225dp"
-        android:src="@mipmap/ic_auto_theft" />
-
-    <ImageButton
-        android:id="@+id/burglary_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
-        android:translationX="@dimen/crimes_first_row_x"
-        android:translationY="275dp"
-        android:src="@mipmap/ic_burglary" />
-
-    <ImageButton
-        android:id="@+id/shop_lifting_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
-        android:translationX="@dimen/crimes_first_row_x"
-        android:translationY="325dp"
-        android:src="@mipmap/ic_shoplifting" />
-
-    <ImageButton
-        android:id="@+id/suspicious_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
-        android:translationX="@dimen/crimes_second_row_x"
-        android:translationY="150dp"
-        android:src="@mipmap/ic_suspicious_activity" />
-
-    <ImageButton
-        android:id="@+id/homicide_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
-        android:translationX="@dimen/crimes_second_row_x"
-        android:translationY="200dp"
-        android:src="@mipmap/ic_homicide" />
-
-    <ImageButton
-        android:id="@+id/vandalism_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
-        android:translationX="@dimen/crimes_second_row_x"
-        android:translationY="250dp"
-        android:src="@mipmap/ic_vandalism" />
-
-    <ImageButton
-        android:id="@+id/drugs_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
-        android:translationX="@dimen/crimes_second_row_x"
-        android:translationY="300dp"
-        android:src="@mipmap/ic_drugs" />
-
-    <ImageButton
-        android:id="@+id/other_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
-        android:translationX="@dimen/crimes_second_row_x"
-        android:translationY="350dp"
-        android:src="@mipmap/ic_other" />
-
-    <Button
-        android:id="@+id/share_location_button"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:text="@string/share_location"
-        android:padding="10dp"
-        android:background="@color/success_color"
-        android:textColor="@color/whiteColor"
-        android:paddingBottom="10dp"
-        />
+        android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/close_button"
-        android:layout_width="@dimen/close_button"
-        android:layout_height="@dimen/close_button"
-        android:background="@drawable/round_button"
-        android:textSize="20sp"
-        android:src="@drawable/ic_dialog_close_dark"
-        android:translationY="70dp"
-        android:translationX="@dimen/crimes_second_row_x"
-        android:visibility="gone"/>
+        <Button
+            android:id="@+id/share_location_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:text="@string/share_location"
+            android:padding="10dp"
+            android:background="@color/success_color"
+            android:textColor="@color/whiteColor"
+            android:paddingBottom="10dp"
+            mMap:layout_constraintBottom_toBottomOf="parent"
+            />
+        <ImageButton
+            android:id="@+id/other_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_button"
+            android:layout_margin="10dp"
+            mMap:layout_constraintBottom_toTopOf="@id/share_location_button"
+            mMap:layout_constraintRight_toRightOf="parent"
+            android:src="@mipmap/ic_other" />
+    </android.support.constraint.ConstraintLayout>
 
 </fragment>
