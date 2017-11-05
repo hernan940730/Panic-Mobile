@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ValueEventListener;
 import com.panic.security.R;
 import com.panic.security.controllers.friends_module.FriendsFragment;
 import com.panic.security.controllers.main_module.MainActivity;
@@ -51,26 +52,21 @@ public class ReportsFragment extends Fragment {
 
     private FirebaseAuth mAuth;
 
+    private ValueEventListener reportsListener;
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
 
-        FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
+        reportsListener = FirebaseDAO.getInstance().getUserReports(mAuth.getCurrentUser().getUid(),
+                new DataCallback<Map<String, String>>() {
             @Override
-            public void onDataReceive(User user) {
-                FirebaseDAO.getInstance().getUserReports(mAuth.getCurrentUser().getUid(),
-                        new DataCallback<Map<String, String>>() {
-                    @Override
-                    public void onDataReceive(Map<String, String> data) {
-                        showReports(data);
-                    }
-                });
-
+            public void onDataReceive(Map<String, String> data) {
+                showReports(data);
             }
         });
-
     }
 
     @Override
@@ -174,4 +170,11 @@ public class ReportsFragment extends Fragment {
 
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (reportsListener != null) {
+            FirebaseDAO.getInstance().revokeUserReportsListener(mAuth.getUid(), reportsListener);
+        }
+    }
 }

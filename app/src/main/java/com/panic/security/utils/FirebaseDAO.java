@@ -10,6 +10,7 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.data.DataFetcher;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -297,6 +298,51 @@ public class FirebaseDAO {
 
     }
 
+    public ChildEventListener addUserFriendsChildListener(String userId, final DataCallback<Friend> callback ) {
+        final DatabaseReference ref = database.getReference()
+                .child(FirebaseReferences.USER_FRIENDS_REFERENCE)
+                .child(userId);
+
+        ChildEventListener listener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Friend friend = dataSnapshot.getValue(Friend.class);
+                callback.onDataReceive(friend);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        ref.addChildEventListener(listener);
+
+        return listener;
+    }
+
+    public void revokeUserFriendsChildListener(String userId, ChildEventListener listener ) {
+        DatabaseReference ref = database.getReference()
+                .child(FirebaseReferences.USER_FRIENDS_REFERENCE)
+                .child(userId);
+        ref.removeEventListener(listener);
+    }
+
     public void getAllFullNamesForAllProfiles(final DataCallback< List<String> > callback) {
         final DatabaseReference ref = database.getReference().child(FirebaseReferences.PROFILES_REFERENCE);
 
@@ -508,11 +554,11 @@ public class FirebaseDAO {
 
     }
 
-    public void getUserReports (final String userId, final DataCallback<Map<String, String>> callback) {
+    public ValueEventListener getUserReports (final String userId, final DataCallback<Map<String, String>> callback) {
         final DatabaseReference ref = database.getReference()
                 .child(FirebaseReferences.USER_REPORTS_REFERENCE)
                 .child(userId);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, String> reports = dataSnapshot.getValue(
@@ -525,7 +571,16 @@ public class FirebaseDAO {
             public void onCancelled(DatabaseError databaseError) {
                 callback.onDataReceive (null);
             }
-        });
+        };
+        ref.addListenerForSingleValueEvent(listener);
+        return listener;
+    }
+
+    public void revokeUserReportsListener(String userId, ValueEventListener listener) {
+        DatabaseReference ref = database.getReference()
+                .child(FirebaseReferences.USER_REPORTS_REFERENCE)
+                .child(userId);
+        ref.removeEventListener(listener);
     }
 
     public void getUserFriendRequestsIn (final DataCallback<Map<String, FriendRequest>> callback) {
@@ -547,6 +602,53 @@ public class FirebaseDAO {
                 callback.onDataReceive (null);
             }
         });
+    }
+
+    public ChildEventListener addUserFriendRequestsInChildListener(final DataCallback<FriendRequest> callback) {
+        final String currUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final DatabaseReference ref = database.getReference()
+                .child(FirebaseReferences.USER_FRIEND_REQUESTS_IN_REFERENCE)
+                .child(currUserId);
+
+        ChildEventListener listener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                FriendRequest friendRequest = dataSnapshot.getValue(FriendRequest.class);
+                callback.onDataReceive(friendRequest);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        ref.addChildEventListener(listener);
+
+        return listener;
+    }
+
+    public void revokeUserFriendRequestsInChildListener(ChildEventListener listener){
+        final String currUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference ref = database.getReference()
+                .child(FirebaseReferences.USER_FRIEND_REQUESTS_IN_REFERENCE)
+                .child(currUserId);
+        ref.removeEventListener(listener);
     }
 
     public void areFriends(String currentUserID, String friendID, final DataCallback<Friend> callback) {

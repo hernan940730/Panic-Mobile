@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dip"
             android:gravity="center_vertical"
+            android:visibility="gone"
             android:background="@drawable/background_with_gray_line"
             android:text="@string/title_friends" />
 
@@ -44,6 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dip"
+            android:visibility="gone"
             android:background="@color/whiteColor"/>
 
         <ProgressBar
@@ -58,7 +60,6 @@
             android:id="@+id/image_without_friends"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:visibility="gone"
             android:scaleType="fitXY"
             android:layout_gravity="center_horizontal"
             android:src="@mipmap/ic_without_friends"
@@ -69,7 +70,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:visibility="gone"
             android:paddingTop="15dp"
             android:text="@string/without_friends" />
 

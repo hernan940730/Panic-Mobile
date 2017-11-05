@@ -123,6 +123,7 @@ public class ListAdapter extends ArrayAdapter<String>{
     }
 
     public void addItem(User user, String email, String description) {
+        add(email);
         users.add(user);
         images.add(null);
         itemsDescription.add(description);
@@ -130,6 +131,7 @@ public class ListAdapter extends ArrayAdapter<String>{
     }
 
     public void addItem(User user, String name, String description, boolean buttons) {
+        add(name);
         users.add(user);
         images.add(null);
         itemsNames.add(name);
@@ -138,6 +140,7 @@ public class ListAdapter extends ArrayAdapter<String>{
     }
 
     public void addItem(Crime crime, String name, Report report, Bitmap image) {
+        add(name);
         crimes.add(crime);
         reports.add(report);
         images.add(image);
