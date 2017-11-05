@@ -607,8 +607,6 @@ public class FirebaseDAO {
         GlideApp.with(activity)
                 .load(ref)
                 .override(100)
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .centerCrop()
                 .placeholder(R.drawable.ic_default_profile_image)
                 .into(view);
@@ -620,8 +618,6 @@ public class FirebaseDAO {
         GlideApp.with(activity)
                 .load(ref)
                 .override(300)
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .circleCrop()
                 .placeholder(R.drawable.ic_default_profile_image)
                 .into(view);
@@ -632,13 +628,10 @@ public class FirebaseDAO {
 
         GlideApp.with(activity)
                 .load(ref)
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(view);
     }
 
     public void getProfileImageInBytes(String userID, final DataCallback<byte[]> callback) {
-
         StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
         ref.getBytes (ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
