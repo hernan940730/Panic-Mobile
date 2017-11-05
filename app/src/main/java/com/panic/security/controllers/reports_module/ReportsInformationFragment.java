@@ -78,7 +78,7 @@ public class ReportsInformationFragment extends Fragment {
             public void onClick(View view) {
 
                 //TODO go to location
-                
+
             }
         });
 

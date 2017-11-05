@@ -68,14 +68,14 @@ public class FriendsFragment extends Fragment {
 
     public void showFriends(Map<String, Friend> friends){
 
-        ImageView imageViewWithoutFriends = (ImageView) getView().findViewById(R.id.image_without_friends);
-        TextView textViewWithoutFriends = (TextView) getView().findViewById(R.id.txt_without_friends);
+        ImageView imageViewWithoutFriends = getView().findViewById(R.id.image_without_friends);
+        TextView textViewWithoutFriends = getView().findViewById(R.id.txt_without_friends);
 
         imageViewWithoutFriends.setVisibility(View.GONE);
         textViewWithoutFriends.setVisibility(View.GONE);
 
         // List
-        final ListView listViewFriends = (ListView) getView().findViewById(R.id.list_view_friends);
+        final ListView listViewFriends = getView().findViewById(R.id.list_view_friends);
         listViewFriends.setVisibility(View.VISIBLE);
         final ListAdapter adapter = new ListAdapter(getActivity());
 
@@ -102,18 +102,11 @@ public class FriendsFragment extends Fragment {
             listViewFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    FirebaseDAO.getInstance().getUserByID(adapter.getUserByPosition(position).getId(), new DataCallback<User>() {
-                        @Override
-                        public void onDataReceive(User userSelected) {
-                            //To send user selected from fragment to activity
-                            Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
-                            intent.putExtra("type", "list_friends");
-                            intent.putExtra("user_selected", userSelected);
-                            getActivity().startActivity(intent);
-                        }
-                    });
-
+                    //To send user selected from fragment to activity
+                    Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
+                    intent.putExtra("type", "list_friends");
+                    intent.putExtra("user_selected", adapter.getUserByPosition(position));
+                    getActivity().startActivity(intent);
                 }
             });
 

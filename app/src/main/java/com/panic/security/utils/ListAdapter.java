@@ -2,6 +2,9 @@ package com.panic.security.utils;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.support.design.widget.CheckableImageButton;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +35,8 @@ public class ListAdapter extends ArrayAdapter<String>{
     private ImageButton acceptRequest;
     private ImageButton rejectRequest;
 
+    private AppCompatCheckBox checkBox;
+
     private Activity context;
     private List<User> users;
     private List<Crime> crimes;
@@ -40,6 +45,7 @@ public class ListAdapter extends ArrayAdapter<String>{
     private List<String> itemsNames;
     private List<String> itemsDescription;
     private boolean withButtons;
+    private boolean withCheckBox;
 
     public ListAdapter(Activity context){
         super(context, R.layout.row_list_view);
@@ -51,6 +57,7 @@ public class ListAdapter extends ArrayAdapter<String>{
         itemsNames = new ArrayList<>();
         itemsDescription = new ArrayList<>();
         withButtons = false;
+        withCheckBox = false;
     }
 
     public User getUserByPosition(int i) {
@@ -114,12 +121,33 @@ public class ListAdapter extends ArrayAdapter<String>{
             });
         }
 
+        checkBox = rowView.findViewById(R.id.share_check_box);
+        if(!withCheckBox){
+            checkBox.setVisibility(View.GONE);
+        }else{
+            checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((ListView) parent).performItemClick(view, position, 0);
+                }
+            });
+        }
+
         return rowView;
     }
 
     @Override
     public int getCount() {
         return itemsNames.size();
+    }
+
+    public void addItem(boolean checkBoxes, User user, String email, String description) {
+        add(email);
+        users.add(user);
+        images.add(null);
+        itemsDescription.add(description);
+        itemsNames.add(email);
+        withCheckBox = checkBoxes;
     }
 
     public void addItem(User user, String email, String description) {
