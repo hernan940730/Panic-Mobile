@@ -51,6 +51,7 @@
     <string name="friend_request_accepted">Friend request accepted</string>
     <string name="friend_request_rejected">Friend request rejected</string>
     <string name="request_pending_acceptance">Request pending acceptance</string>
+    <string name="friend_removed">Friend removed</string>
 
     <!-- Gender -->
     <string name="male_gender">Male</string>
@@ -102,5 +103,9 @@
     <string name="title_friends">Friends</string>
     <string name="without_friends">Oops! You need to make some friends</string>
     <string name="report_done">Report Done</string>
+
+    <!-- Dialog Friend -->
+    <string name="share_location_with_friend">Share location</string>
+    <string name="remove_friend">Remove friend</string>
 
 </resources>

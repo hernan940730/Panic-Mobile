@@ -50,6 +50,7 @@
     <string name="friend_request_rejected">Solicitud de amistad rechazada</string>
     <string name="friend_request_accepted">Solicitud de amistad aceptada</string>
     <string name="request_pending_acceptance">Solicitud pendiente de aceptación</string>
+    <string name="friend_removed">Amigo eliminado</string>
 
     <!-- Gender -->
     <string name="male_gender">Hombre</string>
@@ -100,5 +101,9 @@
     <string name="title_friends">Amigos</string>
     <string name="without_friends">Oops! Aun no tienes amigos</string>
     <string name="report_done">Reporte realizado con éxito</string>
+
+    <!-- Dialog Friend -->
+    <string name="share_location_with_friend">Compartir localización</string>
+    <string name="remove_friend">Eliminar amigo</string>
 
 </resources>

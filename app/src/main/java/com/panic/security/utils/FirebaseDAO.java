@@ -780,4 +780,22 @@ public class FirebaseDAO {
         refOut.removeValue();
     }
 
+    public void removeFriend(String friendId) {
+        final String currUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DatabaseReference refMyFriend = database.getReference()
+                .child(FirebaseReferences.USER_FRIENDS_REFERENCE)
+                .child(currUserId)
+                .child(friendId);
+
+        DatabaseReference refFriend = database.getReference()
+                .child(FirebaseReferences.USER_FRIENDS_REFERENCE)
+                .child(friendId)
+                .child(currUserId);
+
+        refMyFriend.removeValue();
+        refFriend.removeValue();
+    }
+
+
 }
