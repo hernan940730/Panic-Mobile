@@ -135,4 +135,8 @@
     <string name="share_location_with_friend">Share location</string>
     <string name="remove_friend">Remove friend</string>
 
+    <!-- Dialog Friends -->
+    <string name="cancel_text_button">Cancel</string>
+    <string name="share_text_button">Share</string>
+
 </resources>

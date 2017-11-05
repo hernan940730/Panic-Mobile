@@ -14,7 +14,7 @@
             android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_with_gray_line"
+            android:background="@drawable/background_with_gray_line_bottom"
             android:orientation="vertical">
             <TextView
                 android:layout_width="match_parent"
@@ -39,7 +39,7 @@
             android:id="@+id/type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_with_gray_line"
+            android:background="@drawable/background_with_gray_line_bottom"
             android:orientation="vertical"
             android:layout_below="@+id/date">
             <TextView
@@ -65,7 +65,7 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_with_gray_line"
+            android:background="@drawable/background_with_gray_line_bottom"
             android:orientation="vertical"
             android:layout_below="@+id/type">
             <TextView
@@ -91,7 +91,7 @@
             android:id="@+id/longitude"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_with_gray_line"
+            android:background="@drawable/background_with_gray_line_bottom"
             android:orientation="vertical"
             android:layout_below="@+id/description">
             <TextView
@@ -117,7 +117,7 @@
             android:id="@+id/latitude"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_with_gray_line"
+            android:background="@drawable/background_with_gray_line_bottom"
             android:orientation="vertical"
             android:layout_below="@+id/longitude">
             <TextView

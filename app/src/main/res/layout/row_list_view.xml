@@ -52,4 +52,14 @@
         android:background="@drawable/image_view_btn_user_profile"
         android:src="@mipmap/ic_close_red" />
 
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/share_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center"
+        android:layout_alignBottom="@+id/second_text_in_row"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="10dp"
+        android:layout_alignTop="@+id/main_text_in_row" />
+
 </RelativeLayout>

@@ -3,6 +3,9 @@ package com.panic.security.controllers.main_module;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -31,13 +34,16 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -65,6 +71,7 @@ import com.panic.security.controllers.reports_module.ReportCreateFragment;
 import com.panic.security.controllers.reports_module.ReportsFragment;
 import com.panic.security.controllers.user_profile_module.UserProfileFragment;
 import com.panic.security.entities.Crime;
+import com.panic.security.entities.Friend;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.Report;
 import com.panic.security.entities.User;
@@ -73,15 +80,22 @@ import com.panic.security.utils.DataCallback;
 import com.panic.security.utils.DataLoader;
 import com.panic.security.utils.FirebaseDAO;
 import com.panic.security.utils.FirebaseReferences;
+import com.panic.security.utils.ListAdapter;
 import com.panic.security.utils.UserLocationUtils;
 import com.panic.security.models.map_module.MapDrawer;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, View.OnClickListener{
 
     private final String TAG = "MainActivity";
+    private Set<String> friendsIDs;
 
     private static String CRIMES_LIST[] = {
             "assault_crime",
@@ -113,6 +127,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Marker marker;
     public final int locationRequestCode = 1;
 
+    private boolean isSharing = false;
+
     // Search bar
     MaterialSearchView mSearchView;
     List<String> mListSource;
@@ -142,30 +158,111 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         configMenu();
         animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
         //addSearchBar();
-        crimes =( ImageButton ) findViewById( R.id.other_button );
+        crimes = findViewById( R.id.other_button );
 
         setUpCrimesButtons();
 
-        final Button shareLocationButton = (Button) findViewById(R.id.share_location_button);
+        final Button shareLocationButton = findViewById(R.id.share_location_button);
         shareLocationButton.setOnClickListener(new View.OnClickListener() {
-            boolean isSharing = false;
             @Override
             public void onClick(View view) {
                 if (isSharing) {
                     UserLocationUtils.getInstance().revokeSendLocationListener();
                     shareLocationButton.setText(R.string.share_location);
                     shareLocationButton.setBackgroundResource (R.color.success_color);
+                    isSharing = !isSharing;
+                } else {
+                    FirebaseDAO.getInstance().getUserFriends(FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                            new DataCallback<Map<String, Friend>>() {
+                                @Override
+                                public void onDataReceive(Map<String, Friend> friends) {
+                                    showDialog(MainActivity.this, friends, shareLocationButton);
+                                }
+                            }
+                    );
                 }
-                else {
-                    UserLocationUtils.getInstance().addSendLocationListener(MainActivity.this);
-                    shareLocationButton.setText(R.string.stop_share_location);
-                    shareLocationButton.setBackgroundResource (R.color.failure_color);
-                }
-                isSharing = !isSharing;
             }
         });
 
     }
+
+    public boolean showDialog(Context context, Map<String, Friend> friends, final Button shareLocationButton){
+
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.dialog_list_friends);
+
+        friendsIDs = new HashSet<>();
+
+        final ListView listViewFriends = dialog.findViewById(R.id.dialog_list_view_friends);
+        final ListAdapter adapter = new ListAdapter(MainActivity.this);
+
+        if(friends != null){
+
+            for (Map.Entry<String, Friend> friend : friends.entrySet()){
+                FirebaseDAO.getInstance().getUserByID(friend.getKey(), new DataCallback<User>() {
+                    @Override
+                    public void onDataReceive(final User user) {
+
+                        FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
+                            @Override
+                            public void onDataReceive(final Profile profile) {
+                                adapter.addItem(true, user, (profile.getName() + " " + profile.getLast_name()), user.getEmail());
+                                listViewFriends.setAdapter(adapter);
+                            }
+                        });
+
+                    }
+                });
+            }
+
+            // Event when one item is selected
+            listViewFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                    String friendID = adapter.getUserByPosition(position).getId();
+                    int viewId = view.getId();
+                    switch (viewId) {
+                        case R.id.share_check_box:
+                            if(friendsIDs.contains(friendID)){
+                                friendsIDs.remove(friendID);
+                            }else{
+                                friendsIDs.add(friendID);
+                            }
+                        break;
+                    }
+                }
+            });
+        }
+
+        Button cancelShareButton = dialog.findViewById(R.id.cancel_share_button);
+        cancelShareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        Button shareButton = dialog.findViewById(R.id.share_button);
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                friendsIDs.size();
+
+                UserLocationUtils.getInstance().addSendLocationListener(MainActivity.this);
+                shareLocationButton.setText(R.string.stop_share_location);
+                shareLocationButton.setBackgroundResource (R.color.failure_color);
+                isSharing = !isSharing;
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+        return false;
+    }
+
 
     /* Menu navigator*/
     public void configMenu(){
@@ -270,15 +367,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(type != null){
             FragmentManager fragmentManager = getSupportFragmentManager();
 
-            /*if(type.equals("query")){
-                User userFound = (User)intent.getSerializableExtra("user_in_search");
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("userFound", userFound);
-                UserProfileFragment userProfileFragment = new UserProfileFragment();
-                userProfileFragment.setArguments(bundle);
-                fragmentManager.beginTransaction().replace(R.id.content_main, userProfileFragment).commit();
-
-            }else */if(type.equals("list_friends")){
+            if(type.equals("list_friends")){
                 User userFound = (User)intent.getSerializableExtra("user_selected");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("userFound", userFound);
