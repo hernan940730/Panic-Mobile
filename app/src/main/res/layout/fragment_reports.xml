@@ -1,33 +1,41 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/whiteColor"
-    tools:context="com.panic.security.controllers.reports_module.ReportsFragment">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:background="@color/whiteColor">
 
-    <ListView
-        android:id="@+id/list_view_reports"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/whiteColor"/>
+        android:layout_height="match_parent"
+        android:background="@color/whiteColor"
+        tools:context="com.panic.security.controllers.reports_module.ReportsFragment">
 
-    <ImageView
-        android:id="@+id/image_without_reports"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:visibility="gone"
-        android:scaleType="fitXY"
-        android:layout_gravity="center_horizontal"
-        android:src="@mipmap/ic_without_friends"
-        android:layout_marginTop="51dp" />
+        <ListView
+            android:id="@+id/list_view_reports"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/whiteColor"/>
 
-    <TextView
-        android:id="@+id/txt_without_reports"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:visibility="gone"
-        android:paddingTop="15dp"
-        android:text="@string/without_reports" />
+        <ImageView
+            android:id="@+id/image_without_reports"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:visibility="gone"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_horizontal"
+            android:src="@mipmap/ic_without_friends"
+            android:layout_marginTop="51dp" />
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/txt_without_reports"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:paddingTop="15dp"
+            android:text="@string/without_reports" />
+
+    </FrameLayout>
+
+</ScrollView>

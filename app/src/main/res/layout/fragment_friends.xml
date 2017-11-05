@@ -18,6 +18,7 @@
             android:gravity="center_vertical"
             android:background="@drawable/background_with_gray_line"
             android:textSize="16dp"
+            android:visibility="gone"
             android:text="@string/title_friend_requests" />
 
         <ListView
@@ -25,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dip"
+            android:visibility="gone"
             android:background="@color/whiteColor">
         </ListView>
 

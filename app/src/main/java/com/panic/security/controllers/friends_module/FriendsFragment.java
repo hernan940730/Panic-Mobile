@@ -40,23 +40,12 @@ import java.util.Map;
 
 public class FriendsFragment extends Fragment {
 
-    private FirebaseAuth mAuth;
-    // Search bar
     MaterialSearchView mSearchView;
-    //List to search bar
-    List<String> mListSource;
-
-    ProgressBar mProgressBar;
+    // ImageToAddFriend
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mAuth = FirebaseAuth.getInstance();
-        mProgressBar = (ProgressBar) view.findViewById(R.id.friends_progress_bar);
-
-        // Bar search
-        addSearchBar();
 
         FirebaseDAO.getInstance().getUserFriends(FirebaseAuth.getInstance().getCurrentUser().getUid(),
                 new DataCallback<Map<String, Friend>>() {
@@ -71,7 +60,7 @@ public class FriendsFragment extends Fragment {
             @Override
             public void onDataReceive(Map<String, FriendRequest> data) {
                 // Show friends
-                showNotifications(data);
+                showFriendRequest(data);
             }
         });
 
@@ -100,23 +89,8 @@ public class FriendsFragment extends Fragment {
                         FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
                             @Override
                             public void onDataReceive(final Profile profile) {
-
-                                FirebaseDAO.getInstance().getProfileImageInBytes(user.getId(), new DataCallback<byte[]>() {
-                                    @Override
-                                    public void onDataReceive (byte[] bytes) {
-                                        if (bytes != null) {
-                                            adapter.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(),
-                                                    ImageConverter.getRoundedCornerBitmap(BitmapFactory.decodeByteArray (bytes, 0, bytes.length)));
-                                            listViewFriends.setAdapter(adapter);
-                                        } else {
-                                            adapter.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(),
-                                                    BitmapFactory.decodeResource(getResources(), R.mipmap.ic_account));
-                                            listViewFriends.setAdapter(adapter);
-                                        }
-
-                                    }
-                                });
-
+                                adapter.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail());
+                                listViewFriends.setAdapter(adapter);
                             }
                         });
 
@@ -151,14 +125,14 @@ public class FriendsFragment extends Fragment {
 
     }
 
-    public void showNotifications(final Map<String, FriendRequest> friendRequestsIn){
+    public void showFriendRequest(final Map<String, FriendRequest> friendRequestsIn){
 
         // List
         final TextView textViewRequest = (TextView) getView().findViewById(R.id.txt_view_request);
         final ListView listViewRequest = (ListView) getView().findViewById(R.id.list_view_request);
         final ListAdapter adapterNotifications = new ListAdapter(getActivity());
 
-        if(friendRequestsIn != null){
+        if (friendRequestsIn != null) {
 
             textViewRequest.setVisibility(View.VISIBLE);
             listViewRequest.setVisibility(View.VISIBLE);
@@ -167,29 +141,13 @@ public class FriendsFragment extends Fragment {
                 FirebaseDAO.getInstance().getUserByID(friendRequestIn.getKey(), new DataCallback<User>() {
                     @Override
                     public void onDataReceive(final User user) {
-
                         FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
                             @Override
                             public void onDataReceive(final Profile profile) {
-
-                                FirebaseDAO.getInstance().getProfileImageInBytes(user.getId(), new DataCallback<byte[]>() {
-                                    @Override
-                                    public void onDataReceive (byte[] bytes) {
-                                        if (bytes != null) {
-                                            adapterNotifications.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(),
-                                                    ImageConverter.getRoundedCornerBitmap(BitmapFactory.decodeByteArray (bytes, 0, bytes.length)), true);
-                                            listViewRequest.setAdapter(adapterNotifications);
-                                        } else {
-                                            Bitmap defaultFriendImage = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_accept_request);
-                                            adapterNotifications.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(), defaultFriendImage, true);
-                                            listViewRequest.setAdapter(adapterNotifications);
-                                        }
-                                    }
-                                });
-
+                                adapterNotifications.addItem(user, (profile.getName() + " " + profile.getLast_name()), user.getEmail(), true);
+                                listViewRequest.setAdapter(adapterNotifications);
                             }
                         });
-
                     }
                 });
             }
@@ -224,74 +182,25 @@ public class FriendsFragment extends Fragment {
                 }
             });
 
-        }else{
+        } else {
             textViewRequest.setVisibility(View.GONE);
             listViewRequest.setVisibility(View.GONE);
         }
 
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         final View view = inflater.inflate(R.layout.fragment_friends, container, false);
-
+        setHasOptionsMenu(true); // Call onCreateOptionsMenu
         return view;
-    }
-
-    public void addSearchBar(){
-
-        mSearchView = (MaterialSearchView) getActivity().findViewById(R.id.search_view);
-        mSearchView.setVoiceSearch(false);
-        mSearchView.setCursorDrawable(R.drawable.custom_cursor_search);
-
-        fillListSourceToSearch();
-
-        mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                mProgressBar.setVisibility(View.VISIBLE);
-                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-                FirebaseDAO.getInstance().getUserByEmail(query, new DataCallback<User>() {
-                    @Override
-                    public void onDataReceive(User user) {
-
-                        //To send user selected from fragment to activity
-                        Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
-                        intent.putExtra("type", "query");
-                        intent.putExtra("user_in_search", user);
-                        getActivity().startActivity(intent);
-                        mProgressBar.setVisibility(View.GONE);
-                        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    }
-                });
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-                return false;
-            }
-        });
-
-        setHasOptionsMenu(true); //To show search bar, call onCreateOptionsMenu
-    }
-
-    public void fillListSourceToSearch() {
-        mListSource = DataLoader.getInstance().getEmails();
-        String[] sourceArr = new String[mListSource.size()];
-        mSearchView.setSuggestions(mListSource.toArray(sourceArr));
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search_menu, menu);
+        MaterialSearchView mSearchView = (MaterialSearchView) getActivity().findViewById(R.id.search_view);
         MenuItem item = menu.findItem(R.id.action_search);
+        item.setVisible(true);
         mSearchView.setMenuItem(item);
     }
 

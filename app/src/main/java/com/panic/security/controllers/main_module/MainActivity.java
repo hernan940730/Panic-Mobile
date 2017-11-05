@@ -1,6 +1,7 @@
 package com.panic.security.controllers.main_module;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,18 +23,22 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +56,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.panic.security.R;
 import com.panic.security.controllers.friends_module.FriendsFragment;
 import com.panic.security.controllers.login_sign_up_module.LoginActivity;
@@ -63,12 +70,14 @@ import com.panic.security.entities.Report;
 import com.panic.security.entities.User;
 import com.panic.security.utils.CouchbaseDAO;
 import com.panic.security.utils.DataCallback;
+import com.panic.security.utils.DataLoader;
 import com.panic.security.utils.FirebaseDAO;
 import com.panic.security.utils.FirebaseReferences;
 import com.panic.security.utils.UserLocationUtils;
 import com.panic.security.models.map_module.MapDrawer;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, View.OnClickListener{
 
@@ -103,6 +112,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private LatLng location;
     private Marker marker;
     public final int locationRequestCode = 1;
+
+    // Search bar
+    MaterialSearchView mSearchView;
+    List<String> mListSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,11 +242,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.item_home) {
             fragmentManager.beginTransaction().replace (R.id.content_main, new Fragment()).commit();
         } else if (id == R.id.item_user_profile) {
-            fragmentManager.beginTransaction().replace (R.id.content_main, new UserProfileFragment()).commit();
+            fragmentManager.beginTransaction().replace (R.id.content_main, new UserProfileFragment(), "UserProfileFragment").commit();
         } else if (id == R.id.item_friends) {
-            fragmentManager.beginTransaction().replace (R.id.content_main, new FriendsFragment()).commit();
+            fragmentManager.beginTransaction().replace (R.id.content_main, new FriendsFragment(), "FriendsFragment").commit();
         } else if (id == R.id.item_my_reports) {
-            fragmentManager.beginTransaction().replace (R.id.content_main, new ReportsFragment()).commit();
+            fragmentManager.beginTransaction().replace (R.id.content_main, new ReportsFragment(), "ReportsFragment").commit();
         } /*else if (id == R.id.item_notifications) {
             fragmentManager.beginTransaction().replace (R.id.content_main, new NotificationsFragment()).commit();
         } */else if (id == R.id.item_about) {
@@ -254,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(type != null){
             FragmentManager fragmentManager = getSupportFragmentManager();
 
-            if(type.equals("query")){
+            /*if(type.equals("query")){
                 User userFound = (User)intent.getSerializableExtra("user_in_search");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("userFound", userFound);
@@ -262,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 userProfileFragment.setArguments(bundle);
                 fragmentManager.beginTransaction().replace(R.id.content_main, userProfileFragment).commit();
 
-            }else if(type.equals("list_friends")){
+            }else */if(type.equals("list_friends")){
                 User userFound = (User)intent.getSerializableExtra("user_selected");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("userFound", userFound);
@@ -408,6 +421,116 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         marker.remove();
         hideCrimesButtons();
         fragmentManager.beginTransaction().replace (R.id.content_main, reportCreateFragment ).addToBackStack( null ).commit();
+    }
+
+    private void showDescriptionUI (final long timeInMillis){
+
+        // Create Dialog for description input
+        AlertDialog.Builder builder = new AlertDialog.Builder( this, R.style.AlertDialogStyle);
+        builder.setTitle( mCrimeName + " - " + getResources().getString( R.string.reportDescriptionTitle ) );
+        final EditText input = new EditText( this );
+        input.setInputType( InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES );
+        builder.setView( input );
+
+        builder.setPositiveButton(getResources().getString( R.string.accept ), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mText = input.getText().toString();
+                if( !TextUtils.isEmpty(mText) ) {
+                    reportCrime(crime, location, timeInMillis);
+                    marker.remove();
+                    Toast.makeText( MainActivity.this, R.string.report_done, Toast.LENGTH_LONG ).show();
+                    hideCrimesButtons();
+                }
+            }
+        });
+        builder.setNegativeButton(getResources().getString( R.string.cancel ), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void reportCrime( String crimeToReport, LatLng marker, long timeInMillis) {
+
+        com.panic.security.entities.Location location = new com.panic.security.entities.Location();
+        location.setLatitude( marker.latitude );
+        location.setLongitude( marker.longitude );
+
+        Crime crime = new Crime();
+        crime.setType( crimeToReport );
+        crime.setDate( timeInMillis );
+
+        Report report = new Report();
+        report.setDescription(mText);
+
+        FirebaseDAO.getInstance().pushReport(report, crime, location);
+    }
+
+    public void addSearchBar(){
+
+            mSearchView = (MaterialSearchView) findViewById(R.id.search_view);
+            mSearchView.setVoiceSearch(false);
+            mSearchView.setCursorDrawable(R.drawable.custom_cursor_search);
+
+            fillListSourceToSearch();
+
+            mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                    FirebaseDAO.getInstance().getUserByEmail(query, new DataCallback<User>() {
+                        @Override
+                        public void onDataReceive(User user) {
+                            if(user == null){
+                                Toast.makeText( MainActivity.this , getResources().getString(R.string.invalid_user), Toast.LENGTH_LONG).show();
+                            }else{
+                                //To send user selected from fragment to activity
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("userFound", user);
+                                UserProfileFragment userProfileFragment = new UserProfileFragment();
+                                userProfileFragment.setArguments(bundle);
+
+                                FragmentManager fragmentManager = getSupportFragmentManager();
+                                fragmentManager.beginTransaction().replace(R.id.content_main, userProfileFragment).commit();
+                            }
+                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        }
+                    });
+
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+
+                    return false;
+                }
+            });
+
+    }
+
+    public void fillListSourceToSearch() {
+        mListSource = DataLoader.getInstance().getEmails();
+        String[] sourceArr = new String[mListSource.size()];
+        mSearchView.setSuggestions(mListSource.toArray(sourceArr));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        addSearchBar();
+
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        item.setVisible(false);
+        mSearchView.setMenuItem(item);
+
+        return true;
     }
 
     @Override

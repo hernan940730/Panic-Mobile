@@ -1,6 +1,5 @@
 package com.panic.security.controllers.user_profile_module;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -11,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -25,22 +23,15 @@ import com.panic.security.entities.FriendRequest;
 import com.panic.security.entities.Profile;
 import com.panic.security.entities.User;
 import com.panic.security.utils.DataCallback;
-import com.panic.security.utils.DataLoader;
 import com.panic.security.utils.FirebaseDAO;
-import com.panic.security.utils.ImageConverter;
 
-import java.util.List;
 import java.util.Map;
 
 public class UserProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
-    // Search bar
-    MaterialSearchView mSearchView;
-    //List to search bar
-    List<String> mListSource;
     // ImageToAddFriend
-    ImageView mImageViewUserProfileAddFriend;
+    ImageView mUserProfileAddFriend;
     // user_id of User that is displayed
     User mUserShown;
 
@@ -49,7 +40,8 @@ public class UserProfileFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mImageViewUserProfileAddFriend = (ImageView) getView().findViewById(R.id.user_profile_add_friend);
+
+        mUserProfileAddFriend = (ImageView) getView().findViewById(R.id.user_profile_add_friend);
 
         mAuth = FirebaseAuth.getInstance();
         mProgressBar = (ProgressBar) view.findViewById(R.id.user_profile_progress_bar);
@@ -62,7 +54,7 @@ public class UserProfileFragment extends Fragment {
                 if(bundle != null){
                     User userFound = (User)getArguments().getSerializable("userFound");
                     mUserShown = userFound;
-                    addSearchBar();
+                    setHasOptionsMenu(true); // Call onCreateOptionsMenu to search bar
                 }else{
                     mUserShown = user;
                 }
@@ -75,71 +67,7 @@ public class UserProfileFragment extends Fragment {
         });
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        final View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
-
-        // Inflate the layout for this fragment
-        return view;
-    }
-
-    public void addSearchBar(){
-
-        mSearchView = (MaterialSearchView) getActivity().findViewById(R.id.search_view);
-        mSearchView.setVoiceSearch(false);
-        mSearchView.setCursorDrawable(R.drawable.custom_cursor_search);
-
-        fillListSourceToSearch();
-
-        mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                mProgressBar.setVisibility(View.VISIBLE);
-                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-                FirebaseDAO.getInstance().getUserByEmail(query, new DataCallback<User>() {
-                    @Override
-                    public void onDataReceive(User user) {
-
-                        mUserShown = user;
-                        showUserData(user);
-
-                        mProgressBar.setVisibility(View.GONE);
-                        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    }
-                });
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-
-                return false;
-            }
-        });
-
-        setHasOptionsMenu(true); //To show search bar, call onCreateOptionsMenu
-    }
-
-    public void fillListSourceToSearch() {
-        mListSource = DataLoader.getInstance().getEmails();
-        String[] sourceArr = new String[mListSource.size()];
-        mSearchView.setSuggestions(mListSource.toArray(sourceArr));
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search_menu, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        mSearchView.setMenuItem(item);
-    }
-
     public void showUserData(User user){
-
         // Icon of friendship
         setAddFriendIcon(mAuth.getCurrentUser().getUid(), user);
 
@@ -167,22 +95,20 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
+        imageButtonProfilePicture.setPadding(2, 2, 2, 2);
+        FirebaseDAO.getInstance().putRoundProfileImageInView(user.getId(), getActivity(), imageButtonProfilePicture);
 
-
-        FirebaseDAO.getInstance().getProfileImageInBitmap(user.getId(), getActivity(), new DataCallback<Bitmap>() {
-            @Override
-            public void onDataReceive(Bitmap data) {
-                if (data != null) {
-                    imageButtonProfilePicture.setPadding(2, 2, 2, 2);
-                    imageButtonProfilePicture.setImageBitmap(
-                            ImageConverter.getRoundedCornerBitmap (data)
-                    );
-                }
-                else {
-                    imageButtonProfilePicture.setImageResource(R.mipmap.ic_default_user_profile);
-                }
-            }
-        });
+        /*
+        if (data != null) {
+            imageButtonProfilePicture.setPadding(2, 2, 2, 2);
+            imageButtonProfilePicture.setImageBitmap(
+                    ImageConverter.getRoundedCornerBitmap (data)
+            );
+        }
+        else {
+            imageButtonProfilePicture.setImageResource(R.mipmap.ic_default_user_profile);
+        }
+        */
 
         FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
             @Override
@@ -217,7 +143,7 @@ public class UserProfileFragment extends Fragment {
     public void setAddFriendIcon(final String currentUserID, final User friendUser){
 
         if( currentUserID.equals(friendUser.getId()) ){
-            mImageViewUserProfileAddFriend.setVisibility(View.GONE);
+            mUserProfileAddFriend.setVisibility(View.GONE);
         }else{
 
             //Change icon of friend request if friend sent request
@@ -225,7 +151,7 @@ public class UserProfileFragment extends Fragment {
                 @Override
                 public void onDataReceive(FriendRequest friendIn) {
                     if(friendIn != null){
-                        mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_accept_request);
+                        mUserProfileAddFriend.setImageResource(R.mipmap.ic_accept_request);
                     }else{
 
                         //Change icon of friend request if friends request was sent
@@ -233,7 +159,7 @@ public class UserProfileFragment extends Fragment {
                             @Override
                             public void onDataReceive(FriendRequest friendOut) {
                                 if(friendOut != null){
-                                    mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
+                                    mUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
                                 }else{
 
                                     //Change icon of friend request if they are friends
@@ -241,10 +167,10 @@ public class UserProfileFragment extends Fragment {
                                         @Override
                                         public void onDataReceive(Friend friend) {
                                             if(friend != null){
-                                                mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends_gold);
+                                                mUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends_gold);
                                             }else{
-                                                mImageViewUserProfileAddFriend.setVisibility(View.VISIBLE);
-                                                mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_add_person);
+                                                mUserProfileAddFriend.setVisibility(View.VISIBLE);
+                                                mUserProfileAddFriend.setImageResource(R.mipmap.ic_add_person);
                                             }
 
                                         }
@@ -275,7 +201,7 @@ public class UserProfileFragment extends Fragment {
 
     public void actionAddFriend(final User user) {
 
-        mImageViewUserProfileAddFriend.setOnClickListener(new View.OnClickListener() {
+        mUserProfileAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -285,7 +211,7 @@ public class UserProfileFragment extends Fragment {
 
                         if(friend != null){
 
-                            mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends_gold);
+                            mUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends_gold);
                             Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.you_are_friends), Snackbar.LENGTH_LONG).show();
 
                         }else{
@@ -297,7 +223,7 @@ public class UserProfileFragment extends Fragment {
                                         FirebaseDAO.getInstance().pushFriend(mUserShown.getId());
                                         FirebaseDAO.getInstance().removeFriendRequest(mUserShown.getId());
 
-                                        mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends_gold);
+                                        mUserProfileAddFriend.setImageResource(R.mipmap.ic_are_friends_gold);
                                         Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_accepted), Snackbar.LENGTH_LONG).show();
 
                                     }else{
@@ -307,7 +233,7 @@ public class UserProfileFragment extends Fragment {
                                             public void onDataReceive(FriendRequest friendOut) {
                                                 if(friendOut == null){
                                                     FirebaseDAO.getInstance().pushFriendRequest(mUserShown.getId());
-                                                    mImageViewUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
+                                                    mUserProfileAddFriend.setImageResource(R.mipmap.ic_check_circle);
                                                     Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), getResources().getString(R.string.friend_request_sent), Snackbar.LENGTH_LONG).show();
 
                                                 }else{
@@ -328,6 +254,20 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
+        return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MaterialSearchView mSearchView = (MaterialSearchView) getActivity().findViewById(R.id.search_view);
+        MenuItem item = menu.findItem(R.id.action_search);
+        item.setVisible(true);
+        mSearchView.setMenuItem(item);
     }
 
 }
