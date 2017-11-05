@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,51 +35,68 @@ public class UserProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     // ImageToAddFriend
-    ImageView mBtnManageFriends;
+    private ImageView mBtnManageFriends;
     // user_id of User that is displayed
-    User mUserShown;
+    private User mUserShown;
 
-    ProgressBar mProgressBar;
+    private ImageButton imageButtonProfilePicture;
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mBtnManageFriends = (ImageView) getView().findViewById(R.id.user_profile_add_friend);
+        mBtnManageFriends = getView().findViewById(R.id.user_profile_add_friend);
 
         mAuth = FirebaseAuth.getInstance();
-        mProgressBar = (ProgressBar) view.findViewById(R.id.user_profile_progress_bar);
 
-        FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
+        imageButtonProfilePicture = getView().findViewById(R.id.default_user_profile);
+
+        imageButtonProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataReceive(User user) {
+            public void onClick(View v) {
+                if (mUserShown != null) {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
-                Bundle bundle = getArguments();
-                if(bundle != null){
-                    User userFound = (User)getArguments().getSerializable("userFound");
-                    mUserShown = userFound;
-                    setHasOptionsMenu(true); // Call onCreateOptionsMenu to search bar
-                }else{
-                    mUserShown = user;
+                    Fragment editProfileFragment = new EditProfilePictureFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(EditProfilePictureFragment.USER_BUNDLE, mUserShown.getId());
+                    editProfileFragment.setArguments(bundle);
+                    fragmentManager
+                            .beginTransaction()
+                            .replace(R.id.content_main, editProfileFragment)
+                            .addToBackStack(null)
+                            .commit();
                 }
-                showUserData(mUserShown);
-
-                //actionEdit(view);
-                actionManageFriends(user);
-
             }
         });
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            User userFound = (User)getArguments().getSerializable("userFound");
+            mUserShown = userFound;
+            setHasOptionsMenu(true); // Call onCreateOptionsMenu to search bar
+            showUserData(mUserShown);
+            actionManageFriends();
+        } else {
+            FirebaseDAO.getInstance().getUserByID(mAuth.getCurrentUser().getUid(), new DataCallback<User>() {
+                @Override
+                public void onDataReceive(User user) {
+                    mUserShown = user;
+                    showUserData(mUserShown);
+                    actionManageFriends();
+                }
+            });
+        }
     }
 
     public void showUserData(User user){
         // Icon of friendship
         setAddFriendIcon(mAuth.getCurrentUser().getUid(), user);
 
-        final TextView textUserProfileShortDesc = (TextView) getView().findViewById(R.id.user_profile_short_desc);
-        final TextView textUserProfileEmail = (TextView) getView().findViewById(R.id.user_profile_email);
-        final TextView textUserProfilePhoneNumber = (TextView) getView().findViewById(R.id.user_profile_phone_number);
-        final TextView textUserProfileNumberReports = (TextView) getView().findViewById(R.id.user_profile_number_reports);
-        final ImageButton imageButtonProfilePicture = (ImageButton) getView().findViewById(R.id.default_user_profile);
+        final TextView textUserProfileShortDesc = getView().findViewById(R.id.user_profile_short_desc);
+        final TextView textUserProfileEmail = getView().findViewById(R.id.user_profile_email);
+        final TextView textUserProfilePhoneNumber = getView().findViewById(R.id.user_profile_phone_number);
+        final TextView textUserProfileNumberReports = getView().findViewById(R.id.user_profile_number_reports);
 
         //TODO Allow change short description to the user
         textUserProfileShortDesc.setText(getResources().getString(R.string.user_profile_short_desc));
@@ -230,13 +248,15 @@ public class UserProfileFragment extends Fragment {
 
     }
 
-    public void actionManageFriends(final User user) {
+    public void actionManageFriends() {
+
+        final String userId = FirebaseAuth.getInstance().getUid();
 
         mBtnManageFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                FirebaseDAO.getInstance().areFriends(user.getId(), mUserShown.getId(), new DataCallback<Friend>() {
+                FirebaseDAO.getInstance().areFriends(userId, mUserShown.getId(), new DataCallback<Friend>() {
                     @Override
                     public void onDataReceive(Friend friend) {
 
@@ -244,7 +264,7 @@ public class UserProfileFragment extends Fragment {
                             showDialog(getContext(), friend);
                         }else{
 
-                            FirebaseDAO.getInstance().areFriendRequestIn(user.getId(), mUserShown.getId(), new DataCallback<FriendRequest>() {
+                            FirebaseDAO.getInstance().areFriendRequestIn(userId, mUserShown.getId(), new DataCallback<FriendRequest>() {
                                 @Override
                                 public void onDataReceive(FriendRequest friendIn) {
                                     if(friendIn != null){
@@ -256,7 +276,7 @@ public class UserProfileFragment extends Fragment {
 
                                     }else{
 
-                                        FirebaseDAO.getInstance().areFriendRequestOut(user.getId(), mUserShown.getId(), new DataCallback<FriendRequest>() {
+                                        FirebaseDAO.getInstance().areFriendRequestOut(userId, mUserShown.getId(), new DataCallback<FriendRequest>() {
                                             @Override
                                             public void onDataReceive(FriendRequest friendOut) {
                                                 if(friendOut == null){
