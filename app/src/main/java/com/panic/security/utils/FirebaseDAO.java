@@ -10,6 +10,7 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.maps.GoogleMap;
@@ -603,11 +604,11 @@ public class FirebaseDAO {
     public void putProfileImageInView(String userID, Activity activity, ImageView view) {
         StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
 
-        BitmapDescriptor bd = null;
-
         GlideApp.with(activity)
                 .load(ref)
                 .override(100)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .centerCrop()
                 .placeholder(R.drawable.ic_default_profile_image)
                 .into(view);
@@ -619,6 +620,8 @@ public class FirebaseDAO {
         GlideApp.with(activity)
                 .load(ref)
                 .override(300)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .circleCrop()
                 .placeholder(R.drawable.ic_default_profile_image)
                 .into(view);
@@ -629,6 +632,8 @@ public class FirebaseDAO {
 
         GlideApp.with(activity)
                 .load(ref)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(view);
     }
 
