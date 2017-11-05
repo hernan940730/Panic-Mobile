@@ -423,52 +423,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentManager.beginTransaction().replace (R.id.content_main, reportCreateFragment ).addToBackStack( null ).commit();
     }
 
-    private void showDescriptionUI (final long timeInMillis){
-
-        // Create Dialog for description input
-        AlertDialog.Builder builder = new AlertDialog.Builder( this, R.style.AlertDialogStyle);
-        builder.setTitle( mCrimeName + " - " + getResources().getString( R.string.reportDescriptionTitle ) );
-        final EditText input = new EditText( this );
-        input.setInputType( InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES );
-        builder.setView( input );
-
-        builder.setPositiveButton(getResources().getString( R.string.accept ), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mText = input.getText().toString();
-                if( !TextUtils.isEmpty(mText) ) {
-                    reportCrime(crime, location, timeInMillis);
-                    marker.remove();
-                    Toast.makeText( MainActivity.this, R.string.report_done, Toast.LENGTH_LONG ).show();
-                    hideCrimesButtons();
-                }
-            }
-        });
-        builder.setNegativeButton(getResources().getString( R.string.cancel ), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        builder.show();
-    }
-
-    private void reportCrime( String crimeToReport, LatLng marker, long timeInMillis) {
-
-        com.panic.security.entities.Location location = new com.panic.security.entities.Location();
-        location.setLatitude( marker.latitude );
-        location.setLongitude( marker.longitude );
-
-        Crime crime = new Crime();
-        crime.setType( crimeToReport );
-        crime.setDate( timeInMillis );
-
-        Report report = new Report();
-        report.setDescription(mText);
-
-        FirebaseDAO.getInstance().pushReport(report, crime, location);
-    }
-
     public void addSearchBar(){
 
             mSearchView = (MaterialSearchView) findViewById(R.id.search_view);
