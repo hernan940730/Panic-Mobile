@@ -399,7 +399,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         crimes.setVisibility( View.INVISIBLE );
     }
 
-    private void moveCamera(CameraPosition cameraPosition, boolean animateCamera) {
+    public void moveCamera(CameraPosition cameraPosition, boolean animateCamera) {
         if (cameraPosition == null) {
             return;
         }
