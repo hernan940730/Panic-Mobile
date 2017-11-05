@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -91,8 +90,9 @@ public class MapDrawer implements DataLoaderListener {
         for (Map.Entry<String, LatLng> entry : friends.entrySet()) {
             String friendId = entry.getKey();
             Bitmap imageBitmap = StorageManager.loadProfileImage(friendId, mainActivity);
-            BitmapDescriptor bitmapDescriptor = null;
+            BitmapDescriptor bitmapDescriptor;
             if (imageBitmap == null) {
+                StorageManager.saveProfileImage(friendId, mainActivity);
                 imageBitmap = BitmapFactory
                         .decodeResource(mainActivity.getResources(), R.mipmap.ic_account);
             }
@@ -105,13 +105,11 @@ public class MapDrawer implements DataLoaderListener {
                                     )
                             )
                     );
-            if (bitmapDescriptor == null) {
-                StorageManager.saveProfileImage(friendId, mainActivity);
-            }
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(entry.getValue())
                     .icon(bitmapDescriptor);
-            friendsMarkers.add (mMap.addMarker(markerOptions));
+
+            friendsMarkers.add(mMap.addMarker(markerOptions));
         }
     }
 
