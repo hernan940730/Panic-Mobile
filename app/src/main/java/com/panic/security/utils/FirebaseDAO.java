@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by david on 9/7/17.
@@ -929,5 +930,22 @@ public class FirebaseDAO {
         refFriend.removeValue();
     }
 
+    public void shareLocation(Set<String> friends) {
+        DatabaseReference ref = database.getReference()
+                .child(FirebaseReferences.USER_FRIENDS_SHARING_REFERENCE);
+        final String userId = FirebaseAuth.getInstance().getUid();
+        for (String friendId : friends) {
+            ref.child(friendId).child(userId).setValue(userId);
+        }
+    }
+
+    public void stopShareLocation(Set<String> friends) {
+        DatabaseReference ref = database.getReference()
+                .child(FirebaseReferences.USER_FRIENDS_SHARING_REFERENCE);
+        final String userId = FirebaseAuth.getInstance().getUid();
+        for (String friendId : friends) {
+            ref.child(friendId).child(userId).removeValue();
+        }
+    }
 
 }
