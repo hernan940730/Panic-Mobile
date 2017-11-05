@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="300dp"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/share_location_with_friend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_with_gray_line"
+        android:gravity="center"
+        android:text="@string/share_location_with_friend"
+        android:textSize="17sp"
+        android:textAllCaps="false"
+        android:padding="15dp"
+        style="?android:attr/borderlessButtonStyle"/>
+
+    <Button
+        android:id="@+id/remove_friend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_with_gray_line"
+        android:gravity="center"
+        android:text="@string/remove_friend"
+        android:textSize="17sp"
+        android:padding="15dp"
+        android:textAllCaps="false"
+        android:layout_below="@+id/share_location_with_friend"
+        style="?android:attr/borderlessButtonStyle"/>
+
+</RelativeLayout>

@@ -11,14 +11,26 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.panic.security.R;
 import com.panic.security.controllers.main_module.MainActivity;
+import com.panic.security.entities.Profile;
+import com.panic.security.entities.User;
 import com.panic.security.utils.CouchbaseDAO;
+import com.panic.security.utils.FirebaseDAO;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -36,10 +48,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private ProgressBar progressbar;
 
+    private CallbackManager mCallbackManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+        FacebookSdk.sdkInitialize(getApplicationContext());
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -58,6 +73,27 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI() {
         setContentView(R.layout.activity_login);
+
+        mCallbackManager = CallbackManager.Factory.create();
+
+        LoginButton loginButton = findViewById( R.id.facebook_login_button );
+        loginButton.setReadPermissions( "email", "public_profile" );
+        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                facebookLogin( loginResult.getAccessToken() );
+            }
+
+            @Override
+            public void onCancel() {
+                updateUI();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                updateUI();
+            }
+        });
 
         progressbar = ( ProgressBar ) findViewById( R.id.progress_bar );
 
@@ -85,6 +121,14 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Pass the activity result back to the Facebook SDK
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
     public void showSignUpActivity(View view ) {
         Intent intent = new Intent( this, SignUpActivity.class );
         startActivity( intent );
@@ -93,6 +137,51 @@ public class LoginActivity extends AppCompatActivity {
     public void showResetPasswordActivity( View view ){
         Intent intent = new Intent( this, ResetPasswordActivity.class );
         startActivity( intent );
+    }
+
+
+    private void facebookLogin( AccessToken token ) {
+        progressbar.setVisibility(View.VISIBLE);
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Profile profile = new Profile(
+                                    null,
+                                    null,
+                                    0,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                            );
+
+                            FirebaseDAO firebaseDAO = FirebaseDAO.getInstance();
+                            String profileID = firebaseDAO.pushProfile( user.getUid(), profile );
+
+                            User fireBaseUser = new User (
+                                    user.getUid(),
+                                    user.getEmail(),
+                                    true,
+                                    null,
+                                    profileID);
+
+                            firebaseDAO.pushUser( user.getUid(), fireBaseUser );
+                            showHome();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(LoginActivity.this, getResources().getString( R.string.authentication_failed ),
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI();
+                        }
+
+
+                    }
+                });
     }
 
     private void signIn( ) {

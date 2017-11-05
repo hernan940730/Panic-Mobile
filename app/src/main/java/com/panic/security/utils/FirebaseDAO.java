@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.maps.GoogleMap;
@@ -602,8 +604,6 @@ public class FirebaseDAO {
     public void putProfileImageInView(String userID, Activity activity, ImageView view) {
         StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
 
-        BitmapDescriptor bd = null;
-
         GlideApp.with(activity)
                 .load(ref)
                 .override(100)
@@ -623,8 +623,15 @@ public class FirebaseDAO {
                 .into(view);
     }
 
-    public void getProfileImageInBytes(String userID, final DataCallback<byte[]> callback) {
+    public void putFullProfileImageInView(String userID, Activity activity, ImageView view) {
+        StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
 
+        GlideApp.with(activity)
+                .load(ref)
+                .into(view);
+    }
+
+    public void getProfileImageInBytes(String userID, final DataCallback<byte[]> callback) {
         StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userID);
         ref.getBytes (ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -640,6 +647,10 @@ public class FirebaseDAO {
 
     }
 
+    public void pushProfileImage(String userId, Uri uri) {
+        StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userId);
+        ref.putFile(uri);
+    }
 
     public String pushUser (String ID, User entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).child (ID);
@@ -779,5 +790,23 @@ public class FirebaseDAO {
         refIn.removeValue();
         refOut.removeValue();
     }
+
+    public void removeFriend(String friendId) {
+        final String currUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DatabaseReference refMyFriend = database.getReference()
+                .child(FirebaseReferences.USER_FRIENDS_REFERENCE)
+                .child(currUserId)
+                .child(friendId);
+
+        DatabaseReference refFriend = database.getReference()
+                .child(FirebaseReferences.USER_FRIENDS_REFERENCE)
+                .child(friendId)
+                .child(currUserId);
+
+        refMyFriend.removeValue();
+        refFriend.removeValue();
+    }
+
 
 }
