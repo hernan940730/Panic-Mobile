@@ -99,7 +99,7 @@
             android:layout_marginBottom="30dp"
             android:layout_below="@+id/login_button"/>
 
-        <Button
+        <!--<Button
             android:id="@+id/google_sign_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -112,12 +112,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/facebook_login_button"
             android:layout_toStartOf="@+id/google_sign_button" />
+            -->
 
         <TextView
             android:id="@+id/sign_up_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/google_sign_button"
+            android:layout_below="@+id/facebook_login_button"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp"
             android:onClick="showSignUpActivity"
