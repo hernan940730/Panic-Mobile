@@ -50,6 +50,7 @@ import com.panic.security.entities.Report;
 import com.panic.security.entities.StolenObject;
 import com.panic.security.entities.User;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -774,10 +775,23 @@ public class FirebaseDAO {
         ref.putFile(uri);
     }
 
+    public void pushProfileImage(String userId, InputStream inputStream ) {
+        StorageReference ref = storage.getReference(FirebaseReferences.PROFILE_PICTURES_FOLDER_REFERENCE).child(userId);
+        ref.putStream( inputStream );
+    }
+
+
     public String pushUser (String ID, User entity) {
         DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).child (ID);
         entity.setId(ID);
         ref.setValue (entity);
+        return ref.getKey ();
+    }
+
+    public String pushUser (String ID, User entity, OnSuccessListener listener) {
+        DatabaseReference ref = database.getReference (FirebaseReferences.USERS_REFERENCE).child (ID);
+        entity.setId(ID);
+        ref.setValue (entity).addOnSuccessListener( listener );
         return ref.getKey ();
     }
 
