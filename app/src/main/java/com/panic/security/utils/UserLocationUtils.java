@@ -247,8 +247,8 @@ public class UserLocationUtils {
                 new DataCallback<JSONObject>() {
                     @Override
                     public void onDataReceive(JSONObject data) {
+                        Map<String, LatLng> friendsLocation = new HashMap<>();
                         if (data != null) {
-                            Map<String, LatLng> friendsLocation = new HashMap<>();
                             Iterator<String> it = data.keys();
                             while (it.hasNext()) {
                                 String friendUid = it.next();
@@ -261,8 +261,9 @@ public class UserLocationUtils {
                                     e.printStackTrace();
                                 }
                             }
-                            listener.onDataReceive (friendsLocation);
+                            //listener.onDataReceive (friendsLocation);
                         }
+                        listener.onDataReceive (friendsLocation);
                         addReceiveLocationListener();
                     }
                 }

@@ -958,6 +958,10 @@ public class FirebaseDAO {
 
     public void revokeSendLocation() {
         final String userId = FirebaseAuth.getInstance().getUid();
+        if (userId == null) {
+            //TODO fix
+            return;
+        }
         final DatabaseReference refSharing = database.getReference()
                 .child(FirebaseReferences.USER_FRIENDS_SHARING_REFERENCE);
         final DatabaseReference refShared = database.getReference()
