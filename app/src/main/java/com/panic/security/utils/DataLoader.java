@@ -39,7 +39,7 @@ public class DataLoader {
     private List<WeightedLatLng> crimeLocationList;
     private Map<String, Double> crimeWeights;
 
-    private int totalLoadData = 2;
+    private int totalLoadData = 1;
 
     public static synchronized DataLoader getInstance() {
         return dataLoader;
@@ -70,8 +70,6 @@ public class DataLoader {
     }
 
     public void loadData() {
-
-        loadEmails();
         loadMapZones();
     }
 

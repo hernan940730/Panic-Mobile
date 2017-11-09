@@ -29,6 +29,7 @@ import com.panic.security.entities.User;
 import com.panic.security.utils.DataCallback;
 import com.panic.security.utils.FirebaseDAO;
 
+import java.util.Calendar;
 import java.util.Map;
 
 public class UserProfileFragment extends Fragment {
@@ -134,7 +135,7 @@ public class UserProfileFragment extends Fragment {
         FirebaseDAO.getInstance().getProfileByID(user.getProfile_id(), new DataCallback<Profile>() {
             @Override
             public void onDataReceive(Profile profile) {
-                if (profile == null) {
+                if (profile == null || getView() == null) {
                     return;
                 }
                 TextView textUserProfileName = (TextView) getView().findViewById(R.id.user_profile_name);
@@ -153,7 +154,13 @@ public class UserProfileFragment extends Fragment {
                 }
                 //TODO parser long to date and not string
                 if(profile.getBirthday() != 0){
-                    textUserProfileBirthday.setText(String.valueOf(profile.getBirthday()));
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(profile.getBirthday());
+                    textUserProfileBirthday.setText(
+                            String.format("%02d", cal.get(Calendar.DATE) + 1) + "/" +
+                            String.format("%02d", cal.get(Calendar.MONTH) + 1) + "/" +
+                            cal.get(Calendar.YEAR)
+                    );
                 }
 
             }
