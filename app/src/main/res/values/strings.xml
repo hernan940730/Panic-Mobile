@@ -4,7 +4,7 @@
     <string name="app_name_short">Panic!</string>
 
     <!-- Facebook ID -->
-    <string name="facebook_app_id">1595876667140341</string>
+    <string name="facebook_app_id">PUT-HERE-SOME-ID</string>
 
     <!-- Error messages-->
     <string name="server_error">Fail to connect to server!</string>
